@@ -108,7 +108,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* ============================================================ */
-        /* MOTOR MATEMÁTICO 3D DE HOLOGRAMAS (FOCUS ROTATION)           */
+        /* MOTOR MATEMÁTICO 3D DE HOLOGRAMAS                            */
         /* ============================================================ */
         .icon-box {
             position: relative;
@@ -126,16 +126,15 @@
             will-change: transform, opacity;
         }
         
-        /* Imágenes de logo dentro del círculo */
+        /* 💡 LA MAGIA DE LA MÁSCARA CIRCULAR ESTÁ AQUÍ 💡 */
         .dynamic-icon img {
-            width: 60%; 
-            height: 60%; 
-            object-fit: contain;
-            /* Drop shadow blanco para que brillen sobre el fondo oscuro */
-            filter: drop-shadow(0 0 6px rgba(255,255,255,0.7)); 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Llena el círculo completamente */
+            border-radius: 50%; /* Fuerza a que cualquier imagen sea redonda (elimina esquinas) */
+            transform: scale(0.85); /* Deja un micro-margen con el borde de luz, se ve muy premium */
         }
 
-        /* 1. Animación para Portal Financiero (4 Elementos = 12 Segundos) */
         .animate-flip-4 { animation: flip-4 12s infinite cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes flip-4 {
             0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
@@ -143,7 +142,6 @@
             25%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
         }
 
-        /* 2. Animación para Portal Digital (8 Elementos = 24 Segundos) */
         .animate-flip-8 { animation: flip-8 24s infinite cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes flip-8 {
             0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
@@ -151,7 +149,6 @@
             12.5%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
         }
 
-        /* 3. Animación para Portal Investigación (14 Elementos = 42 Segundos) */
         .animate-flip-14 { animation: flip-14 42s infinite cubic-bezier(0.4, 0, 0.2, 1); }
         @keyframes flip-14 {
             0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
@@ -159,7 +156,6 @@
             7.1%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
         }
 
-        /* --- SCROLL EN CELULAR (FOCUS SNAP) --- */
         @media (max-width: 768px) {
             .portfolio-card {
                 opacity: 0.4;
@@ -175,7 +171,6 @@
                 z-index: 50;
                 background-color: rgba(13, 20, 31, 0.95) !important;
             }
-            
             .card-fin.in-view { border-color: rgba(59,130,246,0.5) !important; box-shadow: 0 20px 50px -10px rgba(59,130,246,0.35) !important; }
             .card-dig.in-view { border-color: rgba(16,185,129,0.5) !important; box-shadow: 0 20px 50px -10px rgba(16,185,129,0.35) !important; }
             .card-inv.in-view { border-color: rgba(6,182,212,0.5) !important; box-shadow: 0 20px 50px -10px rgba(6,182,212,0.35) !important; }
@@ -216,6 +211,7 @@
     </div>
 
     <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCart()"></div>
+    
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-[#0A0F16]/95 backdrop-blur-2xl z-[200] border-l border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
         <div class="px-6 py-5 border-b border-gray-800 flex justify-between items-center bg-[#02050A]/50">
             <div class="flex flex-col">
@@ -324,9 +320,9 @@
                             
                             <div class="icon-box w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20 transition-all duration-300 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.1)] overflow-hidden">
                                 <div class="dynamic-icon animate-flip-4" style="animation-delay: 0s;"><i class="fa-solid fa-wallet text-2xl"></i></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 3s;"><img src="logo/SBS.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 6s;"><img src="logo/SENTINEL.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 9s;"><img src="logo/EQUIFAX.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 3s;"><img src="logo/sbs.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 6s;"><img src="logo/sentinel.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 9s;"><img src="logo/equifax.png" alt="" onerror="this.style.display='none'"></div>
                             </div>
 
                             <div class="bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
@@ -354,14 +350,14 @@
                             
                             <div class="icon-box w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-all duration-300 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] overflow-hidden">
                                 <div class="dynamic-icon animate-flip-8" style="animation-delay: 0s;"><i class="fa-solid fa-terminal text-2xl"></i></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 3s;"><img src="logo/NETFLIX.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 6s;"><img src="logo/DISNEY.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 9s;"><img src="logo/PRIME.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 12s;"><img src="logo/HBO.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 15s;"><img src="logo/YOUTUBE.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 18s;"><img src="logo/WINDOWS.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 18s;"><img src="logo/PARAMOUNT.PNG" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 21s;"><img src="logo/CANVA.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 3s;"><img src="logo/netflix.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 6s;"><img src="logo/disney.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 9s;"><img src="logo/prime.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 12s;"><img src="logo/hbo.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 15s;"><img src="logo/youtube.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 18s;"><img src="logo/windows.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 18s;"><img src="logo/paramount.png" alt="" onerror="this.style.display='none'"></div>
+                                <div class="dynamic-icon animate-flip-8" style="animation-delay: 21s;"><img src="logo/canva.png" alt="" onerror="this.style.display='none'"></div>
                             </div>
 
                             <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
@@ -419,6 +415,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
@@ -882,7 +879,6 @@
             document.body.style.overflow = 'auto'; 
         }
 
-        // --- ENRUTADOR SUPREMO (SOLUCIÓN A BUGS LOCALES) ---
         function navigate(viewId, isBrowserBack = false, force = false) {
             if (!force && viewId === 'hub' && currentView !== 'hub' && cart.length > 0) {
                 showNavModal();
@@ -907,7 +903,6 @@
 
             try {
                 if (!isBrowserBack) {
-                    // Evita bug de ruta en PC Local
                     const currentPath = window.location.pathname + window.location.search;
                     if (viewId === 'hub') {
                         history.pushState({ view: 'hub' }, '', currentPath);
@@ -915,7 +910,7 @@
                         history.pushState({ view: viewId }, '', currentPath + '#' + viewId);
                     }
                 }
-            } catch (e) { console.error("Router local adaptado."); }
+            } catch (e) {}
         }
 
         function showNavModal() {
