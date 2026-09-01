@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -20,8 +20,8 @@
                     },
                     colors: {
                         cyber: {
-                            deep: '#010409',
-                            panel: '#0d1117',
+                            deep: '#02050A', 
+                            panel: '#0A0F16',
                             border: '#1f6feb',
                             glow: '#58a6ff'
                         }
@@ -29,7 +29,7 @@
                     animation: {
                         'float': 'float 4s ease-in-out infinite',
                         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards'
                     },
                     keyframes: {
                         float: {
@@ -37,11 +37,11 @@
                             '50%': { transform: 'translateY(-12px)' }
                         },
                         pulseGlow: {
-                            '0%, 100%': { opacity: '0.2' },
-                            '50%': { opacity: '0.5' }
+                            '0%, 100%': { opacity: '0.1' },
+                            '50%': { opacity: '0.3' }
                         },
                         fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
@@ -54,46 +54,37 @@
     
     <style>
         body { 
-            background-color: #010409; 
+            background-color: #02050A; 
             color: #c9d1d9; 
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
         }
 
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
         .bg-grid {
             background-size: 50px 50px;
             background-image: 
-                linear-gradient(to right, rgba(88, 166, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(88, 166, 255, 0.05) 1px, transparent 1px);
-            mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse at center, black 10%, transparent 80%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 80%);
         }
 
-        .glass-panel {
-            background: linear-gradient(180deg, rgba(13, 17, 23, 0.7) 0%, rgba(1, 4, 9, 0.9) 100%);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(88, 166, 255, 0.15);
-            box-shadow: inset 0 0 20px rgba(88, 166, 255, 0.02), 0 8px 32px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .glass-panel:hover {
-            border-color: rgba(88, 166, 255, 0.4);
-            box-shadow: inset 0 0 20px rgba(88, 166, 255, 0.05), 0 10px 40px rgba(88, 166, 255, 0.15);
-        }
-
-        .tech-border { position: relative; }
-        .tech-border::before, .tech-border::after {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border: 1px solid #58a6ff;
-            transition: all 0.3s ease;
-        }
-        .tech-border::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-        .tech-border::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-        .glass-panel:hover .tech-border::before { width: 100%; height: 100%; opacity: 0.1; }
+        @keyframes aurora-1 { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(4vw, -4vh) scale(1.1); } 66% { transform: translate(-3vw, 3vh) scale(0.9); } }
+        @keyframes aurora-2 { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(-4vw, 4vh) scale(1.2); } 66% { transform: translate(3vw, -3vh) scale(0.8); } }
+        @keyframes aurora-3 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(3vw, 2vh) scale(1.1); } }
+        
+        .orb-1 { animation: aurora-1 15s ease-in-out infinite; }
+        .orb-2 { animation: aurora-2 18s ease-in-out infinite; }
+        .orb-3 { animation: aurora-3 20s ease-in-out infinite reverse; }
 
         .carousel-container {
             width: 100%;
@@ -103,290 +94,664 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
-
-        .carousel-track {
-            display: flex;
-            width: max-content;
-        }
-
-        @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } 
-        }
+        .carousel-track { display: flex; width: max-content; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         .hidden-view { display: none !important; }
-        ::-webkit-scrollbar { width: 4px; background: #010409; }
+        ::-webkit-scrollbar { width: 4px; background: #030712; }
         ::-webkit-scrollbar-thumb { background: #1f6feb; border-radius: 4px; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
 
-    <div class="fixed inset-0 z-0 bg-grid pointer-events-none"></div>
-    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] animate-pulse-glow pointer-events-none z-0"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] animate-pulse-glow pointer-events-none z-0" style="animation-delay: 1.5s;"></div>
+    <!-- FONDOS -->
+    <div class="fixed inset-0 z-0 bg-[#02050A]"></div>
+    <div class="bg-noise"></div>
+    <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-60"></div>
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="orb-1 absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-blue-600/15 rounded-full blur-[120px] mix-blend-screen"></div>
+        <div class="orb-2 absolute top-[20%] right-[-10%] w-[45vw] h-[45vw] max-w-[700px] max-h-[700px] bg-emerald-600/10 rounded-full blur-[100px] mix-blend-screen"></div>
+        <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
+    </div>
 
-    <div id="splash-screen" class="fixed inset-0 z-[100] bg-cyber-deep flex flex-col items-center justify-center transition-opacity duration-700">
+    <!-- ========================================== -->
+    <!-- INTERCEPTOR DE NAVEGACIÓN (SMART MODAL)    -->
+    <!-- ========================================== -->
+    <div id="smart-nav-modal" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="smart-nav-card" class="bg-[#0A0F16] border border-blue-500/30 rounded-2xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-300">
+            <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl mx-auto mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white text-center mb-2">Orden en curso</h3>
+            <p class="text-gray-400 text-center text-sm mb-8">Tienes servicios guardados en tu terminal. ¿Qué deseas hacer?</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="openCartFromModal()" class="w-full py-3.5 bg-[#1f6feb] hover:bg-[#1556b6] text-white rounded-lg font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(31,111,235,0.4)] transition-colors flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-eye"></i> Revisar mi orden
+                </button>
+                <button onclick="forceNavigateHub()" class="w-full py-3.5 bg-transparent border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-white rounded-lg font-bold tracking-widest uppercase transition-colors">
+                    Seguir explorando
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TERMINAL DE ÓRDENES (SIDEBAR CARRITO)      -->
+    <!-- ========================================== -->
+    <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCart()"></div>
+    
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-[#0A0F16]/95 backdrop-blur-2xl z-[200] border-l border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        <div class="px-6 py-5 border-b border-gray-800 flex justify-between items-center bg-[#02050A]/50">
+            <div class="flex flex-col">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#58a6ff]"></i> Terminal de Órdenes
+                </h3>
+                <span id="order-id-display" class="font-mono text-[10px] text-gray-500 tracking-widest uppercase mt-1">ID: PENDIENTE</span>
+            </div>
+            <button onclick="closeCart()" class="w-8 h-8 rounded-full bg-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 hover:text-red-400 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="cart-items" class="flex-grow p-6 overflow-y-auto no-scrollbar space-y-4">
+            <!-- Los items se inyectan aquí -->
+        </div>
+
+        <div class="p-6 border-t border-gray-800 bg-[#02050A]/80">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-400 text-sm">Subtotal</span>
+                <span id="cart-subtotal" class="font-mono text-white text-sm">S/ 0.00</span>
+            </div>
+            <div class="flex justify-between items-center mb-6">
+                <span class="text-gray-400 text-sm">Cifrado / Tasas</span>
+                <span class="font-mono text-emerald-400 text-sm">S/ 0.00</span>
+            </div>
+            <div class="flex justify-between items-end mb-6">
+                <span class="text-white font-bold text-lg">TOTAL ESTIMADO</span>
+                <span id="cart-total" class="font-mono text-[#58a6ff] text-3xl font-bold">S/ 0.00</span>
+            </div>
+            
+            <button onclick="sendOrder()" class="w-full py-4 bg-[#25D366] hover:bg-[#1ebd5a] text-black rounded-xl text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(37,211,102,0.3)] flex items-center justify-center gap-3">
+                <i class="fa-brands fa-whatsapp text-xl"></i> Cifrar y Enviar Solicitud
+            </button>
+        </div>
+    </div>
+
+    <!-- BOTÓN TÁCTICO FLOTANTE -->
+    <div class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] group flex items-center gap-3 cursor-pointer" onclick="handleFloatingAction()">
+        <span id="floating-label" class="hidden md:block opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 bg-[#0A0F16]/90 border border-[#25D366]/30 text-[#25D366] text-[10px] font-mono px-3 py-1.5 rounded shadow-[0_0_15px_rgba(37,211,102,0.2)] uppercase tracking-widest backdrop-blur-md">
+            Soporte en línea
+        </span>
+        <div id="floating-btn" class="relative w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center text-[22px] shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:shadow-[0_0_35px_rgba(37,211,102,0.8)] transition-all duration-300 hover:scale-110 active:scale-95">
+            <i id="floating-icon" class="fa-brands fa-whatsapp relative z-10 transition-all duration-300 text-2xl"></i>
+            <span id="floating-ping" class="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30"></span>
+            
+            <div id="cart-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-white text-[10px] font-bold flex items-center justify-center border-2 border-[#02050A] opacity-0 scale-0 transition-all duration-300 z-20">0</div>
+        </div>
+    </div>
+
+    <!-- BOOT SCREEN -->
+    <div id="splash-screen" class="fixed inset-0 z-[100] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="bg-noise"></div>
         <div class="relative animate-float">
             <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-3xl"></div>
             <img src="logo.png" alt="Logo" class="relative z-10 w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-[0_0_20px_rgba(88,166,255,0.4)]">
         </div>
         <div class="mt-8 text-center z-10 px-4">
             <h1 class="text-xl md:text-2xl font-bold text-white tracking-[0.1em] md:tracking-[0.2em] uppercase">ESTUDIO FINANCIERO Y DIGITAL</h1>
-            <p class="font-mono text-[10px] md:text-xs text-[#58a6ff] tracking-[0.3em] mt-2 uppercase">Inicializando Sistema...</p>
+            <p class="font-mono text-[10px] md:text-xs text-[#58a6ff] tracking-[0.3em] mt-2 uppercase">Autenticando Credenciales...</p>
         </div>
     </div>
 
-    <header class="sticky top-0 z-50 bg-[#010409]/80 backdrop-blur-md border-b border-[#1f6feb]/20">
-        <div class="px-4 md:px-8 py-3 flex items-center justify-between max-w-7xl mx-auto">
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#02050A]/80 backdrop-blur-xl border-b border-gray-800/80 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+        <div class="px-4 md:px-8 py-3.5 flex items-center justify-between max-w-7xl mx-auto">
             <div class="flex items-center gap-3 md:gap-4 cursor-pointer" onclick="navigate('hub')">
-                <img src="logo.png" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 object-contain animate-float">
+                <img src="logo.png" alt="Logo" class="relative w-10 h-10 md:w-11 md:h-11 object-contain drop-shadow-[0_0_10px_rgba(88,166,255,0.2)]">
                 <div class="flex flex-col">
-                    <span class="font-bold text-xs md:text-sm tracking-wide md:tracking-widest text-white uppercase leading-tight">ESTUDIO FINANCIERO Y DIGITAL</span>
+                    <span class="font-bold text-[11px] md:text-sm tracking-widest text-white uppercase leading-tight">ESTUDIO FINANCIERO Y DIGITAL</span>
                     <span class="font-mono text-[8px] md:text-[9px] text-[#58a6ff] tracking-widest mt-0.5">SISTEMA CENTRAL V.2.0</span>
                 </div>
             </div>
-            
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 font-mono text-[10px] text-green-400 border border-green-400/20 bg-green-400/5 px-3 py-1 rounded-sm">
-                    <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping"></span> RED ESTABLE
+                <div class="hidden md:flex items-center gap-2 font-mono text-[9px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 rounded uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span> RED ESTABLE
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow px-4 md:px-8 py-8 md:py-12 max-w-7xl mx-auto w-full relative z-10 flex flex-col justify-start">
+    <main class="flex-grow px-4 md:px-8 py-8 md:py-16 max-w-7xl mx-auto w-full relative z-10 flex flex-col justify-start">
 
+        <!-- ============================== VISTA HUB ============================== -->
         <div id="view-hub" class="hidden-view w-full">
-            
-            <div class="mb-12 flex flex-col items-center text-center">
-                <div class="font-mono text-[10px] text-[#58a6ff] border border-[#1f6feb]/30 bg-[#1f6feb]/10 px-3 py-1 rounded-full tracking-widest mb-4 uppercase flex items-center gap-2">
-                    <div class="w-1.5 h-1.5 rounded-full bg-[#58a6ff] animate-pulse"></div> Acceso Autorizado
+            <div class="mb-14 flex flex-col items-center text-center">
+                <div class="font-mono text-[10px] text-emerald-400 border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 rounded-full tracking-widest mb-6 uppercase flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+                    <i class="fa-solid fa-shield-check text-emerald-400"></i> Acceso Autorizado
                 </div>
-                <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">Paneles de Gestión</h1>
-                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light">Seleccione la red de servicio para enrutar su solicitud a la central correspondiente.</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white drop-shadow-md">Paneles de Gestión</h1>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light tracking-wide">Seleccione la red de servicio para enrutar su solicitud a la central correspondiente.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-16">
-                
-                <div onclick="navigate('financiero')" class="glass-panel tech-border rounded-xl p-6 md:p-8 cursor-pointer relative overflow-hidden group hover:-translate-y-2">
-                    <div class="w-14 h-14 rounded-lg bg-[#1f6feb]/20 border border-[#1f6feb]/40 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(31,111,235,0.2)]">
-                        <i class="fa-solid fa-wallet text-[#58a6ff] text-2xl"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-white mb-3">Portal Financiero</h2>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">Reportes Financieros Infocorp, Sentinel, Equifax y SBS (deudas antiguas). Análisis de riesgo y perfil bancario.</p>
-                    <div class="font-mono text-[10px] text-[#58a6ff] flex items-center justify-between border-t border-[#1f6feb]/20 pt-4 mt-auto">
-                        <span>INICIAR MÓDULO</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-
-                <div onclick="navigate('digital')" class="glass-panel tech-border rounded-xl p-6 md:p-8 cursor-pointer relative overflow-hidden group hover:-translate-y-2">
-                    <div class="w-14 h-14 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                        <i class="fa-solid fa-terminal text-emerald-400 text-2xl"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-white mb-3">Portal Digital</h2>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">Despliegue de software profesional, licencias y suscripciones corporativas.</p>
-                    <div class="font-mono text-[10px] text-emerald-400 flex items-center justify-between border-t border-emerald-500/20 pt-4 mt-auto">
-                        <span>INICIAR MÓDULO</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-
-                <div onclick="navigate('investigacion')" class="glass-panel tech-border rounded-xl p-6 md:p-8 cursor-pointer relative overflow-hidden group border-cyan-500/20 hover:-translate-y-2">
-                    <div class="w-14 h-14 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
-                        <i class="fa-solid fa-satellite-dish text-cyan-400 text-2xl"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-white mb-2">Portal Investigación</h2>
-                    <p class="font-mono text-[9px] text-cyan-500 tracking-wider mb-3 uppercase">Sistema Central de Consultas</p>
-                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">Validación de perfiles, antecedentes e inteligencia de datos personales.</p>
-                    <div class="font-mono text-[10px] text-cyan-400 flex items-center justify-between border-t border-cyan-500/20 pt-4 mt-auto">
-                        <span>INICIAR MÓDULO</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+            <!-- TARJETAS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 mb-20">
+                <div onclick="navigate('financiero')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                                <i class="fa-solid fa-wallet text-blue-400 text-2xl group-hover:text-blue-300"></i>
+                            </div>
+                            <div class="bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
+                                <span class="font-mono text-[9px] text-blue-400 uppercase tracking-widest font-bold">Activo</span>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-50 transition-colors">Portal Financiero</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
+                            <span class="font-mono text-[10px] text-blue-400 font-bold uppercase tracking-widest group-hover:text-blue-300">Iniciar Módulo</span>
+                            <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <div onclick="navigate('digital')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(16,185,129,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                                <i class="fa-solid fa-terminal text-emerald-400 text-2xl group-hover:text-emerald-300"></i>
+                            </div>
+                            <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]"></span>
+                                <span class="font-mono text-[9px] text-emerald-400 uppercase tracking-widest font-bold">Activo</span>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-50 transition-colors">Portal Digital</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Despliegue de software profesional, licencias operativas y suscripciones de streaming corporativo.</p>
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-emerald-500/30 transition-colors">
+                            <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest group-hover:text-emerald-300">Iniciar Módulo</span>
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="navigate('investigacion')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(6,182,212,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                                <i class="fa-solid fa-satellite-dish text-cyan-400 text-2xl group-hover:text-cyan-300"></i>
+                            </div>
+                            <div class="bg-cyan-500/10 border border-cyan-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(6,182,212,0.8)]"></span>
+                                <span class="font-mono text-[9px] text-cyan-400 uppercase tracking-widest font-bold">Activo</span>
+                            </div>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-1 group-hover:text-cyan-50 transition-colors">Portal Investigación</h2>
+                        <p class="font-mono text-[8px] text-cyan-500/80 tracking-widest mb-4 uppercase group-hover:text-cyan-400 transition-colors">/// Central Consultas</p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Auditoría, validación de perfiles, antecedentes, OSINT e inteligencia de datos estructurados.</p>
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-cyan-500/30 transition-colors">
+                            <span class="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest group-hover:text-cyan-300">Iniciar Módulo</span>
+                            <div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300 group-hover:translate-x-1">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="glass-panel rounded-2xl p-6 md:p-10 mb-16 relative overflow-hidden border-t-4 border-t-[#25D366]">
+            <!-- SECCIÓN CANAL (INTACTA) -->
+            <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
+                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
                 <div class="flex flex-col items-center text-center mb-8">
-                    <h2 class="text-2xl md:text-4xl font-bold text-white mb-2">Canal Oficial</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Canal Oficial</h2>
                     <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Comunidad Privada Exclusiva</p>
                 </div>
-
                 <div class="flex flex-col lg:flex-row items-center gap-10">
-                    
                     <div class="w-full lg:w-1/2 flex justify-center">
-                        <div class="relative w-full max-sm p-2 bg-gray-800/30 rounded-2xl border border-gray-700 shadow-[0_0_40px_rgba(37,211,102,0.15)] overflow-hidden">
-                            <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain hover:scale-105 transition-transform duration-500">
+                        <div class="relative w-full max-sm p-1 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-[0_0_40px_rgba(37,211,102,0.1)]">
+                            <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain">
                         </div>
                     </div>
-
                     <div class="w-full lg:w-1/2 flex flex-col justify-center">
-                        <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/20">
+                        <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/30">
                             <i class="fa-solid fa-bell animate-pulse"></i> Promociones Activas
                         </div>
-                        
                         <h3 class="text-2xl font-bold text-white mb-4 leading-tight">Optimiza tus finanzas y entretenimiento en un solo lugar.</h3>
-                        
                         <div class="space-y-3 mb-8">
-                            <div class="flex items-start gap-3">
-                                <i class="fa-solid fa-check text-[#25D366] mt-1"></i>
-                                <p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros Infocorp, Sentinel, Equifax y SBS</strong>.</p>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <i class="fa-solid fa-check text-[#25D366] mt-1"></i>
-                                <p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> (Netflix, Disney+, ChatGPT y más).</p>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <i class="fa-solid fa-check text-[#25D366] mt-1"></i>
-                                <p class="text-gray-300 text-sm leading-relaxed">Validaciones, investigaciones y trámites documentarios rápidos.</p>
-                            </div>
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros Infocorp, Sentinel, Equifax y SBS</strong>.</p></div>
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> (Netflix, Disney+, ChatGPT y más).</p></div>
+                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Validaciones, investigaciones y trámites documentarios rápidos.</p></div>
                         </div>
-
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="flex-1 py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.4)] flex items-center justify-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal Oficial
-                            </a>
-                            <a href="https://wa.me/51937751224?text=Hola,%20vengo%20de%20la%20web%20y%20deseo%20contactar%20al%20administrador." target="_blank" class="flex-1 py-4 bg-transparent border border-[#1f6feb] text-[#58a6ff] hover:bg-[#1f6feb]/10 rounded-lg text-center font-bold text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-headset text-lg"></i> Contactar al Administrador
+                            <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="flex-1 py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- SECCIÓN CARRUSEL -->
             <div class="mb-10">
-                <div class="flex flex-col items-center text-center mb-6">
+                <div class="flex flex-col items-center text-center mb-8">
                     <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
-                    <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Evidencias de entregas exitosas</p>
+                    <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Base de evidencias y entregas exitosas</p>
                 </div>
-
-                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
-                    <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-2 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-xs font-mono uppercase tracking-widest transition-colors">Todo</button>
-                    <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-2 rounded border border-gray-700 text-gray-400 text-xs font-mono uppercase tracking-widest transition-colors hover:text-white">Finanzas</button>
-                    <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-2 rounded border border-gray-700 text-gray-400 text-xs font-mono uppercase tracking-widest transition-colors hover:text-white">Streaming</button>
-                    <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-2 rounded border border-gray-700 text-gray-400 text-xs font-mono uppercase tracking-widest transition-colors hover:text-white">Investigación</button>
+                <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-1.5 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-[10px] font-mono uppercase tracking-widest transition-colors">Todo</button>
+                    <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Finanzas</button>
+                    <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Streaming</button>
+                    <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Investigación</button>
                 </div>
-
                 <div class="carousel-container">
-                    <div id="carousel-track" class="carousel-track gap-4 md:gap-6">
-                        </div>
+                    <div id="carousel-track" class="carousel-track gap-4"></div>
                 </div>
             </div>
-
         </div>
 
+        <!-- ============================== VISTA FINANCIERO ============================== -->
         <div id="view-financiero" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-[#58a6ff] flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-[#1f6feb]/30 px-3 rounded transition-all">
+            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
                 <i class="fa-solid fa-angle-left"></i> Retornar al Hub
             </button>
-            <div class="mb-10 border-b border-[#1f6feb]/20 pb-6">
+            <div class="mb-10 border-b border-gray-800 pb-6 relative">
+                <div class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-blue-500/30 uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span> Sistema Encriptado
+                </div>
                 <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-wallet text-[#58a6ff]"></i> Portal Financiero
+                    <i class="fa-solid fa-wallet text-blue-500"></i> Portal Financiero
                 </h2>
-                <p class="text-gray-400 text-sm mt-2 font-mono">/// DIAGNÓSTICO DE RIESGO Y SANEAMIENTO</p>
+                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Servicios de Riesgo</p>
             </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-panel p-6 md:p-8 flex flex-col justify-between rounded-xl">
+                <!-- ITEM FIN-01 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-blue-600/30 group-hover:bg-blue-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-01</span>
+                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Reporte Score Total</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Extracción confidencial de su historial consolidado (Infocorp, Sentinel, Equifax y SBS).</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 15.00</div>
                     </div>
-                    <a href="https://wa.me/51937751224?text=Hola,%20solicito%20la%20emisi%C3%B3n%20del%20Reporte%20Score%20Total." target="_blank" class="w-full py-4 bg-[#1f6feb]/20 border border-[#1f6feb]/50 text-[#58a6ff] hover:bg-[#1f6feb]/40 hover:text-white rounded-lg text-center font-mono text-xs tracking-widest transition-all">
-                        EJECUTAR SOLICITUD
-                    </a>
+                    <button id="btn-FIN-01" onclick="addToCart('FIN-01', 'Reporte Score Total', 15.00, 'FINANCIERO')" class="btn-product w-full py-4 bg-blue-600/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
                 </div>
-                <div class="glass-panel p-6 md:p-8 flex flex-col justify-between rounded-xl">
+                <!-- ITEM FIN-02 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-gray-600 transition-colors">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gray-700/30 group-hover:bg-gray-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-02</span>
+                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Asesoría de Saneamiento</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Estrategia técnica para castigos bancarios y reinserción al sistema de crédito.</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 35.00</div>
                     </div>
-                    <a href="https://wa.me/51937751224?text=Hola,%20deseo%20agendar%20una%20Asesor%C3%ADa%20de%20Saneamiento%20Crediticio." target="_blank" class="w-full py-4 bg-transparent border border-gray-600 text-gray-300 hover:border-white hover:text-white rounded-lg text-center font-mono text-xs tracking-widest transition-all">
-                        AGENDAR SESIÓN
-                    </a>
+                    <button id="btn-FIN-02" onclick="addToCart('FIN-02', 'Asesoría de Saneamiento', 35.00, 'FINANCIERO')" class="btn-product w-full py-4 bg-gray-800/30 border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
                 </div>
             </div>
         </div>
 
+        <!-- ============================== VISTA DIGITAL ============================== -->
         <div id="view-digital" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-emerald-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-emerald-500/30 px-3 rounded transition-all">
+            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
                 <i class="fa-solid fa-angle-left"></i> Retornar al Hub
             </button>
-            <div class="mb-10 border-b border-emerald-500/20 pb-6">
-                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-terminal text-emerald-400"></i> Portal Digital
-                </h2>
-                <p class="text-gray-400 text-sm mt-2 font-mono">/// SOFTWARE Y SISTEMAS DE ENTRETENIMIENTO</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-panel p-6 flex flex-col sm:flex-row sm:items-center justify-between rounded-xl gap-4">
-                    <div class="flex items-center gap-4">
-                        <i class="fa-brands fa-windows text-emerald-400 text-2xl"></i>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Licencias Software</h3>
-                        </div>
-                    </div>
-                    <a href="https://wa.me/51937751224?text=Solicito%20informaci%C3%B3n%20sobre%20Licencias" target="_blank" class="px-4 py-2 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 rounded font-mono text-[10px] uppercase text-center">Consultar</a>
+            <div class="mb-10 border-b border-gray-800 pb-6 relative">
+                <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-emerald-500/30 uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Sistema Encriptado
                 </div>
-                <div class="glass-panel p-6 flex flex-col sm:flex-row sm:items-center justify-between rounded-xl gap-4">
-                    <div class="flex items-center gap-4">
-                        <i class="fa-solid fa-play text-red-400 text-2xl"></i>
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Cuentas Streaming</h3>
-                        </div>
+                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-terminal text-emerald-500"></i> Portal Digital
+                </h2>
+                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Software y Streaming</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- ITEM DIG-01 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
+                    <div class="absolute left-0 inset-y-0 w-1 bg-emerald-600/30 group-hover:bg-emerald-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-01</span>
+                    
+                    <div class="mb-8">
+                        <div class="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 mb-4"><i class="fa-brands fa-windows text-emerald-400 text-xl"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">Licencias Software</h3>
+                        <p class="text-gray-400 text-sm">Sistemas operativos y ofimática original.</p>
+                        <div class="text-lg mt-4 font-bold text-emerald-400 font-mono">Consultar</div>
                     </div>
-                    <a href="https://wa.me/51937751224?text=Solicito%20cat%C3%A1logo%20de%20Streaming" target="_blank" class="px-4 py-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded font-mono text-[10px] uppercase text-center">Catálogo</a>
+                    <button id="btn-DIG-01" onclick="addToCart('DIG-01', 'Cotización: Licencias Software', 0, 'DIGITAL')" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
+                </div>
+                <!-- ITEM DIG-02 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-red-500/30 transition-colors">
+                    <div class="absolute left-0 inset-y-0 w-1 bg-red-600/30 group-hover:bg-red-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-02</span>
+                    
+                    <div class="mb-8">
+                        <div class="w-12 h-12 rounded bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-4"><i class="fa-solid fa-play text-red-400 text-xl"></i></div>
+                        <h3 class="text-xl font-bold text-white mb-2">Cuentas Streaming</h3>
+                        <p class="text-gray-400 text-sm">Catálogo completo de entretenimiento digital.</p>
+                        <div class="text-lg mt-4 font-bold text-red-400 font-mono">Ver Catálogo</div>
+                    </div>
+                    <button id="btn-DIG-02" onclick="addToCart('DIG-02', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL')" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
                 </div>
             </div>
         </div>
 
+        <!-- ============================== VISTA INVESTIGACION ============================== -->
         <div id="view-investigacion" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-cyan-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-cyan-500/30 px-3 rounded transition-all">
+            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
                 <i class="fa-solid fa-angle-left"></i> Retornar al Hub
             </button>
-            <div class="mb-8 border-b border-cyan-500/20 pb-6">
-                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-radar text-cyan-400"></i> Portal Investigación
-                </h2>
-                <p class="text-gray-400 text-sm mt-2 font-mono tracking-wide text-cyan-500/80">/// SISTEMA CENTRAL DE CONSULTAS</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-panel p-6 md:p-8 flex flex-col justify-between rounded-xl">
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-2">Perfilado Básico</h3>
-                        <p class="text-gray-400 text-sm mb-6 font-light">Validación de identidad y estado en registros públicos.</p>
-                        <div class="text-2xl font-bold text-white mb-6 font-mono">S/ 40.00</div>
-                    </div>
-                    <a href="https://wa.me/51937751224?text=Solicito%20el%20servicio%20de%20Perfilado%20B%C3%A1sico" target="_blank" class="w-full py-3 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 rounded-lg text-center font-mono text-[10px] uppercase">
-                        Iniciar Consulta
-                    </a>
+            <div class="mb-10 border-b border-gray-800 pb-6 relative">
+                <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-cyan-500/30 uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span> Sistema Encriptado
                 </div>
-                <div class="glass-panel p-6 md:p-8 flex flex-col justify-between rounded-xl">
+                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
+                    <i class="fa-solid fa-radar text-cyan-500"></i> Portal Investigación
+                </h2>
+                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Inteligencia de Datos</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- ITEM INV-01 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-cyan-500/30 transition-colors">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-cyan-600/30 group-hover:bg-cyan-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-01</span>
+                    
                     <div>
-                        <h3 class="text-xl font-bold text-white mb-2">Rastreo Profundo</h3>
-                        <p class="text-gray-400 text-sm mb-6 font-light">Auditoría de huella digital y presencia en la red.</p>
-                        <div class="text-[10px] text-gray-500 font-mono mb-6 uppercase">Estado: Previa Evaluación</div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Perfilado Básico</h3>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Validación de identidad y estado en registros públicos.</p>
+                        <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 40.00</div>
                     </div>
-                    <a href="https://wa.me/51937751224?text=Deseo%20evaluaci%C3%B3n%20para%20un%20Rastreo%20Digital%20Profundo" target="_blank" class="w-full py-3 bg-purple-500/20 border border-purple-500/50 text-purple-300 hover:bg-purple-500/30 rounded-lg text-center font-mono text-[10px] uppercase">
-                        Contactar Analista
-                    </a>
+                    <button id="btn-INV-01" onclick="addToCart('INV-01', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN')" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
+                </div>
+                <!-- ITEM INV-02 -->
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-purple-500/30 transition-colors">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-purple-600/30 group-hover:bg-purple-500 transition-colors"></div>
+                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-02</span>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Rastreo Profundo</h3>
+                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Auditoría de huella digital y presencia en la red.</p>
+                        <div class="inline-block text-[10px] text-purple-400 border border-purple-500/30 bg-purple-500/10 font-mono mb-8 uppercase px-3 py-1 rounded">Estatus: Previa Evaluación</div>
+                    </div>
+                    <button id="btn-INV-02" onclick="addToCart('INV-02', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN')" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    </button>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <footer class="border-t border-[#1f6feb]/20 bg-[#010409]/90 mt-auto backdrop-blur-md relative z-10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
+    <footer class="border-t border-gray-800/80 bg-[#030712]/95 mt-auto relative z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <span class="font-mono text-[9px] text-gray-500 uppercase tracking-widest">ESTUDIO FINANCIERO Y DIGITAL © 2026</span>
-            <div class="flex items-center gap-4 font-mono text-[9px] text-[#1f6feb] uppercase tracking-widest">
-                <span>CONEXIÓN CIFRADA</span>
-                <span class="w-1 h-1 bg-[#1f6feb] rounded-full"></span>
+            <div class="flex items-center gap-4 font-mono text-[9px] text-gray-500 uppercase tracking-widest">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-lock text-gray-600"></i> CONEXIÓN CIFRADA</span>
+                <span class="w-1 h-1 bg-gray-800 rounded-full"></span>
                 <span>PIURA, PERÚ</span>
             </div>
         </div>
     </footer>
 
     <script>
+        // --- MOTOR E-COMMERCE NIVEL DIOS (UX/UI AVANZADO) ---
+        let cart = [];
+        const WA_NUMBER = "51937751224";
+        let currentView = 'hub';
+        
+        let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+        document.getElementById('order-id-display').innerText = "ID: " + orderId;
+
+        const waMessages = {
+            'hub': "Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀",
+            'financiero': "Hola 👋, estoy en el Portal Financiero y deseo hacer una consulta. 💳",
+            'digital': "Hola 👋, estoy en el Portal Digital y deseo hacer una consulta. 💻",
+            'investigacion': "Hola 👋, estoy en el Portal de Investigación y deseo hacer una consulta. 📡"
+        };
+
+        // 1. ESCUDO ANTI-ACTUALIZACIÓN (PREVENIR PERDIDA DE DATOS)
+        window.addEventListener('beforeunload', function (e) {
+            if (cart.length > 0) {
+                e.preventDefault();
+                e.returnValue = ''; // Muestra el popup nativo del navegador
+            }
+        });
+
+        // 2. FUNCIÓN DE AÑADIR (CON CATEGORÍA)
+        function addToCart(id, name, price, category) {
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty++;
+            } else {
+                cart.push({ id, name, price, category, qty: 1 });
+            }
+            syncProductButtons();
+            updateFloatingAction();
+            renderCart();
+        }
+
+        // 3. ACTUALIZAR CANTIDADES Y ELIMINAR
+        function updateQty(id, change) {
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            syncProductButtons();
+            updateFloatingAction();
+            renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            syncProductButtons();
+            updateFloatingAction();
+            renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        // 4. SINCRONIZADOR VISUAL DE BOTONES DE PRODUCTO
+        function syncProductButtons() {
+            // Buscamos todos los botones que tienen la clase 'btn-product'
+            document.querySelectorAll('.btn-product').forEach(btn => {
+                const btnId = btn.id.replace('btn-', ''); // extrae 'FIN-01'
+                const inCartItem = cart.find(i => i.id === btnId);
+                
+                if (inCartItem) {
+                    // Estado Activo (En el carrito)
+                    btn.innerHTML = `<i class="fa-solid fa-check"></i> EN LA ORDEN (${inCartItem.qty})`;
+                    btn.classList.remove('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400', 'bg-gray-800/30', 'border-gray-700', 'text-gray-300', 'bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-600/10', 'border-red-500/30', 'text-red-400', 'bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400', 'bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
+                    // Forzamos un estilo genérico de "Seleccionado"
+                    btn.classList.add('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
+                } else {
+                    // Restaurar al estado original
+                    btn.innerHTML = `<i class="fa-solid fa-plus"></i> Añadir a la orden`;
+                    btn.classList.remove('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
+                    
+                    // Restaurar los colores según la familia original (basado en el ID)
+                    if(btnId.includes('FIN-01')) btn.classList.add('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400');
+                    if(btnId.includes('FIN-02')) btn.classList.add('bg-gray-800/30', 'border-gray-700', 'text-gray-300');
+                    if(btnId.includes('DIG-01')) btn.classList.add('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400');
+                    if(btnId.includes('DIG-02')) btn.classList.add('bg-red-600/10', 'border-red-500/30', 'text-red-400');
+                    if(btnId.includes('INV-01')) btn.classList.add('bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400');
+                    if(btnId.includes('INV-02')) btn.classList.add('bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
+                }
+            });
+        }
+
+        // 5. RENDER DEL CARRITO
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            let html = '';
+            let total = 0;
+            
+            if(cart.length === 0) {
+                html = `
+                <div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10">
+                    <i class="fa-solid fa-bag-shopping text-6xl mb-4"></i>
+                    <p class="font-mono text-xs uppercase tracking-widest">Terminal vacía</p>
+                </div>`;
+            } else {
+                cart.forEach(item => {
+                    let itemTotal = item.price * item.qty;
+                    total += itemTotal;
+                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
+                    
+                    html += `
+                    <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex items-center justify-between gap-3 animate-fade-in-up">
+                        <div class="flex-1 overflow-hidden">
+                            <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
+                            <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
+                            <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay}</div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
+                            <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                            <span class="font-mono text-xs text-white w-3 text-center">${item.qty}</span>
+                            <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                        </div>
+                        <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-1 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>`;
+                });
+            }
+            
+            container.innerHTML = html;
+            document.getElementById('cart-subtotal').innerText = 'S/ ' + total.toFixed(2);
+            document.getElementById('cart-total').innerText = 'S/ ' + total.toFixed(2);
+        }
+
+        function updateFloatingAction() {
+            const btn = document.getElementById('floating-btn');
+            const icon = document.getElementById('floating-icon');
+            const ping = document.getElementById('floating-ping');
+            const label = document.getElementById('floating-label');
+            const badge = document.getElementById('cart-badge');
+
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+
+            if (totalItems > 0) {
+                btn.classList.remove('bg-[#25D366]', 'shadow-[0_0_20px_rgba(37,211,102,0.4)]', 'hover:shadow-[0_0_35px_rgba(37,211,102,0.8)]');
+                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]', 'hover:shadow-[0_0_35px_rgba(31,111,235,0.8)]');
+                ping.classList.replace('bg-[#25D366]', 'bg-[#1f6feb]');
+                
+                icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all duration-300 text-xl"; 
+                
+                label.innerText = "Revisar Orden";
+                label.classList.remove('text-[#25D366]', 'border-[#25D366]/30');
+                label.classList.add('text-[#58a6ff]', 'border-[#1f6feb]/30');
+
+                badge.innerText = totalItems;
+                badge.classList.remove('opacity-0', 'scale-0');
+                badge.classList.add('opacity-100', 'scale-100');
+
+            } else {
+                btn.classList.remove('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]', 'hover:shadow-[0_0_35px_rgba(31,111,235,0.8)]');
+                btn.classList.add('bg-[#25D366]', 'shadow-[0_0_20px_rgba(37,211,102,0.4)]', 'hover:shadow-[0_0_35px_rgba(37,211,102,0.8)]');
+                ping.classList.replace('bg-[#1f6feb]', 'bg-[#25D366]');
+
+                icon.className = "fa-brands fa-whatsapp relative z-10 transition-all duration-300 text-2xl";
+                
+                label.innerText = "Soporte en línea";
+                label.classList.remove('text-[#58a6ff]', 'border-[#1f6feb]/30');
+                label.classList.add('text-[#25D366]', 'border-[#25D366]/30');
+
+                badge.classList.remove('opacity-100', 'scale-100');
+                badge.classList.add('opacity-0', 'scale-0');
+            }
+        }
+
+        function handleFloatingAction() {
+            if (cart.length > 0) {
+                openCart();
+            } else {
+                const message = waMessages[currentView] || waMessages['hub'];
+                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+        }
+
+        // 6. GENERADOR DE TICKETS ESTRUCTURADOS PARA WHATSAPP
+        function sendOrder() {
+            if(cart.length === 0) return;
+            
+            let total = 0;
+            let message = `*SISTEMA CENTRAL - ORDEN DE SERVICIO* 💻\n`;
+            message += `ID: ${orderId}\n`;
+            message += "══════════════════════════\n\n";
+            
+            // Agrupar productos por categoría
+            const groups = {
+                'FINANCIERO': cart.filter(i => i.category === 'FINANCIERO'),
+                'DIGITAL': cart.filter(i => i.category === 'DIGITAL'),
+                'INVESTIGACIÓN': cart.filter(i => i.category === 'INVESTIGACIÓN')
+            };
+
+            const icons = { 'FINANCIERO': '🏦', 'DIGITAL': '⚡', 'INVESTIGACIÓN': '📡' };
+
+            for (const [cat, items] of Object.entries(groups)) {
+                if (items.length > 0) {
+                    message += `${icons[cat]} *PORTAL ${cat}*\n`;
+                    items.forEach(item => {
+                        let priceStr = item.price > 0 ? `S/ ${(item.price * item.qty).toFixed(2)}` : "Consultar";
+                        message += `▪️ ${item.qty}x ${item.name} (${priceStr})\n`;
+                        total += (item.price * item.qty);
+                    });
+                    message += "\n"; // Espacio entre grupos
+                }
+            }
+            
+            message += "══════════════════════════\n";
+            if(total > 0) {
+                message += `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}\n`;
+                message += "══════════════════════════\n";
+            }
+            message += "Hola 👋, deseo proceder con esta solicitud cifrada.";
+
+            closeCart();
+            window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function openCart() {
+            document.getElementById('cart-overlay').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('cart-drawer').classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeCart() {
+            document.getElementById('cart-overlay').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('cart-drawer').classList.add('translate-x-full');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        // --- CARRUSEL ---
         const evidenceData = [
             { cat: 'finanzas', src: 'referencias/finanzas1.png', fallback: 'https://placehold.co/400x500/0d1117/1f6feb?text=Finanzas', border: 'border-[#1f6feb]/30' },
             { cat: 'streaming', src: 'referencias/streaming1.png', fallback: 'https://placehold.co/400x500/0d1117/10b981?text=Streaming', border: 'border-[#10b981]/30' },
@@ -396,43 +761,106 @@
         function renderCarousel(filterCategory) {
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-                btn.classList.add('border-gray-700', 'text-gray-400');
+                btn.classList.add('border-gray-800', 'text-gray-500');
             });
             const activeBtn = document.getElementById('btn-' + filterCategory);
             activeBtn.classList.add('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-            activeBtn.classList.remove('border-gray-700', 'text-gray-400');
+            activeBtn.classList.remove('border-gray-800', 'text-gray-500');
 
             const track = document.getElementById('carousel-track');
-            
             track.style.animation = 'none';
             void track.offsetWidth; 
 
             let filtered = evidenceData.filter(item => filterCategory === 'all' || item.cat === filterCategory);
-            
             if(filtered.length === 0) filtered = evidenceData;
 
-            let multiplier = filterCategory === 'all' ? 2 : 4; 
+            let multiplier = filterCategory === 'all' ? 8 : 12; 
             let htmlContent = '';
             
             for(let i=0; i<multiplier; i++) {
                 filtered.forEach(item => {
                     htmlContent += `
-                    <div class="w-[200px] md:w-[250px] aspect-[4/5] rounded-xl overflow-hidden border ${item.border} relative flex-shrink-0 bg-[#0d1117]">
-                        <img src="${item.src}" onerror="this.src='${item.fallback}'" class="w-full h-full object-cover">
+                    <div class="w-[260px] md:w-[300px] rounded-xl overflow-hidden border ${item.border} relative flex-shrink-0 bg-[#0A0F16]/80 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.8)] p-2 flex items-center justify-center">
+                        <img src="${item.src}" onerror="this.src='${item.fallback}'" class="w-full h-auto rounded-lg object-contain relative z-0">
                     </div>`;
                 });
             }
-            
             track.innerHTML = htmlContent;
             
-            let speed = filtered.length * multiplier * 4; 
+            let speed = filtered.length * multiplier * 5; 
             if(speed < 20) speed = 20; 
-            
             track.style.animation = `scroll-left ${speed}s linear infinite`;
         }
 
+        // 7. NAVEGACIÓN INTELIGENTE (INTERCEPTOR)
+        function navigate(viewId, isBrowserBack = false, force = false) {
+            
+            // Si el cliente intenta ir al HUB y tiene cosas en el carrito, interceptamos!
+            if (!force && viewId === 'hub' && currentView !== 'hub' && cart.length > 0) {
+                showNavModal();
+                return; // Detenemos la navegación
+            }
+
+            currentView = viewId; 
+            updateFloatingAction();
+
+            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                el.classList.add('hidden-view');
+                el.classList.remove('animate-fade-in-up');
+            });
+            
+            const target = document.getElementById('view-' + viewId);
+            target.classList.remove('hidden-view');
+            void target.offsetWidth; 
+            target.classList.add('animate-fade-in-up');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            try {
+                if (!isBrowserBack) {
+                    if (viewId === 'hub') {
+                        history.pushState({ view: 'hub' }, '', '/');
+                    } else {
+                        history.pushState({ view: viewId }, '', '#' + viewId);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // Funciones del Modal Inteligente
+        function showNavModal() {
+            document.getElementById('smart-nav-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('smart-nav-card').classList.remove('scale-95');
+        }
+
+        function hideNavModal() {
+            document.getElementById('smart-nav-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('smart-nav-card').classList.add('scale-95');
+        }
+
+        function forceNavigateHub() {
+            hideNavModal();
+            navigate('hub', false, true); // force = true
+        }
+
+        function openCartFromModal() {
+            hideNavModal();
+            openCart();
+        }
+
+        window.onpopstate = function(event) {
+            if (event.state && event.state.view) {
+                navigate(event.state.view, true); 
+            } else {
+                navigate('hub', true); 
+            }
+            closeCart(); 
+        };
+
         window.onload = () => {
             renderCarousel('all'); 
+            try { history.replaceState({ view: 'hub' }, '', '/'); } catch(e) {}
 
             const splash = document.getElementById('splash-screen');
             setTimeout(() => {
@@ -443,22 +871,8 @@
                     hub.classList.remove('hidden-view');
                     hub.classList.add('animate-fade-in-up');
                 }, 700);
-            }, 1800); 
+            }, 1500); 
         };
-
-        function navigate(viewId) {
-            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                el.classList.add('hidden-view');
-                el.classList.remove('animate-fade-in-up');
-            });
-            const target = document.getElementById('view-' + viewId);
-            target.classList.remove('hidden-view');
-            void target.offsetWidth;
-            target.classList.add('animate-fade-in-up');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
     </script>
 </body>
 </html>
