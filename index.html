@@ -103,6 +103,64 @@
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- EFECTO CINEMÁTICO DE FOCO 3D (HYPER-FOCUS SNAP) --- */
+        @media (max-width: 768px) {
+            .portfolio-card {
+                /* Estado inactivo (Lejos, gris, borroso) */
+                opacity: 0.25;
+                transform: scale(0.88) translateY(15px) perspective(500px) rotateX(2deg);
+                filter: blur(2px) grayscale(100%);
+                transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+                position: relative;
+                z-index: 1;
+            }
+            .portfolio-card.in-view {
+                /* Estado activo (Frente, encendido, nítido) */
+                opacity: 1;
+                transform: scale(1.05) translateY(0) perspective(500px) rotateX(0deg); 
+                filter: blur(0) grayscale(0%);
+                z-index: 50;
+                background-color: rgba(13, 20, 31, 0.95) !important; /* Cristal más claro */
+            }
+            
+            /* El Destello Láser (Shimmer Sweep) */
+            .portfolio-card::after {
+                content: '';
+                position: absolute;
+                top: 0; left: -150%;
+                width: 50%; height: 100%;
+                background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+                transform: skewX(-25deg);
+                z-index: 20;
+                pointer-events: none;
+                opacity: 0;
+            }
+            .portfolio-card.in-view::after {
+                animation: shimmer-sweep 1s ease-out forwards;
+            }
+
+            /* Iluminación Radiactiva Extrema */
+            .card-fin.in-view { border-color: rgba(59,130,246,0.9) !important; box-shadow: 0 0 60px -10px rgba(59,130,246,0.5), inset 0 0 20px rgba(59,130,246,0.1) !important; }
+            .card-dig.in-view { border-color: rgba(16,185,129,0.9) !important; box-shadow: 0 0 60px -10px rgba(16,185,129,0.5), inset 0 0 20px rgba(16,185,129,0.1) !important; }
+            .card-inv.in-view { border-color: rgba(6,182,212,0.9) !important; box-shadow: 0 0 60px -10px rgba(6,182,212,0.5), inset 0 0 20px rgba(6,182,212,0.1) !important; }
+            
+            /* Reactor interno encendido */
+            .portfolio-card.in-view .glow-bg { opacity: 1 !important; }
+            .portfolio-card.in-view .glow-line { opacity: 1 !important; }
+            .portfolio-card.in-view .icon-box { 
+                transform: scale(1.15); 
+                background-color: rgba(255,255,255,0.1); 
+                border-color: currentColor; 
+                box-shadow: 0 0 25px currentColor; 
+            }
+        }
+
+        @keyframes shimmer-sweep {
+            0% { left: -100%; opacity: 0; }
+            10% { opacity: 1; }
+            100% { left: 200%; opacity: 0; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
@@ -123,7 +181,7 @@
     <div id="smart-nav-modal" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="smart-nav-card" class="bg-[#0A0F16] border border-blue-500/30 rounded-2xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-300">
             <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl mx-auto mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-                <i class="fa-solid fa-bag-shopping"></i>
+                <i class="fa-solid fa-cart-shopping"></i>
             </div>
             <h3 class="text-2xl font-bold text-white text-center mb-2">Orden en curso</h3>
             <p class="text-gray-400 text-center text-sm mb-8">Tienes servicios guardados en tu terminal. ¿Qué deseas hacer?</p>
@@ -166,7 +224,7 @@
                 <span id="cart-subtotal" class="font-mono text-white text-sm">S/ 0.00</span>
             </div>
             <div class="flex justify-between items-center mb-6">
-                <span class="text-gray-400 text-sm">Cifrado / Tasas</span>
+                <span class="text-gray-400 text-sm">Costos de Sistema</span>
                 <span class="font-mono text-emerald-400 text-sm">S/ 0.00</span>
             </div>
             <div class="flex justify-between items-end mb-6">
@@ -175,7 +233,7 @@
             </div>
             
             <button onclick="sendOrder()" class="w-full py-4 bg-[#25D366] hover:bg-[#1ebd5a] text-black rounded-xl text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(37,211,102,0.3)] flex items-center justify-center gap-3">
-                <i class="fa-brands fa-whatsapp text-xl"></i> Cifrar y Enviar Solicitud
+                <i class="fa-brands fa-whatsapp text-xl"></i> PROCESAR ORDEN DE SERVICIO
             </button>
         </div>
     </div>
@@ -233,18 +291,31 @@
                     <i class="fa-solid fa-shield-check text-emerald-400"></i> Acceso Autorizado
                 </div>
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white drop-shadow-md">Paneles de Gestión</h1>
-                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light tracking-wide">Seleccione la red de servicio para enrutar su solicitud a la central correspondiente.</p>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light tracking-wide mb-8">Seleccione el portal de servicio para gestionar su solicitud de forma segura e inmediata.</p>
+                
+                <!-- TELEMETRÍA DINÁMICA -->
+                <div class="flex justify-center gap-4 md:gap-8 flex-wrap">
+                    <div class="bg-[#0A0F16]/50 border border-blue-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
+                        <span id="stat-global" class="font-bold text-2xl text-white font-mono">0</span>
+                        <span class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Consultas Globales</span>
+                    </div>
+                    <div class="bg-[#0A0F16]/50 border border-emerald-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
+                        <span id="stat-hoy" class="font-bold text-2xl text-emerald-400 font-mono">+0</span>
+                        <span class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Prospectos Hoy</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- TARJETAS -->
+            <!-- TARJETAS DE PORTAFOLIO CON EFECTO CINEMÁTICO MÓVIL (FOCUS SNAP) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 mb-20">
-                <div onclick="navigate('financiero')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                
+                <div onclick="navigate('financiero')" class="portfolio-card card-fin group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="glow-bg absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            <div class="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
-                                <i class="fa-solid fa-wallet text-blue-400 text-2xl group-hover:text-blue-300"></i>
+                            <div class="icon-box w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.1)] text-blue-400">
+                                <i class="fa-solid fa-wallet text-2xl group-hover:text-blue-300"></i>
                             </div>
                             <div class="bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(59,130,246,0.8)]"></span>
@@ -262,13 +333,13 @@
                     </div>
                 </div>
 
-                <div onclick="navigate('digital')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(16,185,129,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
-                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                <div onclick="navigate('digital')" class="portfolio-card card-dig group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="glow-bg absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            <div class="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-                                <i class="fa-solid fa-terminal text-emerald-400 text-2xl group-hover:text-emerald-300"></i>
+                            <div class="icon-box w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.1)] text-emerald-400">
+                                <i class="fa-solid fa-terminal text-2xl group-hover:text-emerald-300"></i>
                             </div>
                             <div class="bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]"></span>
@@ -286,13 +357,13 @@
                     </div>
                 </div>
 
-                <div onclick="navigate('investigacion')" class="group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_-15px_rgba(6,182,212,0.3)] cursor-pointer overflow-hidden flex flex-col h-full">
-                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
+                <div onclick="navigate('investigacion')" class="portfolio-card card-inv group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
+                    <div class="glow-bg absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-30 group-hover:opacity-100 transition-all duration-500"></div>
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            <div class="w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                                <i class="fa-solid fa-satellite-dish text-cyan-400 text-2xl group-hover:text-cyan-300"></i>
+                            <div class="icon-box w-14 h-14 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:bg-cyan-500/20 transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.1)] text-cyan-400">
+                                <i class="fa-solid fa-satellite-dish text-2xl group-hover:text-cyan-300"></i>
                             </div>
                             <div class="bg-cyan-500/10 border border-cyan-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
                                 <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_5px_rgba(6,182,212,0.8)]"></span>
@@ -312,7 +383,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN CANAL (INTACTA) -->
+            <!-- SECCIÓN CANAL -->
             <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
                 <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
                 <div class="flex flex-col items-center text-center mb-8">
@@ -378,31 +449,27 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- ITEM FIN-01 -->
                 <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
                     <div class="absolute top-0 inset-x-0 h-1 bg-blue-600/30 group-hover:bg-blue-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-01</span>
-                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Reporte Score Total</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Extracción confidencial de su historial consolidado (Infocorp, Sentinel, Equifax y SBS).</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 15.00</div>
                     </div>
-                    <button id="btn-FIN-01" onclick="addToCart('FIN-01', 'Reporte Score Total', 15.00, 'FINANCIERO')" class="btn-product w-full py-4 bg-blue-600/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-FIN-01" onclick="addToCart('FIN-01', 'Reporte Score Total', 15.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-600/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
-                <!-- ITEM FIN-02 -->
                 <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-gray-600 transition-colors">
                     <div class="absolute top-0 inset-x-0 h-1 bg-gray-700/30 group-hover:bg-gray-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-02</span>
-                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Asesoría de Saneamiento</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Estrategia técnica para castigos bancarios y reinserción al sistema de crédito.</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 35.00</div>
                     </div>
-                    <button id="btn-FIN-02" onclick="addToCart('FIN-02', 'Asesoría de Saneamiento', 35.00, 'FINANCIERO')" class="btn-product w-full py-4 bg-gray-800/30 border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-FIN-02" onclick="addToCart('FIN-02', 'Asesoría de Saneamiento', 35.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-gray-800/30 border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
@@ -425,33 +492,29 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- ITEM DIG-01 -->
                 <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
                     <div class="absolute left-0 inset-y-0 w-1 bg-emerald-600/30 group-hover:bg-emerald-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-01</span>
-                    
                     <div class="mb-8">
                         <div class="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 mb-4"><i class="fa-brands fa-windows text-emerald-400 text-xl"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">Licencias Software</h3>
                         <p class="text-gray-400 text-sm">Sistemas operativos y ofimática original.</p>
                         <div class="text-lg mt-4 font-bold text-emerald-400 font-mono">Consultar</div>
                     </div>
-                    <button id="btn-DIG-01" onclick="addToCart('DIG-01', 'Cotización: Licencias Software', 0, 'DIGITAL')" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-DIG-01" onclick="addToCart('DIG-01', 'Cotización: Licencias Software', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
-                <!-- ITEM DIG-02 -->
                 <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-red-500/30 transition-colors">
                     <div class="absolute left-0 inset-y-0 w-1 bg-red-600/30 group-hover:bg-red-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-02</span>
-                    
                     <div class="mb-8">
                         <div class="w-12 h-12 rounded bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-4"><i class="fa-solid fa-play text-red-400 text-xl"></i></div>
                         <h3 class="text-xl font-bold text-white mb-2">Cuentas Streaming</h3>
                         <p class="text-gray-400 text-sm">Catálogo completo de entretenimiento digital.</p>
                         <div class="text-lg mt-4 font-bold text-red-400 font-mono">Ver Catálogo</div>
                     </div>
-                    <button id="btn-DIG-02" onclick="addToCart('DIG-02', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL')" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-DIG-02" onclick="addToCart('DIG-02', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
@@ -474,31 +537,27 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- ITEM INV-01 -->
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-cyan-500/30 transition-colors">
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-cyan-500/30 relative overflow-hidden group hover:border-cyan-500/50 transition-colors">
                     <div class="absolute top-0 inset-x-0 h-1 bg-cyan-600/30 group-hover:bg-cyan-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-01</span>
-                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Perfilado Básico</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Validación de identidad y estado en registros públicos.</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 40.00</div>
                     </div>
-                    <button id="btn-INV-01" onclick="addToCart('INV-01', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN')" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-INV-01" onclick="addToCart('INV-01', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
-                <!-- ITEM INV-02 -->
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-purple-500/30 transition-colors">
+                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-purple-500/30 relative overflow-hidden group hover:border-purple-500/50 transition-colors">
                     <div class="absolute top-0 inset-x-0 h-1 bg-purple-600/30 group-hover:bg-purple-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-02</span>
-                    
                     <div>
                         <h3 class="text-2xl font-bold text-white mb-3">Rastreo Profundo</h3>
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Auditoría de huella digital y presencia en la red.</p>
                         <div class="inline-block text-[10px] text-purple-400 border border-purple-500/30 bg-purple-500/10 font-mono mb-8 uppercase px-3 py-1 rounded">Estatus: Previa Evaluación</div>
                     </div>
-                    <button id="btn-INV-02" onclick="addToCart('INV-02', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN')" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-INV-02" onclick="addToCart('INV-02', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
@@ -519,7 +578,24 @@
     </footer>
 
     <script>
-        // --- MOTOR E-COMMERCE NIVEL DIOS (UX/UI AVANZADO) ---
+        // --- CÁLCULO DINÁMICO DIARIO DE ESTADÍSTICAS ---
+        function setLiveStats() {
+            const baseDate = new Date('2026-01-01').getTime();
+            const now = new Date();
+            const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
+            
+            const baseGlobal = 8135;
+            const globalTotal = baseGlobal + (daysPassed * 12);
+            
+            const hour = now.getHours();
+            const minutes = now.getMinutes();
+            const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
+            
+            document.getElementById('stat-global').innerText = globalTotal.toLocaleString('en-US');
+            document.getElementById('stat-hoy').innerText = '+' + prospectosHoy;
+        }
+
+        // --- MOTOR E-COMMERCE ---
         let cart = [];
         const WA_NUMBER = "51937751224";
         let currentView = 'hub';
@@ -534,29 +610,58 @@
             'investigacion': "Hola 👋, estoy en el Portal de Investigación y deseo hacer una consulta. 📡"
         };
 
-        // 1. ESCUDO ANTI-ACTUALIZACIÓN (PREVENIR PERDIDA DE DATOS)
         window.addEventListener('beforeunload', function (e) {
             if (cart.length > 0) {
                 e.preventDefault();
-                e.returnValue = ''; // Muestra el popup nativo del navegador
+                e.returnValue = ''; 
             }
         });
 
-        // 2. FUNCIÓN DE AÑADIR (CON CATEGORÍA)
-        function addToCart(id, name, price, category) {
+        // --- INTERCEPTOR DE SCROLL PARA CELULAR (FOCUS SNAP) ---
+        function initScrollObserver() {
+            if (window.innerWidth < 768) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            try { if(navigator.vibrate) navigator.vibrate(15); } catch(e){}
+                        } else {
+                            entry.target.classList.remove('in-view');
+                        }
+                    });
+                }, { threshold: 0.65 }); // Mayor exigencia para enfocar
+
+                document.querySelectorAll('.portfolio-card').forEach(card => {
+                    observer.observe(card);
+                });
+            }
+        }
+
+        function triggerHaptic() {
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+        }
+
+        function addToCart(id, name, price, category, btnElement) {
+            triggerHaptic();
             let item = cart.find(i => i.id === id);
             if(item) {
                 item.qty++;
             } else {
                 cart.push({ id, name, price, category, qty: 1 });
             }
-            syncProductButtons();
-            updateFloatingAction();
-            renderCart();
+            
+            btnElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> PROCESANDO...';
+            btnElement.classList.add('bg-blue-600/30', 'text-white', 'scale-95');
+            
+            setTimeout(() => { 
+                syncProductButtons();
+                updateFloatingAction();
+                renderCart();
+            }, 500);
         }
 
-        // 3. ACTUALIZAR CANTIDADES Y ELIMINAR
         function updateQty(id, change) {
+            triggerHaptic();
             let item = cart.find(i => i.id === id);
             if(item) {
                 item.qty += change;
@@ -571,6 +676,7 @@
         }
 
         function removeItem(id) {
+            triggerHaptic();
             cart = cart.filter(i => i.id !== id);
             syncProductButtons();
             updateFloatingAction();
@@ -578,25 +684,19 @@
             if(cart.length === 0) closeCart();
         }
 
-        // 4. SINCRONIZADOR VISUAL DE BOTONES DE PRODUCTO
         function syncProductButtons() {
-            // Buscamos todos los botones que tienen la clase 'btn-product'
             document.querySelectorAll('.btn-product').forEach(btn => {
-                const btnId = btn.id.replace('btn-', ''); // extrae 'FIN-01'
+                const btnId = btn.id.replace('btn-', ''); 
                 const inCartItem = cart.find(i => i.id === btnId);
                 
                 if (inCartItem) {
-                    // Estado Activo (En el carrito)
                     btn.innerHTML = `<i class="fa-solid fa-check"></i> EN LA ORDEN (${inCartItem.qty})`;
                     btn.classList.remove('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400', 'bg-gray-800/30', 'border-gray-700', 'text-gray-300', 'bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-600/10', 'border-red-500/30', 'text-red-400', 'bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400', 'bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
-                    // Forzamos un estilo genérico de "Seleccionado"
                     btn.classList.add('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
                 } else {
-                    // Restaurar al estado original
                     btn.innerHTML = `<i class="fa-solid fa-plus"></i> Añadir a la orden`;
                     btn.classList.remove('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
                     
-                    // Restaurar los colores según la familia original (basado en el ID)
                     if(btnId.includes('FIN-01')) btn.classList.add('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400');
                     if(btnId.includes('FIN-02')) btn.classList.add('bg-gray-800/30', 'border-gray-700', 'text-gray-300');
                     if(btnId.includes('DIG-01')) btn.classList.add('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400');
@@ -607,7 +707,6 @@
             });
         }
 
-        // 5. RENDER DEL CARRITO
         function renderCart() {
             const container = document.getElementById('cart-items');
             let html = '';
@@ -616,8 +715,8 @@
             if(cart.length === 0) {
                 html = `
                 <div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10">
-                    <i class="fa-solid fa-bag-shopping text-6xl mb-4"></i>
-                    <p class="font-mono text-xs uppercase tracking-widest">Terminal vacía</p>
+                    <i class="fa-solid fa-cart-shopping text-6xl mb-4"></i>
+                    <p class="font-mono text-xs uppercase tracking-widest mt-4">Terminal vacía</p>
                 </div>`;
             } else {
                 cart.forEach(item => {
@@ -698,7 +797,6 @@
             }
         }
 
-        // 6. GENERADOR DE TICKETS ESTRUCTURADOS PARA WHATSAPP
         function sendOrder() {
             if(cart.length === 0) return;
             
@@ -707,7 +805,6 @@
             message += `ID: ${orderId}\n`;
             message += "══════════════════════════\n\n";
             
-            // Agrupar productos por categoría
             const groups = {
                 'FINANCIERO': cart.filter(i => i.category === 'FINANCIERO'),
                 'DIGITAL': cart.filter(i => i.category === 'DIGITAL'),
@@ -724,7 +821,7 @@
                         message += `▪️ ${item.qty}x ${item.name} (${priceStr})\n`;
                         total += (item.price * item.qty);
                     });
-                    message += "\n"; // Espacio entre grupos
+                    message += "\n"; 
                 }
             }
             
@@ -733,9 +830,13 @@
                 message += `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}\n`;
                 message += "══════════════════════════\n";
             }
-            message += "Hola 👋, deseo proceder con esta solicitud cifrada.";
+            message += "Hola 👋, deseo procesar esta orden de servicio.";
 
             closeCart();
+            cart = []; 
+            syncProductButtons();
+            updateFloatingAction();
+            renderCart();
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
@@ -751,7 +852,68 @@
             document.body.style.overflow = 'auto'; 
         }
 
-        // --- CARRUSEL ---
+        function navigate(viewId, isBrowserBack = false, force = false) {
+            if (!force && viewId === 'hub' && currentView !== 'hub' && cart.length > 0) {
+                showNavModal();
+                return; 
+            }
+
+            currentView = viewId; 
+            updateFloatingAction();
+
+            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                el.classList.add('hidden-view');
+                el.classList.remove('animate-fade-in-up');
+            });
+            
+            const target = document.getElementById('view-' + viewId);
+            target.classList.remove('hidden-view');
+            void target.offsetWidth; 
+            target.classList.add('animate-fade-in-up');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            try {
+                if (!isBrowserBack) {
+                    if (viewId === 'hub') {
+                        history.pushState({ view: 'hub' }, '', '/');
+                    } else {
+                        history.pushState({ view: viewId }, '', '#' + viewId);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function showNavModal() {
+            document.getElementById('smart-nav-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('smart-nav-card').classList.remove('scale-95');
+        }
+
+        function hideNavModal() {
+            document.getElementById('smart-nav-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('smart-nav-card').classList.add('scale-95');
+        }
+
+        function forceNavigateHub() {
+            hideNavModal();
+            navigate('hub', false, true); 
+        }
+
+        function openCartFromModal() {
+            hideNavModal();
+            openCart();
+        }
+
+        window.onpopstate = function(event) {
+            if (event.state && event.state.view) {
+                navigate(event.state.view, true); 
+            } else {
+                navigate('hub', true); 
+            }
+            closeCart(); 
+        };
+
         const evidenceData = [
             { cat: 'finanzas', src: 'referencias/finanzas1.png', fallback: 'https://placehold.co/400x500/0d1117/1f6feb?text=Finanzas', border: 'border-[#1f6feb]/30' },
             { cat: 'streaming', src: 'referencias/streaming1.png', fallback: 'https://placehold.co/400x500/0d1117/10b981?text=Streaming', border: 'border-[#10b981]/30' },
@@ -792,73 +954,9 @@
             track.style.animation = `scroll-left ${speed}s linear infinite`;
         }
 
-        // 7. NAVEGACIÓN INTELIGENTE (INTERCEPTOR)
-        function navigate(viewId, isBrowserBack = false, force = false) {
-            
-            // Si el cliente intenta ir al HUB y tiene cosas en el carrito, interceptamos!
-            if (!force && viewId === 'hub' && currentView !== 'hub' && cart.length > 0) {
-                showNavModal();
-                return; // Detenemos la navegación
-            }
-
-            currentView = viewId; 
-            updateFloatingAction();
-
-            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                el.classList.add('hidden-view');
-                el.classList.remove('animate-fade-in-up');
-            });
-            
-            const target = document.getElementById('view-' + viewId);
-            target.classList.remove('hidden-view');
-            void target.offsetWidth; 
-            target.classList.add('animate-fade-in-up');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            try {
-                if (!isBrowserBack) {
-                    if (viewId === 'hub') {
-                        history.pushState({ view: 'hub' }, '', '/');
-                    } else {
-                        history.pushState({ view: viewId }, '', '#' + viewId);
-                    }
-                }
-            } catch (e) {}
-        }
-
-        // Funciones del Modal Inteligente
-        function showNavModal() {
-            document.getElementById('smart-nav-modal').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('smart-nav-card').classList.remove('scale-95');
-        }
-
-        function hideNavModal() {
-            document.getElementById('smart-nav-modal').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('smart-nav-card').classList.add('scale-95');
-        }
-
-        function forceNavigateHub() {
-            hideNavModal();
-            navigate('hub', false, true); // force = true
-        }
-
-        function openCartFromModal() {
-            hideNavModal();
-            openCart();
-        }
-
-        window.onpopstate = function(event) {
-            if (event.state && event.state.view) {
-                navigate(event.state.view, true); 
-            } else {
-                navigate('hub', true); 
-            }
-            closeCart(); 
-        };
-
         window.onload = () => {
+            setLiveStats();
+            initScrollObserver();
             renderCarousel('all'); 
             try { history.replaceState({ view: 'hub' }, '', '/'); } catch(e) {}
 
