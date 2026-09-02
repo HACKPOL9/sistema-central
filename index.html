@@ -107,64 +107,52 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* ============================================================ */
-        /* EL MINI-CARRUSEL INTERNO DE LOGOS (RESTAURADO Y MEJORADO)    */
-        /* ============================================================ */
-        
-        .mini-carousel-container {
-            display: flex;
-            width: 132px; /* 💡 Límite exacto para que solo entren 3 círculos a la vez */
+        /* CARRUSEL SUPERIOR DE 3 CÍRCULOS (TOP-DOCK CAROUSEL) */
+        .top-carousel-wrapper {
+            width: 168px; 
+            height: 48px;
             overflow: hidden;
             position: relative;
             mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
         }
-
-        .mini-carousel-track {
+        .top-carousel-track {
             display: flex;
-            gap: 12px; 
             width: max-content;
-            /* Se pausa por defecto, solo se mueve cuando está enfocado o hover */
-            animation: mini-scroll linear infinite;
+            animation: top-scroll linear infinite;
             animation-play-state: paused;
             will-change: transform;
         }
-
-        /* Activar el movimiento solo cuando la tarjeta está en el centro o tiene hover */
-        .portfolio-card:hover .mini-carousel-track,
-        .portfolio-card.in-view .mini-carousel-track {
+        .portfolio-card:hover .top-carousel-track,
+        .portfolio-card.in-view .top-carousel-track {
             animation-play-state: running;
         }
-
-        @keyframes mini-scroll {
+        @keyframes top-scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Va a la mitad porque clonamos el contenido */
+            100% { transform: translateX(-50%); }
         }
-
-        .mini-logo-box {
-            width: 36px;
-            height: 36px;
+        .circle-logo {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background-color: rgba(255,255,255,0.02);
+            background-color: rgba(255,255,255,0.03);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
             transition: all 0.3s ease;
         }
-
-        /* Troquel redondo perfecto para tus PNGs locales */
-        .mini-logo-box img {
+        .circle-logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            transform: scale(0.85); /* Margen sutil interno */
+            transform: scale(0.85);
         }
 
-        /* --- SCROLL EN CELULAR (FOCUS SNAP) --- */
+        /* SCROLL EN CELULAR (FOCUS SNAP) */
         @media (max-width: 768px) {
             .portfolio-card {
                 opacity: 0.4;
@@ -180,7 +168,6 @@
                 z-index: 50;
                 background-color: rgba(13, 20, 31, 0.95) !important;
             }
-            
             .card-fin.in-view { border-color: rgba(59,130,246,0.5) !important; box-shadow: 0 20px 50px -10px rgba(59,130,246,0.35) !important; }
             .card-dig.in-view { border-color: rgba(16,185,129,0.5) !important; box-shadow: 0 20px 50px -10px rgba(16,185,129,0.35) !important; }
             .card-inv.in-view { border-color: rgba(6,182,212,0.5) !important; box-shadow: 0 20px 50px -10px rgba(6,182,212,0.35) !important; }
@@ -188,21 +175,62 @@
             .portfolio-card.in-view .glow-bg { opacity: 0.8 !important; }
             .portfolio-card.in-view .glow-line { opacity: 1 !important; }
             
-            /* Iluminación de los íconos fijos y los logos del carrusel */
-            .portfolio-card.in-view .icon-box { background-color: rgba(255,255,255,0.08); border-color: currentColor; }
-            .card-fin.in-view .mini-logo-box { border-color: rgba(59,130,246,0.4); background-color: rgba(59,130,246,0.1); }
-            .card-dig.in-view .mini-logo-box { border-color: rgba(16,185,129,0.4); background-color: rgba(16,185,129,0.1); }
-            .card-inv.in-view .mini-logo-box { border-color: rgba(6,182,212,0.4); background-color: rgba(6,182,212,0.1); }
+            .card-fin.in-view .circle-logo { border-color: rgba(59,130,246,0.3); background-color: rgba(59,130,246,0.1); color: #60a5fa;}
+            .card-dig.in-view .circle-logo { border-color: rgba(16,185,129,0.3); background-color: rgba(16,185,129,0.1); color: #34d399;}
+            .card-inv.in-view .circle-logo { border-color: rgba(6,182,212,0.3); background-color: rgba(6,182,212,0.1); color: #22d3ee;}
         }
         
-        /* Efecto Hover PC para los íconos */
-        .card-fin:hover .mini-logo-box { border-color: rgba(59,130,246,0.4); background-color: rgba(59,130,246,0.1); }
-        .card-dig:hover .mini-logo-box { border-color: rgba(16,185,129,0.4); background-color: rgba(16,185,129,0.1); }
-        .card-inv:hover .mini-logo-box { border-color: rgba(6,182,212,0.4); background-color: rgba(6,182,212,0.1); }
+        .card-fin:hover .circle-logo { border-color: rgba(59,130,246,0.3); background-color: rgba(59,130,246,0.1); color: #60a5fa;}
+        .card-dig:hover .circle-logo { border-color: rgba(16,185,129,0.3); background-color: rgba(16,185,129,0.1); color: #34d399;}
+        .card-inv:hover .circle-logo { border-color: rgba(6,182,212,0.3); background-color: rgba(6,182,212,0.1); color: #22d3ee;}
+
+        /* ESTILOS DE CATÁLOGO COMPACTO */
+        .compact-card {
+            background: linear-gradient(145deg, rgba(10,15,22,0.9) 0%, rgba(5,8,13,0.95) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .compact-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        /* INPUTS DEL CARRITO INTELIGENTE */
+        .dni-input {
+            background-color: rgba(0,0,0,0.3);
+            border: 1px solid rgba(59,130,246,0.3);
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            padding: 8px 12px;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .dni-input:focus { border-color: #58a6ff; }
+        .dni-input::placeholder { color: #4b5563; }
+        
+        .type-selector {
+            background-color: rgba(30,58,138,0.2);
+            border: 1px solid rgba(59,130,246,0.3);
+            color: #58a6ff;
+            font-family: 'Fira Code', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 0 8px;
+            outline: none;
+            cursor: pointer;
+        }
+        .type-selector option {
+            background-color: #0A0F16;
+            color: white;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
 
+    <!-- FONDOS -->
     <div class="fixed inset-0 z-0 bg-[#02050A]"></div>
     <div class="bg-noise"></div>
     <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-60"></div>
@@ -212,6 +240,7 @@
         <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
     </div>
 
+    <!-- MODAL NAVEGADOR INTELIGENTE -->
     <div id="smart-nav-modal" class="fixed inset-0 z-[300] bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="smart-nav-card" class="bg-[#0A0F16] border border-blue-500/30 rounded-2xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-95 transition-transform duration-300">
             <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl mx-auto mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
@@ -230,8 +259,8 @@
         </div>
     </div>
 
+    <!-- TERMINAL DE ÓRDENES (CARRITO CON EXTRACCIÓN DE DATOS) -->
     <div id="cart-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeCart()"></div>
-    
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-[#0A0F16]/95 backdrop-blur-2xl z-[200] border-l border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.8)] transform translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
         <div class="px-6 py-5 border-b border-gray-800 flex justify-between items-center bg-[#02050A]/50">
             <div class="flex flex-col">
@@ -261,12 +290,52 @@
                 <span id="cart-total" class="font-mono text-[#58a6ff] text-3xl font-bold">S/ 0.00</span>
             </div>
             
-            <button onclick="sendOrder()" class="w-full py-4 bg-[#25D366] hover:bg-[#1ebd5a] text-black rounded-xl text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(37,211,102,0.3)] flex items-center justify-center gap-3">
-                <i class="fa-brands fa-whatsapp text-xl"></i> PROCESAR ORDEN DE SERVICIO
+            <button onclick="processToPaymentModal()" class="w-full py-4 bg-[#1f6feb] hover:bg-blue-600 text-white rounded-xl text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(31,111,235,0.4)] flex items-center justify-center gap-3">
+                <i class="fa-solid fa-bolt"></i> IR A PASARELA DE PAGO
             </button>
         </div>
     </div>
 
+    <!-- LA BÓVEDA DE PAGO (EDGAR POL) -->
+    <div id="payment-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="payment-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+            
+            <div class="bg-gradient-to-r from-[#02050A] to-[#0A0F16] p-6 border-b border-gray-800 flex justify-between items-start">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-lock text-emerald-400 mr-2"></i>Bóveda de Pago</h3>
+                    <p class="font-mono text-[9px] text-gray-500 uppercase tracking-widest">Abono Seguro Nacional</p>
+                </div>
+                <button onclick="closePaymentModal()" class="text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="p-6 flex flex-col items-center">
+                <div class="flex gap-4 mb-6">
+                    <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold italic shadow-[0_0_15px_rgba(147,51,234,0.4)]">Y</div>
+                    <div class="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold italic shadow-[0_0_15px_rgba(14,165,233,0.4)]">P</div>
+                </div>
+
+                <div class="text-gray-400 text-xs mb-1 uppercase tracking-widest font-mono">Titular de la cuenta</div>
+                <div class="text-xl font-bold text-white mb-6">EDGAR POL</div>
+
+                <div class="bg-black/50 border border-gray-800 rounded-xl w-full p-4 flex flex-col items-center mb-6 relative">
+                    <span class="text-gray-500 text-[10px] uppercase font-mono tracking-widest absolute top-2 left-3">N° Billetera:</span>
+                    <div id="payment-number" class="text-4xl font-black text-[#58a6ff] tracking-wider mt-4">975040527</div>
+                    
+                    <button onclick="copyNumber()" id="btn-copy" class="mt-4 w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-copy"></i> Copiar Número
+                    </button>
+                </div>
+                
+                <p class="text-center text-xs text-gray-400 mb-6 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 p-3 rounded-lg"><i class="fa-solid fa-circle-exclamation mr-1"></i> Copia el número para que puedas realizar el pago en tu App.</p>
+
+                <button id="btn-final-whatsapp" disabled onclick="sendFinalWhatsApp()" class="w-full py-4 bg-gray-800 text-gray-500 cursor-not-allowed rounded-xl text-center font-bold text-xs tracking-widest uppercase transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> YA PAGUÉ (Notificar)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN TÁCTICO FLOTANTE -->
     <div class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] group flex items-center gap-3 cursor-pointer" onclick="handleFloatingAction()">
         <span id="floating-label" class="hidden md:block opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 bg-[#0A0F16]/90 border border-[#25D366]/30 text-[#25D366] text-[10px] font-mono px-3 py-1.5 rounded shadow-[0_0_15px_rgba(37,211,102,0.2)] uppercase tracking-widest backdrop-blur-md">
             Soporte en línea
@@ -278,7 +347,8 @@
         </div>
     </div>
 
-    <div id="splash-screen" class="fixed inset-0 z-[100] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-700">
+    <!-- BOOT SCREEN -->
+    <div id="splash-screen" class="fixed inset-0 z-[200] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-700">
         <div class="bg-noise"></div>
         <div class="relative animate-float">
             <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-3xl"></div>
@@ -309,6 +379,7 @@
 
     <main class="flex-grow px-4 md:px-8 py-8 md:py-16 max-w-7xl mx-auto w-full relative z-10 flex flex-col justify-start">
 
+        <!-- ============================== VISTA HUB (INTACTA) ============================== -->
         <div id="view-hub" class="hidden-view w-full">
             <div class="mb-14 flex flex-col items-center text-center">
                 <div class="font-mono text-[10px] text-emerald-400 border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 rounded-full tracking-widest mb-6 uppercase flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
@@ -329,42 +400,44 @@
                 </div>
             </div>
 
+            <!-- TARJETAS DEL HUB -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 mb-20">
-                
                 <div onclick="navigate('financiero')" class="portfolio-card card-fin group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
                     <div class="glow-bg absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="flex justify-between items-start mb-8">
-                            <div class="icon-box w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.1)] transition-all duration-300">
-                                <i class="fa-solid fa-wallet text-2xl group-hover:text-blue-300"></i>
-                            </div>
-
-                            <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
-                                <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"></i>
-                                <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
-                            </div>
+                    <div class="absolute top-6 right-6 z-20 bg-orange-500/10 border border-orange-500/30 px-3 py-2 rounded-lg flex flex-col items-center justify-center gap-1 group-hover:bg-orange-500/20 transition-colors shadow-[0_0_10px_rgba(249,115,22,0.1)]">
+                        <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)] text-[10px]"></i>
+                        <div class="flex flex-col text-center leading-[1.1]">
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Alta</span>
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Demanda</span>
                         </div>
+                    </div>
 
-                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-50 transition-colors">Portal Financiero</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-6 group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
-                        
-                        <div class="mt-auto mb-6">
-                            <span class="font-mono text-[8px] text-blue-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Conexiones Seguras:</span>
-                            <div class="mini-carousel-container">
-                                <div class="mini-carousel-track" style="animation-duration: 8s;">
-                                    <div class="mini-logo-box"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                    <div class="relative z-10 flex flex-col h-full mt-1">
+                        <div class="flex items-start mb-8">
+                            <div class="top-carousel-wrapper text-gray-500">
+                                <div class="top-carousel-track" style="animation-duration: 12s;">
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-wallet text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                    </div>
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-wallet text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-50 transition-colors">Portal Financiero</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
+                        
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-blue-400 font-bold uppercase tracking-widest group-hover:text-blue-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -377,44 +450,48 @@
                     <div class="glow-bg absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="flex justify-between items-start mb-8">
-                            <div class="icon-box w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.1)] transition-all duration-300">
-                                <i class="fa-solid fa-terminal text-2xl group-hover:text-emerald-300"></i>
-                            </div>
-
-                            <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
-                                <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"></i>
-                                <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
-                            </div>
+                    <div class="absolute top-6 right-6 z-20 bg-orange-500/10 border border-orange-500/30 px-3 py-2 rounded-lg flex flex-col items-center justify-center gap-1 group-hover:bg-orange-500/20 transition-colors shadow-[0_0_10px_rgba(249,115,22,0.1)]">
+                        <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)] text-[10px]"></i>
+                        <div class="flex flex-col text-center leading-[1.1]">
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Alta</span>
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Demanda</span>
                         </div>
+                    </div>
 
-                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-50 transition-colors">Portal Digital</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow group-hover:text-gray-300 transition-colors">Despliegue de software profesional, licencias operativas y suscripciones de streaming corporativo.</p>
-                        
-                        <div class="mt-auto mb-6">
-                            <span class="font-mono text-[8px] text-emerald-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Catálogo Integrado:</span>
-                            <div class="mini-carousel-container">
-                                <div class="mini-carousel-track" style="animation-duration: 18s;">
-                                    <div class="mini-logo-box"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
+                    <div class="relative z-10 flex flex-col h-full mt-1">
+                        <div class="flex items-start mb-8">
+                            <div class="top-carousel-wrapper text-gray-500">
+                                <div class="top-carousel-track" style="animation-duration: 24s;">
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-terminal text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
+                                    </div>
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-terminal text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-emerald-500/30 transition-colors">
+                        <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-50 transition-colors">Portal Digital</h2>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Despliegue de software profesional, licencias operativas y suscripciones de streaming corporativo.</p>
+                        
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-emerald-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest group-hover:text-emerald-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -427,55 +504,57 @@
                     <div class="glow-bg absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
-                    <div class="relative z-10 flex flex-col h-full">
-                        <div class="flex justify-between items-start mb-8">
-                            <div class="icon-box w-14 h-14 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-all duration-300">
-                                <i class="fa-solid fa-satellite-dish text-2xl group-hover:text-cyan-300"></i>
-                            </div>
+                    <div class="absolute top-6 right-6 z-20 bg-orange-500/10 border border-orange-500/30 px-3 py-2 rounded-lg flex flex-col items-center justify-center gap-1 group-hover:bg-orange-500/20 transition-colors shadow-[0_0_10px_rgba(249,115,22,0.1)]">
+                        <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)] text-[10px]"></i>
+                        <div class="flex flex-col text-center leading-[1.1]">
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Alta</span>
+                            <span class="font-mono text-[7px] text-orange-400 uppercase tracking-widest font-bold">Demanda</span>
+                        </div>
+                    </div>
 
-                            <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
-                                <i class="fa-solid fa-fire text-orange-500 animate-pulse drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"></i>
-                                <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
+                    <div class="relative z-10 flex flex-col h-full mt-1">
+                        <div class="flex items-start mb-8">
+                            <div class="top-carousel-wrapper text-gray-500">
+                                <div class="top-carousel-track" style="animation-duration: 35s;">
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-satellite-dish text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/3.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/4.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/5.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/6.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/7.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/8.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/9.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/10.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/11.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                    </div>
+                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
+                                        <div class="circle-logo"><i class="fa-solid fa-satellite-dish text-xl"></i></div>
+                                        <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/3.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/4.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/5.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/6.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/7.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/8.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/9.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/10.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/11.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <h2 class="text-2xl font-bold text-white mb-1 group-hover:text-cyan-50 transition-colors">Portal Investigación</h2>
                         <p class="font-mono text-[8px] text-cyan-500/80 tracking-widest mb-4 uppercase group-hover:text-cyan-400 transition-colors">/// Central Consultas</p>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow group-hover:text-gray-300 transition-colors">Auditoría, validación de perfiles, antecedentes, OSINT e inteligencia de datos estructurados.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Auditoría, validación de perfiles, antecedentes, OSINT e inteligencia de datos estructurados.</p>
                         
-                        <div class="mt-auto mb-6">
-                            <span class="font-mono text-[8px] text-cyan-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Nodos Activos:</span>
-                            <div class="mini-carousel-container">
-                                <div class="mini-carousel-track" style="animation-duration: 30s;">
-                                    <div class="mini-logo-box"><img src="logo/1.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/2.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/3.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/4.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/5.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/6.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/7.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/8.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/9.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/10.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/11.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/12.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/1.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/2.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/3.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/4.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/5.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/6.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/7.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/8.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/9.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/10.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/11.png" onerror="this.style.display='none'"></div>
-                                    <div class="mini-logo-box"><img src="logo/12.png" onerror="this.style.display='none'"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-cyan-500/30 transition-colors">
+                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-cyan-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest group-hover:text-cyan-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -485,6 +564,7 @@
                 </div>
             </div>
 
+            <!-- SECCIÓN CANAL OFICIAL -->
             <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
                 <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
                 <div class="flex flex-col items-center text-center mb-8">
@@ -505,7 +585,6 @@
                         <div class="space-y-3 mb-8">
                             <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros Infocorp, Sentinel, Equifax y SBS</strong>.</p></div>
                             <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> (Netflix, Disney+, ChatGPT y más).</p></div>
-                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Validaciones, investigaciones y trámites documentarios rápidos.</p></div>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="flex-1 py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
@@ -516,6 +595,7 @@
                 </div>
             </div>
 
+            <!-- CARRUSEL INFERIOR DE EVIDENCIAS -->
             <div class="mb-10">
                 <div class="flex flex-col items-center text-center mb-8">
                     <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
@@ -533,64 +613,132 @@
             </div>
         </div>
 
+        <!-- ========================================================= -->
+        <!-- ================ PORTAL FINANCIERO (CATÁLOGO PRO COMPACTO) -->
+        <!-- ========================================================= -->
         <div id="view-financiero" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
-                <i class="fa-solid fa-angle-left"></i> Retornar al Hub
-            </button>
-            <div class="mb-10 border-b border-gray-800 pb-6 relative">
-                <div class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-blue-500/30 uppercase tracking-widest">
-                    <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span> Sistema Encriptado
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
+                <div>
+                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
+                        <i class="fa-solid fa-arrow-left"></i> Retornar al Hub
+                    </button>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-wallet text-blue-500"></i> Portal Financiero
+                    </h2>
+                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Servicios de Riesgo</p>
                 </div>
-                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-wallet text-blue-500"></i> Portal Financiero
-                </h2>
-                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Servicios de Riesgo</p>
+                <div class="flex flex-col items-start md:items-end gap-2">
+                    <div class="animate-pulse flex items-center gap-2 text-blue-400 text-[10px] font-mono border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span> Conexión Segura Activa
+                    </div>
+                </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-blue-500/30 transition-colors">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-blue-600/30 group-hover:bg-blue-500 transition-colors"></div>
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-01</span>
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Reporte Score Total</h3>
-                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Extracción confidencial de su historial consolidado (Infocorp, Sentinel, Equifax y SBS).</p>
-                        <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 15.00</div>
+            <!-- TARJETAS COMPACTAS (CERO RODEOS - LOGO GRANDE ARRIBA) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="compact-card relative rounded-2xl p-6 flex flex-col group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.1)] overflow-hidden p-2">
+                            <img src="logo/sentinel.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                        </div>
                     </div>
-                    <button id="btn-FIN-01" onclick="addToCart('FIN-01', 'Reporte Score Total', 15.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-600/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600/20 hover:text-blue-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Añadir a la orden
-                    </button>
-                </div>
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-gray-600 transition-colors">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gray-700/30 group-hover:bg-gray-500 transition-colors"></div>
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: FIN-02</span>
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Asesoría de Saneamiento</h3>
-                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Estrategia técnica para castigos bancarios y reinserción al sistema de crédito.</p>
-                        <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 35.00</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Reporte Sentinel</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-gray-500 font-mono text-xl">S/</span>
+                        <span class="text-5xl font-black text-white tracking-tighter">4</span>
+                        <span class="text-gray-500 font-mono text-sm">.00</span>
                     </div>
-                    <button id="btn-FIN-02" onclick="addToCart('FIN-02', 'Asesoría de Saneamiento', 35.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-gray-800/30 border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Añadir a la orden
-                    </button>
+                    <div class="mt-auto">
+                        <button id="btn-FIN-SNT" onclick="addToCart('FIN-SNT', 'Reporte Sentinel', 4.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Añadir a la orden
+                        </button>
+                    </div>
                 </div>
+
+                <div class="compact-card relative rounded-2xl p-6 flex flex-col group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.1)] overflow-hidden p-2">
+                            <img src="logo/equifax.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Reporte Equifax</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-gray-500 font-mono text-xl">S/</span>
+                        <span class="text-5xl font-black text-white tracking-tighter">7</span>
+                        <span class="text-gray-500 font-mono text-sm">.00</span>
+                    </div>
+                    <div class="mt-auto">
+                        <button id="btn-FIN-EQF" onclick="addToCart('FIN-EQF', 'Reporte Equifax', 7.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Añadir a la orden
+                        </button>
+                    </div>
+                </div>
+
+                <div class="compact-card relative rounded-2xl p-6 flex flex-col group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.1)] overflow-hidden p-2">
+                            <img src="logo/sbs.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">SBS Deudas Ant.</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-gray-500 font-mono text-xl">S/</span>
+                        <span class="text-5xl font-black text-white tracking-tighter">8</span>
+                        <span class="text-gray-500 font-mono text-sm">.00</span>
+                    </div>
+                    <div class="mt-auto">
+                        <button id="btn-FIN-SBS" onclick="addToCart('FIN-SBS', 'Reporte SBS Deudas Antiguas', 8.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Añadir a la orden
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- EL COMBO TOTAL COMPACTO -->
+                <div class="compact-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-6 border border-blue-500/40 shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] transition-all duration-300 flex flex-col group overflow-hidden">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600"></div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                            <i class="fa-solid fa-gem text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[9px] text-blue-300 border border-blue-500/30 bg-blue-500/10 px-2 py-1 rounded">OFERTA 3 EN 1</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Score Inteligente</h3>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-gray-500 font-mono text-xl">S/</span>
+                        <span class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 tracking-tighter">15</span>
+                        <span class="text-gray-500 font-mono text-sm">.00</span>
+                    </div>
+                    <div class="mt-auto">
+                        <button id="btn-FIN-COMBO" onclick="addToCart('FIN-COMBO', 'Combo: Score Inteligente', 15.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-600 text-white hover:bg-blue-500 rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(59,130,246,0.4)]">
+                            <i class="fa-solid fa-cart-arrow-down"></i> Añadir Combo
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
+        <!-- ========================================================= -->
+        <!-- ================ PORTAL DIGITAL ========================== -->
+        <!-- ========================================================= -->
         <div id="view-digital" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
-                <i class="fa-solid fa-angle-left"></i> Retornar al Hub
-            </button>
-            <div class="mb-10 border-b border-gray-800 pb-6 relative">
-                <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-emerald-500/30 uppercase tracking-widest">
-                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Sistema Encriptado
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
+                <div>
+                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
+                        <i class="fa-solid fa-arrow-left"></i> Retornar al Hub
+                    </button>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-terminal text-emerald-500"></i> Portal Digital
+                    </h2>
+                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Software y Streaming</p>
                 </div>
-                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-terminal text-emerald-500"></i> Portal Digital
-                </h2>
-                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Software y Streaming</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-emerald-500/30 transition-colors">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- PRODUCTO DIGITAL 1 -->
+                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-gray-800 hover:border-emerald-500/30 transition-colors group">
                     <div class="absolute left-0 inset-y-0 w-1 bg-emerald-600/30 group-hover:bg-emerald-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-01</span>
                     <div class="mb-8">
@@ -599,11 +747,12 @@
                         <p class="text-gray-400 text-sm">Sistemas operativos y ofimática original.</p>
                         <div class="text-lg mt-4 font-bold text-emerald-400 font-mono">Consultar</div>
                     </div>
-                    <button id="btn-DIG-01" onclick="addToCart('DIG-01', 'Cotización: Licencias Software', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    <button id="btn-DIG-WIN" onclick="addToCart('DIG-WIN', 'Cotización: Licencias Software', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Cotizar
                     </button>
                 </div>
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-gray-800 relative overflow-hidden group hover:border-red-500/30 transition-colors">
+                <!-- PRODUCTO DIGITAL 2 -->
+                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-gray-800 hover:border-red-500/30 transition-colors group">
                     <div class="absolute left-0 inset-y-0 w-1 bg-red-600/30 group-hover:bg-red-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-02</span>
                     <div class="mb-8">
@@ -612,29 +761,32 @@
                         <p class="text-gray-400 text-sm">Catálogo completo de entretenimiento digital.</p>
                         <div class="text-lg mt-4 font-bold text-red-400 font-mono">Ver Catálogo</div>
                     </div>
-                    <button id="btn-DIG-02" onclick="addToCart('DIG-02', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    <button id="btn-DIG-STR" onclick="addToCart('DIG-STR', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Ver Catálogo
                     </button>
                 </div>
             </div>
         </div>
 
+        <!-- ========================================================= -->
+        <!-- ================ PORTAL INVESTIGACIÓN ==================== -->
+        <!-- ========================================================= -->
         <div id="view-investigacion" class="hidden-view w-full">
-            <button onclick="navigate('hub')" class="mb-8 font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 uppercase tracking-widest border border-transparent hover:border-gray-700 px-3 rounded transition-all w-fit bg-gray-900/50">
-                <i class="fa-solid fa-angle-left"></i> Retornar al Hub
-            </button>
-            <div class="mb-10 border-b border-gray-800 pb-6 relative">
-                <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded text-[10px] font-mono mb-4 w-fit border border-cyan-500/30 uppercase tracking-widest">
-                    <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span> Sistema Encriptado
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
+                <div>
+                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
+                        <i class="fa-solid fa-arrow-left"></i> Retornar al Hub
+                    </button>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-radar text-cyan-500"></i> Portal Investigación
+                    </h2>
+                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Inteligencia de Datos Estructurados</p>
                 </div>
-                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-radar text-cyan-500"></i> Portal Investigación
-                </h2>
-                <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Inteligencia de Datos</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-cyan-500/30 relative overflow-hidden group hover:border-cyan-500/50 transition-colors">
+                <!-- PRODUCTO INVESTIGACIÓN 1 -->
+                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-cyan-500/30 hover:border-cyan-500/50 transition-colors group">
                     <div class="absolute top-0 inset-x-0 h-1 bg-cyan-600/30 group-hover:bg-cyan-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-01</span>
                     <div>
@@ -642,11 +794,12 @@
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Validación de identidad y estado en registros públicos.</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 40.00</div>
                     </div>
-                    <button id="btn-INV-01" onclick="addToCart('INV-01', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                    <button id="btn-INV-BAS" onclick="addToCart('INV-BAS', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-solid fa-plus"></i> Añadir a la orden
                     </button>
                 </div>
-                <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-8 flex flex-col justify-between border border-purple-500/30 relative overflow-hidden group hover:border-purple-500/50 transition-colors">
+                <!-- PRODUCTO INVESTIGACIÓN 2 -->
+                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-purple-500/30 hover:border-purple-500/50 transition-colors group">
                     <div class="absolute top-0 inset-x-0 h-1 bg-purple-600/30 group-hover:bg-purple-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-02</span>
                     <div>
@@ -654,8 +807,8 @@
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Auditoría de huella digital y presencia en la red.</p>
                         <div class="inline-block text-[10px] text-purple-400 border border-purple-500/30 bg-purple-500/10 font-mono mb-8 uppercase px-3 py-1 rounded">Estatus: Previa Evaluación</div>
                     </div>
-                    <button id="btn-INV-02" onclick="addToCart('INV-02', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Añadir a la orden
+                    <button id="btn-INV-PRO" onclick="addToCart('INV-PRO', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Evaluar Caso
                     </button>
                 </div>
             </div>
@@ -675,111 +828,155 @@
     </footer>
 
     <script>
+        // BLOQUE 1: FUNCIONES DE ARRANQUE SEGURAS
         function setLiveStats() {
-            const baseDate = new Date('2026-01-01').getTime();
-            const now = new Date();
-            const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
-            
-            const baseGlobal = 8135;
-            const globalTotal = baseGlobal + (daysPassed * 12);
-            
-            const hour = now.getHours();
-            const minutes = now.getMinutes();
-            const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
-            
-            document.getElementById('stat-global').innerText = globalTotal.toLocaleString('en-US');
-            document.getElementById('stat-hoy').innerText = '+' + prospectosHoy;
+            try {
+                const baseDate = new Date('2026-01-01').getTime();
+                const now = new Date();
+                const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
+                const baseGlobal = 8135;
+                const globalTotal = baseGlobal + (daysPassed * 12);
+                const hour = now.getHours();
+                const minutes = now.getMinutes();
+                const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
+                
+                const elGlobal = document.getElementById('stat-global');
+                const elHoy = document.getElementById('stat-hoy');
+                if(elGlobal) elGlobal.innerText = globalTotal.toLocaleString('en-US');
+                if(elHoy) elHoy.innerText = '+' + prospectosHoy;
+            } catch(e) {}
         }
 
+        const evidenceData = [
+            { cat: 'finanzas', src: 'referencias/finanzas1.png', fallback: 'https://placehold.co/400x500/0d1117/1f6feb?text=Finanzas', border: 'border-[#1f6feb]/30' },
+            { cat: 'streaming', src: 'referencias/streaming1.png', fallback: 'https://placehold.co/400x500/0d1117/10b981?text=Streaming', border: 'border-[#10b981]/30' },
+            { cat: 'investigacion', src: 'referencias/doxeo1.png', fallback: 'https://placehold.co/400x500/0d1117/06b6d4?text=Doxeo', border: 'border-[#06b6d4]/30' }
+        ];
+
+        function renderCarousel(filterCategory) {
+            try {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
+                    btn.classList.add('border-gray-800', 'text-gray-500');
+                });
+                const activeBtn = document.getElementById('btn-' + filterCategory);
+                if(activeBtn) {
+                    activeBtn.classList.add('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
+                    activeBtn.classList.remove('border-gray-800', 'text-gray-500');
+                }
+
+                const track = document.getElementById('carousel-track');
+                if(!track) return;
+                track.style.animation = 'none';
+                void track.offsetWidth; 
+
+                let filtered = evidenceData.filter(item => filterCategory === 'all' || item.cat === filterCategory);
+                if(filtered.length === 0) filtered = evidenceData;
+
+                let multiplier = filterCategory === 'all' ? 8 : 12; 
+                let htmlContent = '';
+                
+                for(let i=0; i<multiplier; i++) {
+                    filtered.forEach(item => {
+                        htmlContent += `
+                        <div class="w-[260px] md:w-[300px] rounded-xl overflow-hidden border ${item.border} relative flex-shrink-0 bg-[#0A0F16]/80 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.8)] p-2 flex items-center justify-center">
+                            <img src="${item.src}" onerror="this.src='${item.fallback}'" class="w-full h-auto rounded-lg object-contain relative z-0">
+                        </div>`;
+                    });
+                }
+                track.innerHTML = htmlContent;
+                let speed = filtered.length * multiplier * 5; 
+                if(speed < 20) speed = 20; 
+                track.style.animation = `scroll-left ${speed}s linear infinite`;
+            } catch(e) {}
+        }
+
+        function initScrollObserver() {
+            try {
+                if (window.innerWidth < 768) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('in-view');
+                            } else {
+                                entry.target.classList.remove('in-view');
+                            }
+                        });
+                    }, { rootMargin: "-25% 0px -25% 0px" }); 
+
+                    document.querySelectorAll('.portfolio-card').forEach(card => {
+                        observer.observe(card);
+                    });
+                }
+            } catch(e) {}
+        }
+
+        // --- SISTEMA AUTOMATIZADO DE CARRITO Y EXTRACTOR ---
         let cart = [];
         const WA_NUMBER = "51937751224";
         let currentView = 'hub';
-        
         let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-        document.getElementById('order-id-display').innerText = "ID: " + orderId;
-
-        const waMessages = {
-            'hub': "Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀",
-            'financiero': "Hola 👋, estoy en el Portal Financiero y deseo hacer una consulta. 💳",
-            'digital': "Hola 👋, estoy en el Portal Digital y deseo hacer una consulta. 💻",
-            'investigacion': "Hola 👋, estoy en el Portal de Investigación y deseo hacer una consulta. 📡"
-        };
+        
+        try {
+            const elOrderId = document.getElementById('order-id-display');
+            if(elOrderId) elOrderId.innerText = "ID: " + orderId;
+        } catch(e) {}
 
         window.addEventListener('beforeunload', function (e) {
-            if (cart.length > 0) {
-                e.preventDefault();
-                e.returnValue = ''; 
-            }
+            if (cart.length > 0) { e.preventDefault(); e.returnValue = ''; }
         });
 
-        // --- SENSOR MÓVIL OPTIMIZADO (FOCUS SNAP PARA CARRUSEL) ---
-        function initScrollObserver() {
-            if (window.innerWidth < 768) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('in-view');
-                            try { if(navigator.vibrate) navigator.vibrate(15); } catch(e){}
-                        } else {
-                            entry.target.classList.remove('in-view');
-                        }
-                    });
-                }, { 
-                    // Se activa solo en el centro de la pantalla
-                    rootMargin: "-25% 0px -25% 0px" 
-                }); 
-
-                document.querySelectorAll('.portfolio-card').forEach(card => {
-                    observer.observe(card);
-                });
-            }
-        }
-
-        function triggerHaptic() {
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-        }
-
         function addToCart(id, name, price, category, btnElement) {
-            triggerHaptic();
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             let item = cart.find(i => i.id === id);
             if(item) {
                 item.qty++;
+                item.dnis.push({type: 'DNI', num: ''}); 
             } else {
-                cart.push({ id, name, price, category, qty: 1 });
+                cart.push({ id, name, price, category, qty: 1, dnis: [{type: 'DNI', num: ''}] }); 
             }
-            
             btnElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> PROCESANDO...';
             btnElement.classList.add('bg-blue-600/30', 'text-white', 'scale-95');
-            
             setTimeout(() => { 
-                syncProductButtons();
-                updateFloatingAction();
-                renderCart();
+                syncProductButtons(); updateFloatingAction(); renderCart();
             }, 400);
         }
 
         function updateQty(id, change) {
-            triggerHaptic();
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             let item = cart.find(i => i.id === id);
             if(item) {
                 item.qty += change;
                 if(item.qty <= 0) {
                     cart = cart.filter(i => i.id !== id);
+                } else {
+                    if(change > 0) item.dnis.push({type: 'DNI', num: ''}); 
+                    if(change < 0) item.dnis.pop();
                 }
             }
-            syncProductButtons();
-            updateFloatingAction();
-            renderCart();
+            syncProductButtons(); updateFloatingAction(); renderCart();
             if(cart.length === 0) closeCart();
         }
 
         function removeItem(id) {
-            triggerHaptic();
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             cart = cart.filter(i => i.id !== id);
-            syncProductButtons();
-            updateFloatingAction();
-            renderCart();
+            syncProductButtons(); updateFloatingAction(); renderCart();
             if(cart.length === 0) closeCart();
+        }
+
+        function updateDocType(id, index, type) {
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.dnis[index].type = type;
+                item.dnis[index].num = ''; // Resetea el input para evitar errores de longitud
+                renderCart();
+            }
+        }
+
+        function updateDni(id, index, value) {
+            let item = cart.find(i => i.id === id);
+            if(item) { item.dnis[index].num = value; }
         }
 
         function syncProductButtons() {
@@ -789,24 +986,39 @@
                 
                 if (inCartItem) {
                     btn.innerHTML = `<i class="fa-solid fa-check"></i> EN LA ORDEN (${inCartItem.qty})`;
-                    btn.classList.remove('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400', 'bg-gray-800/30', 'border-gray-700', 'text-gray-300', 'bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-600/10', 'border-red-500/30', 'text-red-400', 'bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400', 'bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
+                    btn.classList.remove('bg-blue-500/10', 'border-blue-500/30', 'text-blue-400', 'bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-600/10', 'border-red-500/30', 'text-red-400', 'bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400', 'bg-purple-600/10', 'border-purple-500/30', 'text-purple-400', 'bg-blue-600', 'hover:bg-blue-500');
                     btn.classList.add('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
                 } else {
-                    btn.innerHTML = `<i class="fa-solid fa-plus"></i> Añadir a la orden`;
                     btn.classList.remove('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
-                    
-                    if(btnId.includes('FIN-01')) btn.classList.add('bg-blue-600/10', 'border-blue-500/30', 'text-blue-400');
-                    if(btnId.includes('FIN-02')) btn.classList.add('bg-gray-800/30', 'border-gray-700', 'text-gray-300');
-                    if(btnId.includes('DIG-01')) btn.classList.add('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400');
-                    if(btnId.includes('DIG-02')) btn.classList.add('bg-red-600/10', 'border-red-500/30', 'text-red-400');
-                    if(btnId.includes('INV-01')) btn.classList.add('bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400');
-                    if(btnId.includes('INV-02')) btn.classList.add('bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
+                    if(btnId.includes('FIN-')) {
+                        if(btnId === 'FIN-COMBO') {
+                            btn.innerHTML = `<i class="fa-solid fa-cart-arrow-down"></i> Añadir Combo`;
+                            btn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-500');
+                        } else {
+                            btn.innerHTML = `<i class="fa-solid fa-plus"></i> Añadir a la orden`;
+                            btn.classList.add('bg-blue-500/10', 'border-blue-500/30', 'text-blue-400');
+                        }
+                    } else if(btnId.includes('DIG-WIN')) {
+                        btn.innerHTML = `<i class="fa-solid fa-plus"></i> Cotizar`;
+                        btn.classList.add('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400');
+                    } else if(btnId.includes('DIG-STR')) {
+                        btn.innerHTML = `<i class="fa-solid fa-plus"></i> Ver Catálogo`;
+                        btn.classList.add('bg-red-600/10', 'border-red-500/30', 'text-red-400');
+                    } else if(btnId.includes('INV-BAS')) {
+                        btn.innerHTML = `<i class="fa-solid fa-plus"></i> Añadir a la orden`;
+                        btn.classList.add('bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400');
+                    } else if(btnId.includes('INV-PRO')) {
+                        btn.innerHTML = `<i class="fa-solid fa-plus"></i> Evaluar Caso`;
+                        btn.classList.add('bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
+                    }
                 }
             });
         }
 
         function renderCart() {
             const container = document.getElementById('cart-items');
+            if(!container) return;
+            
             let html = '';
             let total = 0;
             
@@ -823,252 +1035,232 @@
                     let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
                     
                     html += `
-                    <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex items-center justify-between gap-3 animate-fade-in-up">
-                        <div class="flex-1 overflow-hidden">
-                            <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
-                            <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
-                            <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay}</div>
-                        </div>
-                        <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
-                            <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                            <span class="font-mono text-xs text-white w-3 text-center">${item.qty}</span>
-                            <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
-                        </div>
-                        <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-1 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>`;
+                    <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 animate-fade-in-up mb-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 overflow-hidden">
+                                <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
+                                <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
+                                <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay} c/u</div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
+                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                <span class="font-mono text-xs text-white w-3 text-center">${item.qty}</span>
+                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                            </div>
+                            <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>`;
+
+                    // 💡 LÓGICA DE CAPTURA DNI/CE/RUC CON RESTRICCIÓN NUMÉRICA
+                    if(item.category === 'FINANCIERO') {
+                        html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
+                        for(let i=0; i<item.qty; i++) {
+                            let doc = item.dnis[i];
+                            let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
+                            let ph = doc.type === 'RUC' ? "RUC (10 u 11 dígitos)" : `Ingrese ${doc.type}`;
+                            
+                            html += `
+                            <div class="flex relative">
+                                <select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
+                                    <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
+                                    <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
+                                    <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
+                                </select>
+                                <input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
+                            </div>`;
+                        }
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
                 });
             }
             
             container.innerHTML = html;
-            document.getElementById('cart-subtotal').innerText = 'S/ ' + total.toFixed(2);
-            document.getElementById('cart-total').innerText = 'S/ ' + total.toFixed(2);
+            const elSub = document.getElementById('cart-subtotal');
+            const elTotal = document.getElementById('cart-total');
+            if(elSub) elSub.innerText = 'S/ ' + total.toFixed(2);
+            if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
         }
 
+        // --- SISTEMA DE NAVEGACIÓN ---
         function updateFloatingAction() {
             const btn = document.getElementById('floating-btn');
             const icon = document.getElementById('floating-icon');
-            const ping = document.getElementById('floating-ping');
             const label = document.getElementById('floating-label');
             const badge = document.getElementById('cart-badge');
+            if(!btn || !icon || !label || !badge) return;
 
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
 
             if (totalItems > 0) {
-                btn.classList.remove('bg-[#25D366]', 'shadow-[0_0_20px_rgba(37,211,102,0.4)]', 'hover:shadow-[0_0_35px_rgba(37,211,102,0.8)]');
-                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]', 'hover:shadow-[0_0_35px_rgba(31,111,235,0.8)]');
-                ping.classList.replace('bg-[#25D366]', 'bg-[#1f6feb]');
-                
+                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]');
+                btn.classList.remove('bg-[#25D366]');
                 icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all duration-300 text-xl"; 
-                
                 label.innerText = "Revisar Orden";
-                label.classList.remove('text-[#25D366]', 'border-[#25D366]/30');
                 label.classList.add('text-[#58a6ff]', 'border-[#1f6feb]/30');
-
+                label.classList.remove('text-[#25D366]');
                 badge.innerText = totalItems;
                 badge.classList.remove('opacity-0', 'scale-0');
-                badge.classList.add('opacity-100', 'scale-100');
-
             } else {
-                btn.classList.remove('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]', 'hover:shadow-[0_0_35px_rgba(31,111,235,0.8)]');
-                btn.classList.add('bg-[#25D366]', 'shadow-[0_0_20px_rgba(37,211,102,0.4)]', 'hover:shadow-[0_0_35px_rgba(37,211,102,0.8)]');
-                ping.classList.replace('bg-[#1f6feb]', 'bg-[#25D366]');
-
+                btn.classList.add('bg-[#25D366]');
+                btn.classList.remove('bg-[#1f6feb]');
                 icon.className = "fa-brands fa-whatsapp relative z-10 transition-all duration-300 text-2xl";
-                
                 label.innerText = "Soporte en línea";
-                label.classList.remove('text-[#58a6ff]', 'border-[#1f6feb]/30');
-                label.classList.add('text-[#25D366]', 'border-[#25D366]/30');
-
-                badge.classList.remove('opacity-100', 'scale-100');
+                label.classList.add('text-[#25D366]');
+                label.classList.remove('text-[#58a6ff]');
                 badge.classList.add('opacity-0', 'scale-0');
             }
         }
 
         function handleFloatingAction() {
-            if (cart.length > 0) {
-                openCart();
-            } else {
-                const message = waMessages[currentView] || waMessages['hub'];
-                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+            if (cart.length > 0) { openCart(); } 
+            else { window.open(`https://wa.me/${WA_NUMBER}?text=Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀`, '_blank'); }
+        }
+
+        function openCart() {
+            const el1 = document.getElementById('cart-overlay');
+            const el2 = document.getElementById('cart-drawer');
+            if(el1 && el2) {
+                el1.classList.remove('opacity-0', 'pointer-events-none');
+                el2.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden'; 
             }
         }
 
-        function sendOrder() {
-            if(cart.length === 0) return;
-            
+        function closeCart() {
+            const el1 = document.getElementById('cart-overlay');
+            const el2 = document.getElementById('cart-drawer');
+            if(el1 && el2) {
+                el1.classList.add('opacity-0', 'pointer-events-none');
+                el2.classList.add('translate-x-full');
+                document.body.style.overflow = 'auto'; 
+            }
+        }
+
+        function navigate(viewId) {
+            currentView = viewId; 
+            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                if(el) { el.classList.add('hidden-view'); el.classList.remove('animate-fade-in-up'); }
+            });
+            const target = document.getElementById('view-' + viewId);
+            if(target) {
+                target.classList.remove('hidden-view');
+                void target.offsetWidth; 
+                target.classList.add('animate-fade-in-up');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- LA BÓVEDA DE PAGO (VALIDACIONES ESTRICTAS) ---
+        function processToPaymentModal() {
+            let errorMsg = "";
+            cart.forEach(item => {
+                if(item.category === 'FINANCIERO') {
+                    item.dnis.forEach((doc, idx) => {
+                        let len = doc.num.length;
+                        if(doc.type === 'DNI' && len !== 8) errorMsg = "Los DNIs deben tener exactamente 8 números.";
+                        else if(doc.type === 'CE' && len < 8) errorMsg = "Los Carnets de Extranjería (C.E) deben tener al menos 8 números.";
+                        else if(doc.type === 'RUC' && len !== 11 && len !== 10) errorMsg = "Los RUCs deben tener 10 u 11 números.";
+                    });
+                }
+            });
+
+            if(errorMsg !== "") {
+                alert("⚠️ " + errorMsg);
+                return;
+            }
+
+            closeCart();
+            const modal = document.getElementById('payment-modal');
+            const card = document.getElementById('payment-card');
+            if(modal && card) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                card.classList.remove('scale-95');
+            }
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('payment-modal');
+            const card = document.getElementById('payment-card');
+            if(modal && card) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                card.classList.add('scale-95');
+            }
+        }
+
+        function copyNumber() {
+            try { if(navigator.vibrate) navigator.vibrate([20, 50, 20]); } catch(e){}
+            const num = "975040527";
+            navigator.clipboard.writeText(num).then(() => {
+                const btnCopy = document.getElementById('btn-copy');
+                btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+                btnCopy.classList.remove('bg-blue-500/10', 'text-blue-400');
+                btnCopy.classList.add('bg-emerald-500', 'text-black', 'shadow-[0_0_15px_rgba(16,185,129,0.5)]');
+
+                setTimeout(() => {
+                    const btnFinal = document.getElementById('btn-final-whatsapp');
+                    btnFinal.disabled = false;
+                    btnFinal.classList.remove('bg-gray-800', 'text-gray-500', 'cursor-not-allowed');
+                    btnFinal.classList.add('bg-[#25D366]', 'hover:bg-[#1ebd5a]', 'text-black', 'shadow-[0_0_20px_rgba(37,211,102,0.4)]', 'animate-pulse');
+                    btnFinal.innerHTML = '<i class="fa-brands fa-whatsapp text-xl"></i> YA PAGUÉ (Enviar Comprobante)';
+                }, 500);
+            });
+        }
+
+        function sendFinalWhatsApp() {
             let total = 0;
             let message = `*SISTEMA CENTRAL - ORDEN DE SERVICIO* 💻\n`;
             message += `ID: ${orderId}\n`;
             message += "══════════════════════════\n\n";
             
-            const groups = {
-                'FINANCIERO': cart.filter(i => i.category === 'FINANCIERO'),
-                'DIGITAL': cart.filter(i => i.category === 'DIGITAL'),
-                'INVESTIGACIÓN': cart.filter(i => i.category === 'INVESTIGACIÓN')
-            };
-
-            const icons = { 'FINANCIERO': '🏦', 'DIGITAL': '⚡', 'INVESTIGACIÓN': '📡' };
-
-            for (const [cat, items] of Object.entries(groups)) {
-                if (items.length > 0) {
-                    message += `${icons[cat]} *PORTAL ${cat}*\n`;
-                    items.forEach(item => {
-                        let priceStr = item.price > 0 ? `S/ ${(item.price * item.qty).toFixed(2)}` : "Consultar";
-                        message += `▪️ ${item.qty}x ${item.name} (${priceStr})\n`;
-                        total += (item.price * item.qty);
-                    });
-                    message += "\n"; 
+            cart.forEach(item => {
+                let priceStr = `S/ ${(item.price * item.qty).toFixed(2)}`;
+                message += `▪️ ${item.qty}x *${item.name}* (${priceStr})\n`;
+                if(item.category === 'FINANCIERO') {
+                    let docStrings = item.dnis.map(d => `${d.type}: ${d.num}`);
+                    message += `   🔍 *Documentos:* ${docStrings.join(', ')}\n`;
                 }
-            }
+                total += (item.price * item.qty);
+            });
             
-            message += "══════════════════════════\n";
-            if(total > 0) {
-                message += `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}\n`;
-                message += "══════════════════════════\n";
-            }
-            message += "Hola 👋, deseo procesar esta orden de servicio.";
+            message += "\n══════════════════════════\n";
+            message += `*TOTAL ABONADO:* S/ ${total.toFixed(2)}\n`;
+            message += "══════════════════════════\n\n";
+            message += "✅ *Estoy realizando mi pago ahorita, le comparto el comprobante:*";
 
-            closeCart();
-            cart = []; 
-            syncProductButtons();
-            updateFloatingAction();
-            renderCart();
+            closePaymentModal();
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        function openCart() {
-            document.getElementById('cart-overlay').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('cart-drawer').classList.remove('translate-x-full');
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closeCart() {
-            document.getElementById('cart-overlay').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('cart-drawer').classList.add('translate-x-full');
-            document.body.style.overflow = 'auto'; 
-        }
-
-        function navigate(viewId, isBrowserBack = false, force = false) {
-            if (!force && viewId === 'hub' && currentView !== 'hub' && cart.length > 0) {
-                showNavModal();
-                return; 
-            }
-
-            currentView = viewId; 
-            updateFloatingAction();
-
-            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                el.classList.add('hidden-view');
-                el.classList.remove('animate-fade-in-up');
-            });
             
-            const target = document.getElementById('view-' + viewId);
-            target.classList.remove('hidden-view');
-            void target.offsetWidth; 
-            target.classList.add('animate-fade-in-up');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            try {
-                if (!isBrowserBack) {
-                    const currentPath = window.location.pathname + window.location.search;
-                    if (viewId === 'hub') {
-                        history.pushState({ view: 'hub' }, '', currentPath);
-                    } else {
-                        history.pushState({ view: viewId }, '', currentPath + '#' + viewId);
-                    }
-                }
-            } catch (e) {}
-        }
-
-        function showNavModal() {
-            document.getElementById('smart-nav-modal').classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('smart-nav-card').classList.remove('scale-95');
-        }
-
-        function hideNavModal() {
-            document.getElementById('smart-nav-modal').classList.add('opacity-0', 'pointer-events-none');
-            document.getElementById('smart-nav-card').classList.add('scale-95');
-        }
-
-        function forceNavigateHub() {
-            hideNavModal();
-            navigate('hub', false, true); 
-        }
-
-        function openCartFromModal() {
-            hideNavModal();
-            openCart();
-        }
-
-        window.onpopstate = function(event) {
-            if (event.state && event.state.view) {
-                navigate(event.state.view, true); 
-            } else {
-                navigate('hub', true); 
-            }
-            closeCart(); 
-        };
-
-        const evidenceData = [
-            { cat: 'finanzas', src: 'referencias/finanzas1.png', fallback: 'https://placehold.co/400x500/0d1117/1f6feb?text=Finanzas', border: 'border-[#1f6feb]/30' },
-            { cat: 'streaming', src: 'referencias/streaming1.png', fallback: 'https://placehold.co/400x500/0d1117/10b981?text=Streaming', border: 'border-[#10b981]/30' },
-            { cat: 'investigacion', src: 'referencias/doxeo1.png', fallback: 'https://placehold.co/400x500/0d1117/06b6d4?text=Doxeo', border: 'border-[#06b6d4]/30' }
-        ];
-
-        function renderCarousel(filterCategory) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-                btn.classList.add('border-gray-800', 'text-gray-500');
-            });
-            const activeBtn = document.getElementById('btn-' + filterCategory);
-            activeBtn.classList.add('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-            activeBtn.classList.remove('border-gray-800', 'text-gray-500');
-
-            const track = document.getElementById('carousel-track');
-            track.style.animation = 'none';
-            void track.offsetWidth; 
-
-            let filtered = evidenceData.filter(item => filterCategory === 'all' || item.cat === filterCategory);
-            if(filtered.length === 0) filtered = evidenceData;
-
-            let multiplier = filterCategory === 'all' ? 8 : 12; 
-            let htmlContent = '';
-            
-            for(let i=0; i<multiplier; i++) {
-                filtered.forEach(item => {
-                    htmlContent += `
-                    <div class="w-[260px] md:w-[300px] rounded-xl overflow-hidden border ${item.border} relative flex-shrink-0 bg-[#0A0F16]/80 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.8)] p-2 flex items-center justify-center">
-                        <img src="${item.src}" onerror="this.src='${item.fallback}'" class="w-full h-auto rounded-lg object-contain relative z-0">
-                    </div>`;
-                });
-            }
-            track.innerHTML = htmlContent;
-            
-            let speed = filtered.length * multiplier * 5; 
-            if(speed < 20) speed = 20; 
-            track.style.animation = `scroll-left ${speed}s linear infinite`;
-        }
-
-        window.onload = () => {
-            setLiveStats();
-            initScrollObserver();
-            renderCarousel('all'); 
-            try { history.replaceState({ view: 'hub' }, '', window.location.pathname + window.location.search); } catch(e) {}
-
-            const splash = document.getElementById('splash-screen');
+            // 💡 REINICIO TOTAL AUTOMÁTICO DESPUÉS DE COMPRAR
             setTimeout(() => {
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    const hub = document.getElementById('view-hub');
-                    hub.classList.remove('hidden-view');
-                    hub.classList.add('animate-fade-in-up');
-                }, 700);
-            }, 1500); 
+                window.location.href = window.location.pathname; 
+            }, 1500);
+        }
+
+        // --- ARRANQUE BLINDADO ---
+        window.onload = () => {
+            // 1. Ocultar el Splash Screen SIEMPRE
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if(splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                        const hub = document.getElementById('view-hub');
+                        if(hub && currentView === 'hub') {
+                            hub.classList.remove('hidden-view');
+                            hub.classList.add('animate-fade-in-up');
+                        }
+                    }, 700);
+                }
+            }, 1000); 
+
+            // 2. Ejecutar funciones secundarias protegidas
+            try { setLiveStats(); } catch(e) {}
+            try { initScrollObserver(); } catch(e) {}
+            try { renderCarousel('all'); } catch(e) {}
+            try { history.replaceState({ view: 'hub' }, '', window.location.pathname + window.location.search); } catch(e) {}
         };
     </script>
 </body>
