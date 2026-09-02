@@ -108,64 +108,60 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* ============================================================ */
-        /* MOTOR MATEMÁTICO 3D DE HOLOGRAMAS (FOCUS ROTATION)           */
+        /* EL MINI-CARRUSEL INTERNO DE LOGOS (RESTAURADO Y MEJORADO)    */
         /* ============================================================ */
-        .icon-box {
-            position: relative;
-            perspective: 1000px;
-        }
         
-        .dynamic-icon {
-            position: absolute;
-            inset: 0;
+        .mini-carousel-container {
+            display: flex;
+            width: 132px; /* 💡 Límite exacto para que solo entren 3 círculos a la vez */
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .mini-carousel-track {
+            display: flex;
+            gap: 12px; 
+            width: max-content;
+            /* Se pausa por defecto, solo se mueve cuando está enfocado o hover */
+            animation: mini-scroll linear infinite;
+            animation-play-state: paused;
+            will-change: transform;
+        }
+
+        /* Activar el movimiento solo cuando la tarjeta está en el centro o tiene hover */
+        .portfolio-card:hover .mini-carousel-track,
+        .portfolio-card.in-view .mini-carousel-track {
+            animation-play-state: running;
+        }
+
+        @keyframes mini-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Va a la mitad porque clonamos el contenido */
+        }
+
+        .mini-logo-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.02);
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transform-style: preserve-3d;
-            will-change: transform, opacity;
-            
-            /* 💡 REGLA DE ORO: Las animaciones están PAUSADAS por defecto */
-            animation-play-state: paused !important; 
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
         }
 
-        /* 💡 REGLA DE ORO: Solo giran cuando pasas el ratón (PC) o están en el centro del celular (in-view) */
-        .portfolio-card:hover .dynamic-icon,
-        .portfolio-card.in-view .dynamic-icon {
-            animation-play-state: running !important;
-        }
-        
-        .dynamic-icon img {
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            border-radius: 50%; 
-            transform: scale(0.85); 
-            filter: drop-shadow(0 0 6px rgba(255,255,255,0.7)); 
-        }
-
-        /* 1. Portal Financiero (4 Elementos = 12 Segundos) */
-        .animate-flip-4 { animation: flip-4 12s infinite cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes flip-4 {
-            0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
-            5%, 20% { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1.1); filter: drop-shadow(0 0 8px currentColor); }
-            25%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
-        }
-
-        /* 2. Portal Digital (9 Elementos = 27 Segundos) -> Agregado Paramount */
-        .animate-flip-9 { animation: flip-9 27s infinite cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes flip-9 {
-            0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
-            2.2%, 8.8% { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1.1); filter: drop-shadow(0 0 8px currentColor); }
-            11.11%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
-        }
-
-        /* 3. Portal Investigación (13 Elementos: Principal + 12) -> Eliminado el 13 */
-        .animate-flip-13 { animation: flip-13 39s infinite cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes flip-13 {
-            0%, 100% { opacity: 0; transform: translateY(15px) rotateX(-90deg) scale(0.5); }
-            1.5%, 6.1% { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1.1); filter: drop-shadow(0 0 8px currentColor); }
-            7.69%, 99.9% { opacity: 0; transform: translateY(-15px) rotateX(90deg) scale(0.5); }
+        /* Troquel redondo perfecto para tus PNGs locales */
+        .mini-logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transform: scale(0.85); /* Margen sutil interno */
         }
 
         /* --- SCROLL EN CELULAR (FOCUS SNAP) --- */
@@ -191,8 +187,18 @@
             
             .portfolio-card.in-view .glow-bg { opacity: 0.8 !important; }
             .portfolio-card.in-view .glow-line { opacity: 1 !important; }
+            
+            /* Iluminación de los íconos fijos y los logos del carrusel */
             .portfolio-card.in-view .icon-box { background-color: rgba(255,255,255,0.08); border-color: currentColor; }
+            .card-fin.in-view .mini-logo-box { border-color: rgba(59,130,246,0.4); background-color: rgba(59,130,246,0.1); }
+            .card-dig.in-view .mini-logo-box { border-color: rgba(16,185,129,0.4); background-color: rgba(16,185,129,0.1); }
+            .card-inv.in-view .mini-logo-box { border-color: rgba(6,182,212,0.4); background-color: rgba(6,182,212,0.1); }
         }
+        
+        /* Efecto Hover PC para los íconos */
+        .card-fin:hover .mini-logo-box { border-color: rgba(59,130,246,0.4); background-color: rgba(59,130,246,0.1); }
+        .card-dig:hover .mini-logo-box { border-color: rgba(16,185,129,0.4); background-color: rgba(16,185,129,0.1); }
+        .card-inv:hover .mini-logo-box { border-color: rgba(6,182,212,0.4); background-color: rgba(6,182,212,0.1); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
@@ -331,12 +337,8 @@
                     
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            
-                            <div class="icon-box w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 group-hover:bg-blue-500/20 transition-all duration-300 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.1)] overflow-hidden">
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 0s;"><i class="fa-solid fa-wallet text-2xl"></i></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 3s;"><img src="logo/sbs.png" alt="SBS" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 6s;"><img src="logo/sentinel.png" alt="Sentinel" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-4" style="animation-delay: 9s;"><img src="logo/equifax.png" alt="Equifax" onerror="this.style.display='none'"></div>
+                            <div class="icon-box w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.1)] transition-all duration-300">
+                                <i class="fa-solid fa-wallet text-2xl group-hover:text-blue-300"></i>
                             </div>
 
                             <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
@@ -344,9 +346,25 @@
                                 <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
                             </div>
                         </div>
+
                         <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-50 transition-colors">Portal Financiero</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
-                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6 group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
+                        
+                        <div class="mt-auto mb-6">
+                            <span class="font-mono text-[8px] text-blue-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Conexiones Seguras:</span>
+                            <div class="mini-carousel-container">
+                                <div class="mini-carousel-track" style="animation-duration: 8s;">
+                                    <div class="mini-logo-box"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-blue-400 font-bold uppercase tracking-widest group-hover:text-blue-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -361,17 +379,8 @@
                     
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            
-                            <div class="icon-box w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 group-hover:bg-emerald-500/20 transition-all duration-300 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.1)] overflow-hidden">
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 0s;"><i class="fa-solid fa-terminal text-2xl"></i></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 3s;"><img src="logo/netflix.png" alt="NFLX" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 6s;"><img src="logo/disney.png" alt="DSNY" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 9s;"><img src="logo/prime.png" alt="PRIME" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 12s;"><img src="logo/hbo.png" alt="HBO" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 15s;"><img src="logo/youtube.png" alt="YT" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 18s;"><img src="logo/windows.png" alt="WIN" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 21s;"><img src="logo/paramount.png" alt="PARA" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-9" style="animation-delay: 24s;"><img src="logo/canva.png" alt="CNV" onerror="this.style.display='none'"></div>
+                            <div class="icon-box w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.1)] transition-all duration-300">
+                                <i class="fa-solid fa-terminal text-2xl group-hover:text-emerald-300"></i>
                             </div>
 
                             <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
@@ -379,9 +388,33 @@
                                 <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
                             </div>
                         </div>
+
                         <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-50 transition-colors">Portal Digital</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Despliegue de software profesional, licencias operativas y suscripciones de streaming corporativo.</p>
-                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-emerald-500/30 transition-colors">
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow group-hover:text-gray-300 transition-colors">Despliegue de software profesional, licencias operativas y suscripciones de streaming corporativo.</p>
+                        
+                        <div class="mt-auto mb-6">
+                            <span class="font-mono text-[8px] text-emerald-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Catálogo Integrado:</span>
+                            <div class="mini-carousel-container">
+                                <div class="mini-carousel-track" style="animation-duration: 18s;">
+                                    <div class="mini-logo-box"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-emerald-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest group-hover:text-emerald-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -396,21 +429,8 @@
                     
                     <div class="relative z-10 flex flex-col h-full">
                         <div class="flex justify-between items-start mb-8">
-                            
-                            <div class="icon-box w-14 h-14 rounded-full bg-cyan-500/10 border border-cyan-500/20 group-hover:bg-cyan-500/20 transition-all duration-300 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] overflow-hidden">
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 0s;"><i class="fa-solid fa-satellite-dish text-2xl"></i></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 3s;"><img src="logo/1.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 6s;"><img src="logo/2.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 9s;"><img src="logo/3.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 12s;"><img src="logo/4.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 15s;"><img src="logo/5.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 18s;"><img src="logo/6.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 21s;"><img src="logo/7.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 24s;"><img src="logo/8.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 27s;"><img src="logo/9.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 30s;"><img src="logo/10.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 33s;"><img src="logo/11.png" alt="" onerror="this.style.display='none'"></div>
-                                <div class="dynamic-icon animate-flip-13" style="animation-delay: 36s;"><img src="logo/12.png" alt="" onerror="this.style.display='none'"></div>
+                            <div class="icon-box w-14 h-14 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-all duration-300">
+                                <i class="fa-solid fa-satellite-dish text-2xl group-hover:text-cyan-300"></i>
                             </div>
 
                             <div class="bg-orange-500/10 border border-orange-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 group-hover:bg-orange-500/20 transition-colors">
@@ -418,10 +438,44 @@
                                 <span class="font-mono text-[9px] text-orange-400 uppercase tracking-widest font-bold">Alta Demanda</span>
                             </div>
                         </div>
+
                         <h2 class="text-2xl font-bold text-white mb-1 group-hover:text-cyan-50 transition-colors">Portal Investigación</h2>
                         <p class="font-mono text-[8px] text-cyan-500/80 tracking-widest mb-4 uppercase group-hover:text-cyan-400 transition-colors">/// Central Consultas</p>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Auditoría, validación de perfiles, antecedentes, OSINT e inteligencia de datos estructurados.</p>
-                        <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-cyan-500/30 transition-colors">
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow group-hover:text-gray-300 transition-colors">Auditoría, validación de perfiles, antecedentes, OSINT e inteligencia de datos estructurados.</p>
+                        
+                        <div class="mt-auto mb-6">
+                            <span class="font-mono text-[8px] text-cyan-500/60 uppercase tracking-widest block mb-3 border-b border-gray-800 pb-1">Nodos Activos:</span>
+                            <div class="mini-carousel-container">
+                                <div class="mini-carousel-track" style="animation-duration: 30s;">
+                                    <div class="mini-logo-box"><img src="logo/1.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/2.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/3.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/4.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/5.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/6.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/7.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/8.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/9.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/10.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/11.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/1.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/2.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/3.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/4.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/5.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/6.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/7.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/8.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/9.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/10.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/11.png" onerror="this.style.display='none'"></div>
+                                    <div class="mini-logo-box"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-cyan-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest group-hover:text-cyan-300">Iniciar Módulo</span>
                             <div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
                                 <i class="fa-solid fa-arrow-right text-xs"></i>
@@ -658,7 +712,7 @@
             }
         });
 
-        // --- SENSOR MÓVIL OPTIMIZADO (FOCUS SNAP) ---
+        // --- SENSOR MÓVIL OPTIMIZADO (FOCUS SNAP PARA CARRUSEL) ---
         function initScrollObserver() {
             if (window.innerWidth < 768) {
                 const observer = new IntersectionObserver((entries) => {
@@ -671,7 +725,7 @@
                         }
                     });
                 }, { 
-                    // 💡 Esto asegura que solo se active cuando la tarjeta cruza el centro de la pantalla
+                    // Se activa solo en el centro de la pantalla
                     rootMargin: "-25% 0px -25% 0px" 
                 }); 
 
