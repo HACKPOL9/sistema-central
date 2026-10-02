@@ -11,6 +11,11 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Manejo suave del historial
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -61,6 +66,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        .lock-scroll {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+
         .bg-noise {
             position: fixed;
             inset: 0;
@@ -107,7 +117,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* CARRUSEL SUPERIOR DE 3 CÍRCULOS */
         .top-carousel-wrapper {
             width: 168px; 
             height: 48px;
@@ -154,7 +163,6 @@
             transform: scale(0.85);
         }
 
-        /* SCROLL EN CELULAR (FOCUS SNAP) */
         @media (max-width: 768px) {
             .portfolio-card {
                 opacity: 0.4;
@@ -173,20 +181,8 @@
             .card-fin.in-view { border-color: rgba(59,130,246,0.5) !important; box-shadow: 0 20px 50px -10px rgba(59,130,246,0.35) !important; }
             .card-dig.in-view { border-color: rgba(16,185,129,0.5) !important; box-shadow: 0 20px 50px -10px rgba(16,185,129,0.35) !important; }
             .card-inv.in-view { border-color: rgba(6,182,212,0.5) !important; box-shadow: 0 20px 50px -10px rgba(6,182,212,0.35) !important; }
-            
-            .portfolio-card.in-view .glow-bg { opacity: 0.8 !important; }
-            .portfolio-card.in-view .glow-line { opacity: 1 !important; }
-            
-            .card-fin.in-view .circle-logo { border-color: rgba(59,130,246,0.3); background-color: rgba(59,130,246,0.1); color: #60a5fa;}
-            .card-dig.in-view .circle-logo { border-color: rgba(16,185,129,0.3); background-color: rgba(16,185,129,0.1); color: #34d399;}
-            .card-inv.in-view .circle-logo { border-color: rgba(6,182,212,0.3); background-color: rgba(6,182,212,0.1); color: #22d3ee;}
         }
-        
-        .card-fin:hover .circle-logo { border-color: rgba(59,130,246,0.3); background-color: rgba(59,130,246,0.1); color: #60a5fa;}
-        .card-dig:hover .circle-logo { border-color: rgba(16,185,129,0.3); background-color: rgba(16,185,129,0.1); color: #34d399;}
-        .card-inv:hover .circle-logo { border-color: rgba(6,182,212,0.3); background-color: rgba(6,182,212,0.1); color: #22d3ee;}
 
-        /* ESTILOS DE CATÁLOGO COMPACTO */
         .compact-card {
             background: linear-gradient(145deg, rgba(10,15,22,0.9) 0%, rgba(5,8,13,0.95) 100%);
             backdrop-filter: blur(10px);
@@ -198,6 +194,14 @@
             border-color: rgba(59,130,246,0.4);
             box-shadow: 0 10px 30px -10px rgba(59,130,246,0.2);
         }
+        
+        /* Efectos Hover para el catálogo Digital Nivel Dios */
+        .card-hover-red:hover { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 10px 30px -10px rgba(239, 68, 68, 0.2); transform: translateY(-4px); }
+        .card-hover-cyan:hover { border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.2); transform: translateY(-4px); }
+        .card-hover-purple:hover { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2); transform: translateY(-4px); }
+        .card-hover-emerald:hover { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2); transform: translateY(-4px); }
+        .card-hover-blue:hover { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2); transform: translateY(-4px); }
+
         .premium-card {
             background: linear-gradient(145deg, rgba(10,15,22,0.9) 0%, rgba(5,8,13,0.95) 100%);
             backdrop-filter: blur(10px);
@@ -209,7 +213,6 @@
             border-color: rgba(255,255,255,0.15);
         }
 
-        /* INPUTS DEL CARRITO INTELIGENTE */
         .dni-input {
             background-color: rgba(0,0,0,0.3);
             border: 1px solid rgba(59,130,246,0.3);
@@ -264,43 +267,69 @@
     <!-- SISTEMA DE NOTIFICACIONES TOAST -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none w-full max-w-md px-4"></div>
 
-    <!-- ⚡ MODAL INTRODUCTORIO (PRE-FILTRO) PORTAL FINANCIERO ⚡ -->
-    <div id="financiero-intro-modal" class="fixed inset-0 z-[400] bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
-        <div id="financiero-intro-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col relative">
+    <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
+    <div id="search-modal" class="fixed inset-0 z-[1000] bg-[#02050A]/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center p-4 pt-20">
+        <div class="w-full max-w-2xl relative transform transition-transform duration-300 scale-95" id="search-modal-content">
+            <button onclick="closeSearch()" class="absolute -top-12 right-0 text-gray-500 hover:text-white transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
+                <i class="fa-solid fa-xmark text-lg"></i> Cerrar
+            </button>
             
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/20 rounded-full blur-[50px] pointer-events-none"></div>
+            <div class="relative mb-6 group">
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl group-focus-within:text-blue-400 transition-colors"></i>
+                <input type="text" id="modal-search-input" oninput="executeSearch(this.value)" placeholder="Buscar Netflix, Sentinel, Canva..." class="w-full bg-[#0A0F16] border border-gray-800 text-white text-base md:text-lg rounded-2xl py-4 pl-14 pr-6 focus:outline-none focus:border-blue-500/50 shadow-[0_10px_40px_rgba(0,0,0,0.5)] focus:shadow-[0_0_30px_rgba(59,130,246,0.15)] transition-all">
+            </div>
+            
+            <div id="search-results-container" class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pb-10">
+                <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
+                    <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>
+                    Escribe para buscar en el sistema
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- ⚡ MODAL INTRODUCTORIO (PRE-FILTRO) PORTAL FINANCIERO ⚡ -->
+    <div id="financiero-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="financiero-intro-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col relative">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-600/20 rounded-full blur-[50px] pointer-events-none"></div>
             <div class="p-6 md:p-8 relative z-10">
                 <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                     <i class="fa-solid fa-wallet text-3xl text-blue-400"></i>
                 </div>
-                
                 <h3 class="text-2xl font-bold text-white mb-2">PORTAL FINANCIERO</h3>
                 <p class="text-gray-400 text-sm leading-relaxed mb-6">Obtén un análisis exacto de tu perfil crediticio y revisa al instante:</p>
-                
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
-                    <div class="flex items-start gap-3">
-                        <span class="text-lg leading-none mt-0.5">⭐</span>
-                        <p class="text-gray-300 text-[13px] leading-tight">Tu <strong class="text-white">Score Crediticio</strong> exacto.</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-lg leading-none mt-0.5">🚦</span>
-                        <p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Semaforización</strong> actual (tu nivel de riesgo).</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-lg leading-none mt-0.5">📊</span>
-                        <p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Deudas vigentes y vencidas</strong> al detalle.</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-lg leading-none mt-0.5">🔍</span>
-                        <p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Alertas y reportes</strong> en Infocorp.</p>
-                    </div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">⭐</span><p class="text-gray-300 text-[13px] leading-tight">Tu <strong class="text-white">Score Crediticio</strong> exacto.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚦</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Semaforización</strong> actual (tu nivel de riesgo).</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">📊</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Deudas vigentes y vencidas</strong> al detalle.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🔍</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Alertas y reportes</strong> en Infocorp.</p></div>
                 </div>
-
                 <p class="text-center font-bold text-blue-400 text-[13px] mb-8 tracking-wide">¡Toma el control de tus finanzas hoy! ⚡</p>
-
-                <!-- BOTON ÚNICO MAESTRO -->
                 <button onclick="proceedToFinanciero()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)] flex items-center justify-center gap-2">
+                    ACCEDER <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚡ MODAL INTRODUCTORIO (PRE-FILTRO) PORTAL DIGITAL ⚡ -->
+    <div id="digital-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="digital-intro-card" class="bg-[#0A0F16] border border-emerald-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col relative">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-emerald-600/20 rounded-full blur-[50px] pointer-events-none"></div>
+            <div class="p-6 md:p-8 relative z-10">
+                <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <i class="fa-solid fa-terminal text-3xl text-emerald-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">PORTAL DIGITAL</h3>
+                <p class="text-gray-400 text-[13px] leading-relaxed mb-6">Aprovisionamiento instantáneo de licencias y plataformas premium. Infraestructura digital de alta disponibilidad con entrega automatizada en segundos.</p>
+                <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎬</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Streaming Global:</strong> Netflix, Max, Prime, YouTube, Disney+, Paramount+</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Inteligencia Artificial:</strong> ChatGPT Plus, Gemini Advanced.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎨</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Creación & Diseño:</strong> Canva Pro, CapCut Pro.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">💻</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Software y Extra:</strong> Windows 11, Office 365, Spotify, Duolingo.</p></div>
+                </div>
+                <p class="text-center font-bold text-emerald-400 text-[13px] mb-8 tracking-wide">¡Despliegue operativo inmediato! ⚡</p>
+                <button onclick="proceedToDigital()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2">
                     ACCEDER <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
@@ -363,10 +392,9 @@
         </div>
     </div>
 
-    <!-- LA BÓVEDA DE PAGO (PASO 2) -->
+    <!-- LA BÓVEDA DE PAGO -->
     <div id="payment-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="payment-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
-            
             <div class="bg-gradient-to-r from-[#02050A] to-[#0A0F16] p-6 border-b border-gray-800 flex justify-between items-start">
                 <div>
                     <h3 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-lock text-emerald-400 mr-2"></i>Bóveda de Pago</h3>
@@ -374,31 +402,25 @@
                 </div>
                 <button onclick="closePaymentModal()" class="text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-
             <div class="p-6 flex flex-col items-center">
                 <img src="publi/metodos.png" alt="Métodos de Pago" class="h-10 md:h-12 w-auto object-contain mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]" onerror="this.style.display='none'">
-
                 <div class="text-gray-400 text-xs mb-1 uppercase tracking-widest font-mono">Titular de la cuenta</div>
                 <div class="text-xl font-bold text-white mb-6">EDGAR POL</div>
-
                 <div class="bg-black/50 border border-gray-800 rounded-xl w-full p-4 flex flex-col items-center mb-6 relative">
                     <span class="text-gray-500 text-[10px] uppercase font-mono tracking-widest absolute top-2 left-3">N° Billetera:</span>
                     <div id="payment-number" class="text-4xl font-black text-[#58a6ff] tracking-wider mt-4">975040527</div>
-                    
                     <button onclick="copyNumber()" id="btn-copy" class="mt-4 w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                         <i class="fa-regular fa-copy"></i> Copiar Número
                     </button>
                 </div>
-                
                 <p class="text-center text-xs text-gray-400 mb-2 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 p-3 rounded-lg"><i class="fa-solid fa-circle-exclamation mr-1"></i> Copia el número para que puedas realizar el pago en tu App.</p>
             </div>
         </div>
     </div>
 
-    <!-- VENTANA FINAL (PASO 3) -->
+    <!-- VENTANA FINAL -->
     <div id="final-modal" class="fixed inset-0 z-[500] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="final-card" class="bg-[#0A0F16] border border-emerald-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
-            
             <div class="bg-gradient-to-r from-[#02050A] to-[#0A0F16] p-6 border-b border-gray-800 flex justify-between items-start">
                 <div>
                     <h3 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-check-circle text-emerald-400 mr-2"></i>Paso 3: Reporte</h3>
@@ -406,15 +428,12 @@
                 </div>
                 <button onclick="closeFinalModal()" class="text-gray-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-
             <div class="p-6 flex flex-col items-center text-center">
                 <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                     <i class="fa-solid fa-file-invoice text-3xl text-emerald-400"></i>
                 </div>
-                
                 <h4 class="text-white font-bold text-lg mb-2">¡Número copiado exitosamente!</h4>
                 <p class="text-gray-400 text-xs mb-8">Envía tu orden y adjunta el comprobante de pago para recibir tus reportes de inmediato.</p>
-
                 <button onclick="sendFinalWhatsApp()" class="w-full py-4 bg-[#25D366] hover:bg-[#1ebd5a] text-black rounded-xl text-center font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(37,211,102,0.4)] animate-pulse">
                     <i class="fa-brands fa-whatsapp text-lg"></i> ENVIAR ORDEN PARA PAGAR
                 </button>
@@ -457,6 +476,10 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
+                <!-- BOTÓN LUPA DE BÚSQUEDA GLOBAL -->
+                <button onclick="openSearch()" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800/50 border border-gray-700 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </button>
                 <div class="hidden md:flex items-center gap-2 font-mono text-[9px] text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 rounded uppercase tracking-widest">
                     <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></span> RED ESTABLE
                 </div>
@@ -487,8 +510,8 @@
                 </div>
             </div>
 
-            <!-- TARJETAS DEL HUB -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 mb-20">
+                <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
                     <div class="glow-bg absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -522,7 +545,7 @@
                         </div>
 
                         <h2 class="text-2xl font-bold text-white mb-3 group-hover:text-blue-50 transition-colors">Portal Financiero</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS. Análisis estructural de riesgo y perfil crediticio avanzado.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-8 flex-grow group-hover:text-gray-300 transition-colors">Reportes Infocorp, Sentinel, Equifax y SBS Deudas Antiguas. Análisis de riesgo y perfil crediticio.</p>
                         
                         <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-5 group-hover:border-blue-500/30 transition-colors">
                             <span class="font-mono text-[10px] text-blue-400 font-bold uppercase tracking-widest group-hover:text-blue-300">Más Información</span>
@@ -533,7 +556,7 @@
                     </div>
                 </div>
 
-                <div onclick="navigate('digital')" class="portfolio-card card-dig group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
+                <div onclick="initDigitalPortal()" class="portfolio-card card-dig group relative bg-[#0A0F16]/80 backdrop-blur-md rounded-2xl p-8 border border-gray-800 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden flex flex-col h-full">
                     <div class="glow-bg absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="glow-line absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
@@ -548,28 +571,26 @@
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-8">
                             <div class="top-carousel-wrapper text-gray-500">
-                                <div class="top-carousel-track" style="animation-duration: 24s;">
+                                <div class="top-carousel-track" style="animation-duration: 8s;">
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><i class="fa-solid fa-terminal text-xl"></i></div>
                                         <div class="circle-logo"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
                                     </div>
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><i class="fa-solid fa-terminal text-xl"></i></div>
                                         <div class="circle-logo"><img src="logo/netflix.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/disney.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/hbo.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/youtube.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/windows.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.style.display='none'"></div>
                                     </div>
                                 </div>
                             </div>
@@ -602,36 +623,18 @@
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-8">
                             <div class="top-carousel-wrapper text-gray-500">
-                                <div class="top-carousel-track" style="animation-duration: 35s;">
+                                <div class="top-carousel-track" style="animation-duration: 10s;">
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><i class="fa-solid fa-satellite-dish text-xl"></i></div>
-                                        <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/3.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/4.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/5.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/6.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/7.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/8.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/9.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/10.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/11.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sunat.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/reniec.png" onerror="this.style.display='none'"></div>
                                     </div>
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><i class="fa-solid fa-satellite-dish text-xl"></i></div>
-                                        <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/3.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/4.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/5.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/6.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/7.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/8.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/9.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/10.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/11.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/12.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/sunat.png" onerror="this.style.display='none'"></div>
+                                        <div class="circle-logo"><img src="logo/reniec.png" onerror="this.style.display='none'"></div>
                                     </div>
                                 </div>
                             </div>
@@ -650,69 +653,16 @@
                     </div>
                 </div>
             </div>
-
-            <!-- SECCIÓN CANAL OFICIAL -->
-            <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
-                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
-                <div class="flex flex-col items-center text-center mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Canal Oficial</h2>
-                    <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Comunidad Privada Exclusiva</p>
-                </div>
-                <div class="flex flex-col lg:flex-row items-center gap-10">
-                    <div class="w-full lg:w-1/2 flex justify-center">
-                        <div class="relative w-full max-sm p-1 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-[0_0_40px_rgba(37,211,102,0.1)]">
-                            <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain">
-                        </div>
-                    </div>
-                    <div class="w-full lg:w-1/2 flex flex-col justify-center">
-                        <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/30">
-                            <i class="fa-solid fa-bell animate-pulse"></i> Promociones Activas
-                        </div>
-                        <h3 class="text-2xl font-bold text-white mb-4 leading-tight">Optimiza tus finanzas y entretenimiento en un solo lugar.</h3>
-                        <div class="space-y-3 mb-8">
-                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros Infocorp, Sentinel, Equifax y SBS</strong>.</p></div>
-                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> (Netflix, Disney+, ChatGPT y más).</p></div>
-                            <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Verificaciones, antecedentes y <strong class="text-white">Auditorías de Investigación OSINT</strong>.</p></div>
-                        </div>
-                        <div class="flex flex-col gap-4">
-                            <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="w-full py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal Oficial
-                            </a>
-                            <a href="https://wa.me/51937751224?text=Hola%20Administrador,%20deseo%20hacer%20una%20consulta." target="_blank" class="w-full py-4 bg-[#0A0F16] border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-headset text-lg"></i> Contactar al Administrador
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CARRUSEL INFERIOR DE EVIDENCIAS -->
-            <div class="mb-10">
-                <div class="flex flex-col items-center text-center mb-8">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
-                    <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Base de evidencias y entregas exitosas</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-2 mb-8">
-                    <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-1.5 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-[10px] font-mono uppercase tracking-widest transition-colors">Todo</button>
-                    <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Finanzas</button>
-                    <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Streaming</button>
-                    <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Investigación</button>
-                </div>
-                <div class="carousel-container">
-                    <div id="carousel-track" class="carousel-track gap-4"></div>
-                </div>
-            </div>
         </div>
 
         <!-- ========================================================= -->
-        <!-- ================ PORTAL FINANCIERO (HUD + CART CONTROL) = -->
+        <!-- ================ PORTAL FINANCIERO ====================== -->
         <!-- ========================================================= -->
         <div id="view-financiero" class="hidden-view w-full">
             
-            <!-- CABECERA DE CENTRO DE MANDO -->
             <div class="mb-10 border-b border-gray-800 pb-6 relative">
                 <div class="flex justify-between items-center mb-8">
-                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-1.5 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all uppercase tracking-widest w-fit border border-gray-800">
+                    <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-1.5 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all uppercase tracking-widest w-fit border border-gray-800">
                         <i class="fa-solid fa-arrow-left"></i> Retornar
                     </button>
                     <div class="animate-pulse flex items-center gap-2 text-blue-400 text-[9px] font-mono border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 rounded-full uppercase tracking-widest">
@@ -728,46 +678,36 @@
                 </div>
             </div>
 
-            <!-- CONTENEDOR ANIMADO DEL CATÁLOGO -->
             <div id="financiero-catalog" class="opacity-100 translate-y-0 transition-all duration-700 ease-out">
                 
-                <!-- TRACKER DE PASOS (DINÁMICO) -->
                 <div class="w-full bg-[#0A0F16]/80 border border-gray-800/80 rounded-xl p-4 flex items-center justify-between relative overflow-hidden backdrop-blur-md mb-6">
                     <div id="step-1-container" class="flex flex-col items-center gap-2 relative z-10 w-1/3 transition-opacity duration-500 opacity-100">
                         <div id="step-1-circle" class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-[11px] font-bold shadow-[0_0_15px_rgba(59,130,246,0.6)] border border-blue-400 transition-all duration-500">1</div>
                         <span id="step-1-text" class="text-[8px] md:text-[9px] font-mono uppercase tracking-widest text-blue-400 text-center transition-all duration-500">Selección</span>
                     </div>
-                    
                     <div class="absolute left-[16%] right-[50%] top-7 h-[2px] bg-gray-800 z-0">
                         <div id="line-1-progress" class="h-full w-1/2 bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-500"></div>
                     </div>
-
                     <div id="step-2-container" class="flex flex-col items-center gap-2 relative z-10 w-1/3 transition-opacity duration-500 opacity-50">
                         <div id="step-2-circle" class="w-7 h-7 rounded-full bg-[#02050A] text-gray-500 flex items-center justify-center text-[11px] font-bold border border-gray-700 transition-all duration-500">2</div>
                         <span id="step-2-text" class="text-[8px] md:text-[9px] font-mono uppercase tracking-widest text-gray-500 text-center transition-all duration-500">Datos & Pago</span>
                     </div>
-                    
                     <div class="absolute left-[50%] right-[16%] top-7 h-[2px] bg-gray-800 z-0">
                         <div id="line-2-progress" class="h-full w-0 bg-gradient-to-r from-blue-500 to-blue-400 transition-all duration-500"></div>
                     </div>
-
                     <div id="step-3-container" class="flex flex-col items-center gap-2 relative z-10 w-1/3 transition-opacity duration-500 opacity-50">
                         <div id="step-3-circle" class="w-7 h-7 rounded-full bg-[#02050A] text-gray-500 flex items-center justify-center text-[11px] font-bold border border-gray-700 transition-all duration-500">3</div>
                         <span id="step-3-text" class="text-[8px] md:text-[9px] font-mono uppercase tracking-widest text-gray-500 text-center transition-all duration-500">Reporte</span>
                     </div>
                 </div>
                 
-                <!-- TARJETAS COMPACTAS -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
                     <!-- REPORTE SENTINEL -->
                     <div id="card-FIN-SNT" class="compact-card relative rounded-2xl p-6 flex flex-col group overflow-hidden border border-gray-800/80 bg-[#0A0F16]/60 backdrop-blur-xl transition-all duration-500 h-full">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none magnetic-glow"></div>
-                        
                         <div class="flex justify-between items-start mb-4 relative z-10">
                             <div class="flex flex-col">
                                 <h3 class="text-2xl font-bold text-white pr-2 leading-tight mt-1 mb-3">Reporte<br>Sentinel</h3>
-                                
                                 <div class="flex flex-wrap gap-2 mb-4">
                                     <div class="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded font-mono text-[9px] uppercase tracking-widest text-blue-400">
                                         <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_5px_rgba(96,165,250,0.8)]"></span> Oficial
@@ -776,14 +716,12 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Inmediato
                                     </div>
                                 </div>
-
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-cyan-500/70 font-mono text-xl">S/</span>
                                     <span class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 tracking-tighter pr-2 pb-1">4</span>
                                     <span class="text-cyan-500/50 font-mono text-sm">.00</span>
                                 </div>
                             </div>
-                            
                             <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center mt-1">
                                 <div class="absolute inset-0 border-[1.5px] border-dashed border-blue-500/40 rounded-full animate-[spin_8s_linear_infinite] radar-ring transition-colors"></div>
                                 <div class="w-24 h-24 rounded-full bg-[#0A0F16] flex items-center justify-center border border-gray-800 shadow-[0_0_30px_rgba(59,130,246,0.2)] p-4 z-10 group-hover:border-blue-500/30 transition-colors">
@@ -791,7 +729,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div id="action-FIN-SNT" class="mt-auto relative z-10 w-full">
                             <button onclick="addToCart('FIN-SNT', 'Reporte Sentinel', 4.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
@@ -802,11 +739,9 @@
                     <!-- REPORTE EQUIFAX -->
                     <div id="card-FIN-EQF" class="compact-card relative rounded-2xl p-6 flex flex-col group overflow-hidden border border-gray-800/80 bg-[#0A0F16]/60 backdrop-blur-xl transition-all duration-500 h-full">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none magnetic-glow"></div>
-                        
                         <div class="flex justify-between items-start mb-4 relative z-10">
                             <div class="flex flex-col">
                                 <h3 class="text-2xl font-bold text-white pr-2 leading-tight mt-1 mb-3">Reporte<br>Equifax</h3>
-                                
                                 <div class="flex flex-wrap gap-2 mb-4">
                                     <div class="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded font-mono text-[9px] uppercase tracking-widest text-blue-400">
                                         <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_5px_rgba(96,165,250,0.8)]"></span> Oficial
@@ -815,14 +750,12 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Inmediato
                                     </div>
                                 </div>
-
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-cyan-500/70 font-mono text-xl">S/</span>
                                     <span class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 tracking-tighter pr-2 pb-1">7</span>
                                     <span class="text-cyan-500/50 font-mono text-sm">.00</span>
                                 </div>
                             </div>
-                            
                             <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center mt-1">
                                 <div class="absolute inset-0 border-[1.5px] border-dashed border-blue-500/40 rounded-full animate-[spin_8s_linear_infinite] radar-ring transition-colors"></div>
                                 <div class="w-24 h-24 rounded-full bg-[#0A0F16] flex items-center justify-center border border-gray-800 shadow-[0_0_30px_rgba(59,130,246,0.2)] p-4 z-10 group-hover:border-blue-500/30 transition-colors">
@@ -830,7 +763,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div id="action-FIN-EQF" class="mt-auto relative z-10 w-full">
                             <button onclick="addToCart('FIN-EQF', 'Reporte Equifax', 7.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
@@ -841,11 +773,9 @@
                     <!-- SBS DEUDAS ANTIGUAS -->
                     <div id="card-FIN-SBS" class="compact-card relative rounded-2xl p-6 flex flex-col group overflow-hidden border border-gray-800/80 bg-[#0A0F16]/60 backdrop-blur-xl transition-all duration-500 h-full">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none magnetic-glow"></div>
-                        
                         <div class="flex justify-between items-start mb-4 relative z-10">
                             <div class="flex flex-col">
                                 <h3 class="text-xl font-bold text-white pr-2 leading-tight mt-1 mb-4">SBS Deudas<br>Antiguas</h3>
-                                
                                 <div class="flex flex-wrap gap-2 mb-4">
                                     <div class="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded font-mono text-[9px] uppercase tracking-widest text-blue-400">
                                         <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_5px_rgba(96,165,250,0.8)]"></span> Oficial
@@ -854,14 +784,12 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Inmediato
                                     </div>
                                 </div>
-
                                 <div class="flex items-baseline gap-1">
                                     <span class="text-cyan-500/70 font-mono text-xl">S/</span>
                                     <span class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 tracking-tighter pr-2 pb-1">8</span>
                                     <span class="text-cyan-500/50 font-mono text-sm">.00</span>
                                 </div>
                             </div>
-                            
                             <div class="relative w-32 h-32 flex-shrink-0 flex items-center justify-center mt-1">
                                 <div class="absolute inset-0 border-[1.5px] border-dashed border-blue-500/40 rounded-full animate-[spin_8s_linear_infinite] radar-ring transition-colors"></div>
                                 <div class="w-24 h-24 rounded-full bg-[#0A0F16] flex items-center justify-center border border-gray-800 shadow-[0_0_30px_rgba(59,130,246,0.2)] p-4 z-10 group-hover:border-blue-500/30 transition-colors">
@@ -869,7 +797,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div id="action-FIN-SBS" class="mt-auto relative z-10 w-full">
                             <button onclick="addToCart('FIN-SBS', 'SBS Deudas Antiguas', 8.00, 'FINANCIERO', this)" class="btn-product w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
@@ -882,47 +809,479 @@
         </div>
 
         <!-- ========================================================= -->
-        <!-- ================ PORTAL DIGITAL ========================== -->
+        <!-- ================ PORTAL DIGITAL (FORMATO 2 COLUMNAS) ===== -->
         <!-- ========================================================= -->
         <div id="view-digital" class="hidden-view w-full">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
-                <div>
-                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
-                        <i class="fa-solid fa-arrow-left"></i> Retornar al Hub
+            
+            <div class="mb-10 border-b border-gray-800 pb-6 relative">
+                <div class="flex justify-between items-center mb-8">
+                    <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-1.5 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all uppercase tracking-widest w-fit border border-gray-800">
+                        <i class="fa-solid fa-arrow-left"></i> Retornar
                     </button>
+                    <div class="animate-pulse flex items-center gap-2 text-emerald-400 text-[9px] font-mono border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Licencias Activas
+                    </div>
+                </div>
+                
+                <div class="mb-8">
                     <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-terminal text-emerald-500"></i> Portal Digital
+                        <i class="fa-solid fa-terminal text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"></i> Portal Digital
                     </h2>
-                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Software y Streaming</p>
+                    <p class="text-gray-500 text-[10px] md:text-xs mt-2 font-mono tracking-widest uppercase">/// Catálogo de Software y Streaming</p>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-gray-800 hover:border-emerald-500/30 transition-colors group">
-                    <div class="absolute left-0 inset-y-0 w-1 bg-emerald-600/30 group-hover:bg-emerald-500 transition-colors"></div>
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-01</span>
-                    <div class="mb-8">
-                        <div class="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 mb-4"><i class="fa-brands fa-windows text-emerald-400 text-xl"></i></div>
-                        <h3 class="text-xl font-bold text-white mb-2">Licencias Software</h3>
-                        <p class="text-gray-400 text-sm">Sistemas operativos y ofimática original.</p>
-                        <div class="text-lg mt-4 font-bold text-emerald-400 font-mono">Consultar</div>
+
+            <!-- FILTROS DIGITALES -->
+            <div id="digital-filters" class="flex overflow-x-auto gap-2 mb-8 pb-2 no-scrollbar opacity-0 translate-y-10 transition-all duration-700 ease-out">
+                <button onclick="filterDigital('all')" id="btn-dig-all" class="dig-filter-btn px-4 py-2 rounded-lg border border-emerald-500 bg-emerald-500/20 text-white text-[10px] font-bold font-mono uppercase tracking-widest whitespace-nowrap transition-colors">Todo</button>
+                <button onclick="filterDigital('streaming')" id="btn-dig-streaming" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-play mr-1"></i> Streaming</button>
+                <button onclick="filterDigital('ia')" id="btn-dig-ia" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-brain mr-1"></i> IA & Tech</button>
+                <button onclick="filterDigital('diseno')" id="btn-dig-diseno" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-pen-nib mr-1"></i> Diseño</button>
+                <button onclick="filterDigital('musica')" id="btn-dig-musica" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-music mr-1"></i> Música & Edu</button>
+                <button onclick="filterDigital('software')" id="btn-dig-software" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-compact-disc mr-1"></i> Software</button>
+            </div>
+
+            <!-- CATÁLOGO VERTICAL DE 2 COLUMNAS EN CELULAR -->
+            <div id="digital-catalog" class="opacity-0 translate-y-12 transition-all duration-700 ease-out">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    
+                    <!-- ============================================== -->
+                    <!-- CATEGORIA: STREAMING                           -->
+                    <!-- ============================================== -->
+                    <div class="category-section cat-streaming w-full col-span-full mt-2 mb-1">
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-play text-red-500 mr-2"></i>Streaming Premium</h3>
                     </div>
-                    <button id="btn-DIG-WIN" onclick="addToCart('DIG-WIN', 'Cotización: Licencias Software', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-emerald-600/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus"></i> Cotizar
-                    </button>
-                </div>
-                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-gray-800 hover:border-red-500/30 transition-colors group">
-                    <div class="absolute left-0 inset-y-0 w-1 bg-red-600/30 group-hover:bg-red-500 transition-colors"></div>
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: DIG-02</span>
-                    <div class="mb-8">
-                        <div class="w-12 h-12 rounded bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-4"><i class="fa-solid fa-play text-red-400 text-xl"></i></div>
-                        <h3 class="text-xl font-bold text-white mb-2">Cuentas Streaming</h3>
-                        <p class="text-gray-400 text-sm">Catálogo completo de entretenimiento digital.</p>
-                        <div class="text-lg mt-4 font-bold text-red-400 font-mono">Ver Catálogo</div>
+
+                    <!-- NETFLIX -->
+                    <div id="card-DIG-NTF" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#0d131f] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <!-- AQUI ESTA LA MAGIA DEL TAMAÑO -->
+                            <img src="publi/netflix.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Netflix" onerror="this.src='https://placehold.co/150x150/111/fff?text=NETFLIX'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <!-- TEXTOS MÁS GRANDES -->
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Netflix Premium</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">4K Ultra HD</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                            </div>
+                            <div id="action-DIG-NTF" class="w-full">
+                                <button onclick="addToCart('DIG-NTF', 'Netflix Premium', 15.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button id="btn-DIG-STR" onclick="addToCart('DIG-STR', 'Solicitud: Catálogo Streaming', 0, 'DIGITAL', this)" class="btn-product w-full py-4 bg-red-600/10 border border-red-500/30 text-red-400 hover:bg-red-600/20 hover:text-red-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus"></i> Ver Catálogo
-                    </button>
+
+                    <!-- HBO MAX -->
+                    <div id="card-DIG-MAX" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#050b14] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/hbo.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Max" onerror="this.src='https://placehold.co/150x150/111/fff?text=MAX'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Max (HBO)</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Platino / 4K</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-MAX" class="w-full">
+                                <button onclick="addToCart('DIG-MAX', 'Max (HBO)', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRIME VIDEO -->
+                    <div id="card-DIG-PRM" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#071018] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/primevideo.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Prime" onerror="this.src='https://placehold.co/150x150/111/fff?text=PRIME'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Prime Video</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Ultra HD</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-PRM" class="w-full">
+                                <button onclick="addToCart('DIG-PRM', 'Prime Video', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- YOUTUBE -->
+                    <div id="card-DIG-YTB" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#180505] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/youtube.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="YouTube" onerror="this.src='https://placehold.co/150x150/111/fff?text=YOUTUBE'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">YouTube Premium</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Sin Anuncios</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-YTB" class="w-full">
+                                <button onclick="addToCart('DIG-YTB', 'YouTube Premium', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- DISNEY+ -->
+                    <div id="card-DIG-DSN" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#070b1a] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Disney.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Disney+" onerror="this.src='https://placehold.co/150x150/111/fff?text=DISNEY'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Disney+</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Premium + Star</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">12.00</span>
+                            </div>
+                            <div id="action-DIG-DSN" class="w-full">
+                                <button onclick="addToCart('DIG-DSN', 'Disney+', 12.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PARAMOUNT+ -->
+                    <div id="card-DIG-PAR" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#0a0f1a] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Paramount.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Paramount+" onerror="this.src='https://placehold.co/150x150/111/fff?text=PARAMOUNT'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Paramount+</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Estrenos Exclusivos</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-PAR" class="w-full">
+                                <button onclick="addToCart('DIG-PAR', 'Paramount+', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRUNCHYROLL -->
+                    <div id="card-DIG-CRN" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#1a0c02] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Crunchyroll.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Crunchyroll" onerror="this.src='https://placehold.co/150x150/111/fff?text=CRUNCHYROLL'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Crunchyroll</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Mega Fan</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-CRN" class="w-full">
+                                <button onclick="addToCart('DIG-CRN', 'Crunchyroll', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- APPLE TV -->
+                    <div id="card-DIG-APL" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#0d0f12] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/AppleTV.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Apple TV" onerror="this.src='https://placehold.co/150x150/111/fff?text=APPLETV'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Apple TV+</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Originals 4K HDR</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                            </div>
+                            <div id="action-DIG-APL" class="w-full">
+                                <button onclick="addToCart('DIG-APL', 'Apple TV+', 15.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIX -->
+                    <div id="card-DIG-VIX" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#1a0a02] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/VIX.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="VIX" onerror="this.src='https://placehold.co/150x150/111/fff?text=VIX'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">VIX Premium</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Liga 1 Max</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-VIX" class="w-full">
+                                <button onclick="addToCart('DIG-VIX', 'VIX Premium', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIRECTV GO -->
+                    <div id="card-DIG-DTV" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020a1a] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/directv.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="DirecTV" onerror="this.src='https://placehold.co/150x150/111/fff?text=DTV'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">DirecTV GO</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">TV en Vivo</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">20.00</span>
+                            </div>
+                            <div id="action-DIG-DTV" class="w-full">
+                                <button onclick="addToCart('DIG-DTV', 'DirecTV GO', 20.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MOVISTAR TV -->
+                    <div id="card-DIG-MOV" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020b12] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/movistar.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Movistar TV" onerror="this.src='https://placehold.co/150x150/111/fff?text=MOVISTAR'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Movistar Play</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">App Móvil</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                            </div>
+                            <div id="action-DIG-MOV" class="w-full">
+                                <button onclick="addToCart('DIG-MOV', 'Movistar Play', 15.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- IPTV -->
+                    <div id="card-DIG-IPTV" class="card-digital-item cat-streaming flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-red h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#070214] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/iptv.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="IPTV" onerror="this.src='https://placehold.co/150x150/111/fff?text=IPTV'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">IPTV Smarters</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Pro / VIP</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">25.00</span>
+                            </div>
+                            <div id="action-DIG-IPTV" class="w-full">
+                                <button onclick="addToCart('DIG-IPTV', 'IPTV Smarters Pro', 25.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- CATEGORIA: INTELIGENCIA ARTIFICIAL (CYAN)      -->
+                    <!-- ============================================== -->
+                    <div class="category-section cat-ia w-full col-span-full mt-4 mb-2">
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-brain text-cyan-500 mr-2"></i>Inteligencia Artificial</h3>
+                    </div>
+
+                    <!-- CHATGPT -->
+                    <div id="card-DIG-GPT" class="card-digital-item cat-ia flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-cyan h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020a0a] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/chatgpt.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="ChatGPT" onerror="this.src='https://placehold.co/150x150/111/fff?text=GPT'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">ChatGPT Plus</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">GPT-4o / DALL-E 3</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">30.00</span>
+                            </div>
+                            <div id="action-DIG-GPT" class="w-full">
+                                <button onclick="addToCart('DIG-GPT', 'ChatGPT Plus', 30.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GEMINI -->
+                    <div id="card-DIG-GEM" class="card-digital-item cat-ia flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-cyan h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#02070e] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/GEMINI.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Gemini" onerror="this.src='https://placehold.co/150x150/111/fff?text=GEMINI'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Gemini Advanced</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Google 1.5 Pro</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">30.00</span>
+                            </div>
+                            <div id="action-DIG-GEM" class="w-full">
+                                <button onclick="addToCart('DIG-GEM', 'Gemini Advanced', 30.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- CATEGORIA: SOFTWARE (AZUL)                     -->
+                    <!-- ============================================== -->
+                    <div class="category-section cat-software w-full col-span-full mt-4 mb-2">
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-compact-disc text-blue-500 mr-2"></i>Licencias de Software</h3>
+                    </div>
+
+                    <!-- WINDOWS -->
+                    <div id="card-DIG-WIN" class="card-digital-item cat-software flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-blue h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020610] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Windows.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Windows" onerror="this.src='https://placehold.co/150x150/111/fff?text=WIN'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Windows 11 Pro</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Licencia OEM</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">25.00</span>
+                            </div>
+                            <div id="action-DIG-WIN" class="w-full">
+                                <button onclick="addToCart('DIG-WIN', 'Windows 11 Pro', 25.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OFFICE -->
+                    <div id="card-DIG-OFF" class="card-digital-item cat-software flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-blue h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#070512] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Office.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Office" onerror="this.src='https://placehold.co/150x150/111/fff?text=OFFICE'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Microsoft 365</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Suscripción Anual</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">35.00</span>
+                            </div>
+                            <div id="action-DIG-OFF" class="w-full">
+                                <button onclick="addToCart('DIG-OFF', 'Microsoft 365', 35.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- CATEGORIA: DISEÑO (MORADO)                     -->
+                    <!-- ============================================== -->
+                    <div class="category-section cat-diseno w-full col-span-full mt-4 mb-2">
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-pen-nib text-purple-500 mr-2"></i>Diseño & Edición</h3>
+                    </div>
+
+                    <!-- CANVA -->
+                    <div id="card-DIG-CNV" class="card-digital-item cat-diseno flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-purple h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#070410] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/canva.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Canva" onerror="this.src='https://placehold.co/150x150/111/fff?text=CANVA'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Canva Pro</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Educación / Pro</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-CNV" class="w-full">
+                                <button onclick="addToCart('DIG-CNV', 'Canva Pro', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CAPCUT -->
+                    <div id="card-DIG-CPT" class="card-digital-item cat-diseno flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-purple h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020205] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/capcut.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="CapCut" onerror="this.src='https://placehold.co/150x150/111/fff?text=CAPCUT'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">CapCut Pro</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Efectos Premium</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                            </div>
+                            <div id="action-DIG-CPT" class="w-full">
+                                <button onclick="addToCart('DIG-CPT', 'CapCut Pro', 15.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================== -->
+                    <!-- CATEGORIA: MÚSICA & EDUCACIÓN (VERDE)          -->
+                    <!-- ============================================== -->
+                    <div class="category-section cat-musica w-full col-span-full mt-4 mb-2">
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-music text-emerald-500 mr-2"></i>Música & Educación</h3>
+                    </div>
+
+                    <!-- SPOTIFY -->
+                    <div id="card-DIG-SPT" class="card-digital-item cat-musica flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-emerald h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#020a05] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/spotify.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Spotify" onerror="this.src='https://placehold.co/150x150/111/fff?text=SPOTIFY'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Spotify Premium</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Sin Anuncios</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                            </div>
+                            <div id="action-DIG-SPT" class="w-full">
+                                <button onclick="addToCart('DIG-SPT', 'Spotify Premium', 10.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DUOLINGO -->
+                    <div id="card-DIG-DUO" class="card-digital-item cat-musica flex flex-col group relative rounded-2xl overflow-hidden border border-gray-800/80 bg-[#0A0F16]/90 backdrop-blur-xl transition-all duration-500 card-hover-emerald h-full">
+                        <div class="h-36 md:h-48 relative flex items-center justify-center bg-[#061002] border-b border-gray-800/80 overflow-hidden shrink-0">
+                            <div class="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                            <img src="publi/Duolingo.png" class="w-full h-full object-contain p-4 md:p-8 z-10 group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]" alt="Duolingo" onerror="this.src='https://placehold.co/150x150/111/fff?text=DUOLINGO'">
+                        </div>
+                        <div class="p-4 md:p-6 flex flex-col flex-grow relative z-10">
+                            <h3 class="text-base md:text-xl font-bold text-white mb-1 leading-tight">Duolingo Super</h3>
+                            <span class="text-gray-400 font-mono text-[10px] md:text-[11px] uppercase tracking-widest mb-4">Vidas Ilimitadas</span>
+                            <div class="flex items-baseline gap-1 mb-4 mt-auto">
+                                <span class="text-gray-500 font-mono text-sm">S/</span><span class="text-2xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                            </div>
+                            <div id="action-DIG-DUO" class="w-full">
+                                <button onclick="addToCart('DIG-DUO', 'Duolingo Super', 15.00, 'DIGITAL', this)" class="btn-product w-full py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -933,7 +1292,7 @@
         <div id="view-investigacion" class="hidden-view w-full">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
                 <div>
-                    <button onclick="navigate('hub')" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
+                    <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded hover:bg-gray-800 transition-all mb-6 uppercase tracking-widest w-fit border border-gray-800">
                         <i class="fa-solid fa-arrow-left"></i> Retornar al Hub
                     </button>
                     <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
@@ -943,8 +1302,28 @@
                 </div>
             </div>
             
+            <div class="mb-10 bg-[#0A0F16]/90 border border-cyan-500/30 rounded-2xl p-6 shadow-[0_0_30px_rgba(6,182,212,0.1)] relative overflow-hidden backdrop-blur-md">
+                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
+                <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-terminal text-cyan-400"></i> Terminal de Rastreo Vehicular (OSINT)
+                </h3>
+                <p class="text-gray-400 text-xs font-mono mb-6">/// CONEXIÓN DIRECTA AL MOTOR DE EXTRACCIÓN (BETA)</p>
+                
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <i class="fa-solid fa-car absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500/50"></i>
+                        <input type="text" id="input-placa" placeholder="Ingrese Placa Vehicular (Ej: ABC-123)" class="w-full bg-[#02050A] border border-cyan-500/30 text-white font-mono text-sm rounded-xl py-4 pl-12 pr-4 focus:border-cyan-400 focus:outline-none transition-colors uppercase">
+                    </div>
+                    <button onclick="ejecutarRastreo()" id="btn-rastreo" class="py-4 px-8 bg-cyan-600/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl font-bold font-mono text-xs tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-radar"></i> Iniciar Escaneo
+                    </button>
+                </div>
+
+                <div id="pantalla-resultados" class="hidden mt-6 bg-[#02050A] border border-gray-800 rounded-xl p-6"></div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-cyan-500/30 hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-BAS" class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-cyan-500/30 hover:border-cyan-500/50 transition-colors group">
                     <div class="absolute top-0 inset-x-0 h-1 bg-cyan-600/30 group-hover:bg-cyan-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-01</span>
                     <div>
@@ -952,11 +1331,13 @@
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Validación de identidad y estado en registros públicos.</p>
                         <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 40.00</div>
                     </div>
-                    <button id="btn-INV-BAS" onclick="addToCart('INV-BAS', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
-                    </button>
+                    <div id="action-INV-BAS">
+                        <button onclick="addToCart('INV-BAS', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
+                        </button>
+                    </div>
                 </div>
-                <div class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-purple-500/30 hover:border-purple-500/50 transition-colors group">
+                <div id="card-INV-PRO" class="premium-card relative bg-[#0A0F16]/90 backdrop-blur-md rounded-2xl p-8 flex flex-col justify-between border border-purple-500/30 hover:border-purple-500/50 transition-colors group">
                     <div class="absolute top-0 inset-x-0 h-1 bg-purple-600/30 group-hover:bg-purple-500 transition-colors"></div>
                     <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-02</span>
                     <div>
@@ -964,14 +1345,69 @@
                         <p class="text-gray-400 text-sm mb-6 leading-relaxed">Auditoría de huella digital y presencia en la red.</p>
                         <div class="inline-block text-[10px] text-purple-400 border border-purple-500/30 bg-purple-500/10 font-mono mb-8 uppercase px-3 py-1 rounded">Estatus: Previa Evaluación</div>
                     </div>
-                    <button id="btn-INV-PRO" onclick="addToCart('INV-PRO', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus"></i> Evaluar Caso
-                    </button>
+                    <div id="action-INV-PRO">
+                        <button onclick="addToCart('INV-PRO', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Evaluar Caso
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
+
+    <!-- CANAL OFICIAL Y EVIDENCIAS COMPARTIDAS -->
+    <div id="shared-sections" class="hidden-view opacity-0 px-4 md:px-8 max-w-7xl mx-auto w-full mb-16 relative z-10 transition-opacity duration-500">
+        <div class="bg-[#0A0F16]/80 backdrop-blur-md rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
+            <div class="flex flex-col items-center text-center mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Canal Oficial</h2>
+                <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Comunidad Privada Exclusiva</p>
+            </div>
+            <div class="flex flex-col lg:flex-row items-center gap-10">
+                <div class="w-full lg:w-1/2 flex justify-center">
+                    <div class="relative w-full max-sm p-1 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-[0_0_40px_rgba(37,211,102,0.1)]">
+                        <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain">
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 flex flex-col justify-center">
+                    <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/30">
+                        <i class="fa-solid fa-bell animate-pulse"></i> Promociones Activas
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 leading-tight">Optimiza tus finanzas y entretenimiento en un solo lugar.</h3>
+                    <div class="space-y-3 mb-8">
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros Infocorp, Sentinel, Equifax y SBS</strong>.</p></div>
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> (Netflix, Disney+, ChatGPT y más).</p></div>
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Verificaciones, antecedentes y <strong class="text-white">Auditorías de Investigación OSINT</strong>.</p></div>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="w-full py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal Oficial
+                        </a>
+                        <a href="https://wa.me/51937751224?text=Hola%20Administrador,%20deseo%20hacer%20una%20consulta." target="_blank" class="w-full py-4 bg-[#0A0F16] border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-headset text-lg"></i> Contactar al Administrador
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex flex-col items-center text-center mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
+                <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Base de evidencias y entregas exitosas</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-1.5 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-[10px] font-mono uppercase tracking-widest transition-colors">Todo</button>
+                <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Finanzas</button>
+                <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Streaming</button>
+                <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Investigación</button>
+            </div>
+            <div class="carousel-container">
+                <div id="carousel-track" class="carousel-track gap-4"></div>
+            </div>
+        </div>
+    </div>
 
     <footer class="border-t border-gray-800/80 bg-[#030712]/95 mt-auto relative z-10">
         <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -985,7 +1421,130 @@
     </footer>
 
     <script>
-        // NOTIFICACIONES NIVEL DIOS (TOAST)
+        // ⚡ DATA DEL BUSCADOR GLOBAL ⚡
+        const systemProducts = [
+            {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Análisis crediticio', price: 4.00, portal: 'financiero', color: 'blue'},
+            {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Análisis crediticio', price: 7.00, portal: 'financiero', color: 'blue'},
+            {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', desc: 'Deudas históricas', price: 8.00, portal: 'financiero', color: 'blue'},
+            {id: 'DIG-NTF', name: 'Netflix Premium', desc: '4K Ultra HD', price: 15.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-MAX', name: 'Max (HBO)', desc: 'Platino / 4K', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-PRM', name: 'Prime Video', desc: 'Ultra HD', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-YTB', name: 'YouTube Premium', desc: 'Sin Anuncios', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-DSN', name: 'Disney+', desc: 'Premium + Star', price: 12.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-PAR', name: 'Paramount+', desc: 'Estrenos Exclusivos', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-CRN', name: 'Crunchyroll', desc: 'Mega Fan', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-APL', name: 'Apple TV+', desc: 'Originals 4K HDR', price: 15.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-VIX', name: 'VIX Premium', desc: 'Liga 1 Max', price: 10.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-DTV', name: 'DirecTV GO', desc: 'TV en Vivo', price: 20.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-MOV', name: 'Movistar Play', desc: 'App Móvil', price: 15.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-IPTV', name: 'IPTV Smarters Pro', desc: 'VIP', price: 25.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 30.00, portal: 'digital', color: 'cyan'},
+            {id: 'DIG-GEM', name: 'Gemini Advanced', desc: 'Google 1.5 Pro', price: 30.00, portal: 'digital', color: 'cyan'},
+            {id: 'DIG-WIN', name: 'Windows 11 Pro', desc: 'OEM', price: 25.00, portal: 'digital', color: 'blue'},
+            {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Anual', price: 35.00, portal: 'digital', color: 'blue'},
+            {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Educación/Pro', price: 10.00, portal: 'digital', color: 'purple'},
+            {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos Premium', price: 15.00, portal: 'digital', color: 'purple'},
+            {id: 'DIG-SPT', name: 'Spotify Premium', desc: 'Sin Anuncios', price: 10.00, portal: 'digital', color: 'emerald'},
+            {id: 'DIG-DUO', name: 'Duolingo Super', desc: 'Vidas Ilimitadas', price: 15.00, portal: 'digital', color: 'emerald'},
+            {id: 'INV-BAS', name: 'Perfilado Básico', desc: 'Identidad y Registros', price: 40.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-PRO', name: 'Rastreo Profundo', desc: 'Huella digital', price: 0.00, portal: 'investigacion', color: 'purple'}
+        ];
+
+        function openSearch() {
+            const modal = document.getElementById('search-modal');
+            const content = document.getElementById('search-modal-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            document.getElementById('modal-search-input').focus();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSearch() {
+            const modal = document.getElementById('search-modal');
+            const content = document.getElementById('search-modal-content');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('scale-95');
+            document.getElementById('modal-search-input').value = '';
+            document.getElementById('search-results-container').innerHTML = `
+                <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
+                    <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>
+                    Escribe para buscar en el sistema
+                </div>
+            `;
+            document.body.style.overflow = 'auto';
+        }
+
+        function executeSearch(query) {
+            const container = document.getElementById('search-results-container');
+            if(!query || query.length < 2) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
+                        <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>
+                        Escribe para buscar en el sistema
+                    </div>
+                `;
+                return;
+            }
+            
+            query = query.toLowerCase();
+            const results = systemProducts.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query) || p.portal.toLowerCase().includes(query));
+            
+            if(results.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-500 py-8 font-mono text-xs uppercase">No se encontraron resultados para "${query}"</div>`;
+                return;
+            }
+
+            const grouped = { 'financiero': [], 'digital': [], 'investigacion': [] };
+            results.forEach(p => grouped[p.portal].push(p));
+
+            let html = '';
+            
+            for (const [portal, items] of Object.entries(grouped)) {
+                if (items.length === 0) continue;
+                
+                let portalName = portal === 'investigacion' ? 'Portal de Investigación' : `Portal ${portal.charAt(0).toUpperCase() + portal.slice(1)}`;
+                let icon = portal === 'financiero' ? 'fa-wallet text-blue-500' : (portal === 'digital' ? 'fa-terminal text-emerald-500' : 'fa-radar text-cyan-500');
+                
+                html += `
+                    <div class="mb-4">
+                        <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><i class="fa-solid ${icon}"></i> ${portalName}</h4>
+                        <div class="space-y-2">
+                `;
+                
+                items.forEach(item => {
+                    let priceStr = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
+                    html += `
+                        <div onclick="goToProduct('${item.portal}', '${item.id}')" class="bg-[#0A0F16] border border-gray-800 hover:border-${item.color}-500/50 p-3 rounded-xl cursor-pointer transition-colors flex items-center justify-between group">
+                            <div>
+                                <h5 class="text-white font-bold text-sm group-hover:text-${item.color}-400 transition-colors">${item.name}</h5>
+                                <p class="text-gray-500 text-[10px] font-mono">${item.desc}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-white font-mono font-bold">${priceStr}</span>
+                                <i class="fa-solid fa-chevron-right text-gray-600 text-xs ml-2 group-hover:text-${item.color}-400"></i>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function goToProduct(portal, id) {
+            closeSearch();
+            navigate(portal, false);
+            setTimeout(() => {
+                const card = document.getElementById('card-' + id);
+                if(card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('ring-2', 'ring-white', 'scale-105');
+                    setTimeout(() => card.classList.remove('ring-2', 'ring-white', 'scale-105'), 1000);
+                }
+            }, 800);
+        }
+
+        // NOTIFICACIONES TOAST
         function showNotification(message) {
             try { if(navigator.vibrate) navigator.vibrate([50, 100, 50]); } catch(e){}
             const container = document.getElementById('toast-container');
@@ -993,7 +1552,6 @@
 
             const toast = document.createElement('div');
             toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(220,38,38,0.4)] border border-red-500/50 bg-red-950/90 backdrop-blur-md w-max mx-auto pointer-events-auto cursor-pointer`;
-            
             toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-lg"></i><p class="text-white text-[11px] font-mono tracking-wide leading-tight">${message}</p>`;
 
             toast.onclick = () => {
@@ -1001,7 +1559,6 @@
                 toast.classList.add('opacity-0', '-translate-y-5');
                 setTimeout(() => toast.remove(), 500);
             };
-            
             container.appendChild(toast);
 
             setTimeout(() => {
@@ -1016,9 +1573,125 @@
             }, 4000);
         }
 
-        // PRE-FILTRO (MODAL INTRODUCTORIO) FINANCIERO
+        // MOTOR FETCH API OSINT
+        async function ejecutarRastreo() {
+            const placaInput = document.getElementById('input-placa');
+            const placa = placaInput.value.trim().toUpperCase();
+            const btn = document.getElementById('btn-rastreo');
+            const pantalla = document.getElementById('pantalla-resultados');
+
+            if(placa === '') { showNotification('Error: Ingrese una placa vehicular válida.'); return; }
+
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> HACKEANDO RED...';
+            btn.classList.add('bg-cyan-600', 'text-white');
+            pantalla.classList.remove('hidden');
+            pantalla.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mb-4"></div>
+                    <p class="text-cyan-400 font-mono text-xs animate-pulse">Conectando con Motor OSINT (127.0.0.1:8000)...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/consultar/${placa}`);
+                if(!response.ok) throw new Error('Error de conexión');
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-solid fa-radar"></i> Nuevo Escaneo';
+                    btn.classList.remove('bg-cyan-600', 'text-white');
+                    pantalla.innerHTML = `
+                        <div class="border-b border-gray-800 pb-4 mb-4 flex justify-between items-center">
+                            <span class="text-emerald-400 font-mono text-[10px] uppercase tracking-widest"><i class="fa-solid fa-circle-check"></i> Extracción Exitosa</span>
+                            <span class="text-gray-500 font-mono text-[10px]">TARGET: ${data.placa_consultada}</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+                            <div><span class="text-gray-500 block mb-1">PROPIETARIO SIMULADO:</span> <span class="text-white font-bold">${data.propietario_simulado}</span></div>
+                            <div><span class="text-gray-500 block mb-1">PAPELETAS DETECTADAS:</span> <span class="text-red-400 font-bold">${data.papeletas_simuladas} Registros</span></div>
+                            <div><span class="text-gray-500 block mb-1">ESTADO DEL SISTEMA:</span> <span class="text-cyan-400">${data.mensaje}</span></div>
+                            <div><span class="text-gray-500 block mb-1">FUENTE DE EXTRACCIÓN:</span> <span class="text-white">${data.datos_obtenidos_de}</span></div>
+                        </div>
+                    `;
+                }, 1500); 
+
+            } catch (error) {
+                btn.innerHTML = '<i class="fa-solid fa-radar"></i> Reintentar Escaneo';
+                btn.classList.remove('bg-cyan-600', 'text-white');
+                pantalla.innerHTML = `
+                    <div class="text-center py-6">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-3xl mb-3 animate-pulse"></i>
+                        <p class="text-red-400 font-mono text-xs uppercase tracking-widest">CONEXIÓN RECHAZADA O MOTOR APAGADO</p>
+                        <p class="text-gray-500 font-mono text-[10px] mt-2">Verifique que su servidor FastAPI esté corriendo y con CORS habilitado.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // --- MANEJO DE VISTAS Y NAVEGACIÓN ---
+        function navigate(viewId, isBack = false) {
+            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
+            
+            const shared = document.getElementById('shared-sections');
+            if(shared) {
+                if(viewId === 'hub') {
+                    shared.classList.remove('hidden-view');
+                    setTimeout(() => shared.classList.remove('opacity-0'), 50);
+                } else {
+                    shared.classList.add('opacity-0');
+                    setTimeout(() => shared.classList.add('hidden-view'), 300);
+                }
+            }
+
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                if(el) { el.classList.add('hidden-view'); el.classList.remove('animate-fade-in-up'); }
+            });
+            
+            const target = document.getElementById('view-' + viewId);
+            if(target) {
+                target.classList.remove('hidden-view');
+                void target.offsetWidth; 
+                target.classList.add('animate-fade-in-up');
+            }
+
+            if (!isBack) {
+                const newUrl = viewId === 'hub' ? window.location.pathname : window.location.pathname + '#' + viewId;
+                history.pushState({ view: viewId }, '', newUrl);
+            }
+
+            if(viewId === 'financiero') {
+                const catalog = document.getElementById('financiero-catalog');
+                if(catalog && document.getElementById('financiero-intro-modal').classList.contains('opacity-0')) {
+                    catalog.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+                    catalog.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                }
+            }
+            if(viewId === 'digital') {
+                const catalog = document.getElementById('digital-catalog');
+                const filters = document.getElementById('digital-filters');
+                if(catalog && document.getElementById('digital-intro-modal').classList.contains('opacity-0')) {
+                    if(filters) {
+                        filters.classList.remove('opacity-0', 'translate-y-10');
+                        filters.classList.add('opacity-100', 'translate-y-0');
+                    }
+                    catalog.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+                    catalog.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                }
+            }
+        }
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.view) {
+                navigate(event.state.view, true);
+            } else {
+                navigate('hub', true);
+            }
+        });
+
+        // PRE-FILTROS
         function initFinancieroPortal() {
             navigate('financiero');
+            window.scrollTo(0, 0);
             const catalog = document.getElementById('financiero-catalog');
             if(catalog) {
                 catalog.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
@@ -1041,7 +1714,6 @@
                 modal.classList.add('opacity-0', 'pointer-events-none');
                 card.classList.add('scale-95');
             }
-            
             const catalog = document.getElementById('financiero-catalog');
             if(catalog) {
                 setTimeout(() => {
@@ -1051,50 +1723,302 @@
             }
         }
 
-        function initScrollObserver() {
-            try {
-                if (window.innerWidth < 1024) {
-                    const cards = document.querySelectorAll('.portfolio-card');
-                    let isScrolling = false;
-
-                    function updateCenterCard() {
-                        let closestCard = null;
-                        let minDistance = Infinity;
-                        const windowCenter = window.innerHeight / 2;
-
-                        cards.forEach(card => {
-                            const rect = card.getBoundingClientRect();
-                            const cardCenter = rect.top + (rect.height / 2);
-                            const distance = Math.abs(windowCenter - cardCenter);
-
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                closestCard = card;
-                            }
-                        });
-
-                        cards.forEach(card => {
-                            if (card === closestCard) {
-                                card.classList.add('in-view');
-                                card.classList.add('is-centered');
-                            } else {
-                                card.classList.remove('in-view');
-                                card.classList.remove('is-centered');
-                            }
-                        });
-                        isScrolling = false;
-                    }
-
-                    window.addEventListener('scroll', () => {
-                        if (!isScrolling) {
-                            window.requestAnimationFrame(updateCenterCard);
-                            isScrolling = true;
-                        }
-                    }, { passive: true });
-                    
-                    setTimeout(updateCenterCard, 100);
+        function initDigitalPortal() {
+            navigate('digital');
+            window.scrollTo(0, 0);
+            const catalog = document.getElementById('digital-catalog');
+            const filters = document.getElementById('digital-filters');
+            if(catalog && filters) {
+                catalog.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                catalog.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+                filters.classList.remove('opacity-100', 'translate-y-0');
+                filters.classList.add('opacity-0', 'translate-y-10');
+            }
+            setTimeout(() => {
+                const modal = document.getElementById('digital-intro-modal');
+                const card = document.getElementById('digital-intro-card');
+                if(modal && card) {
+                    modal.classList.remove('opacity-0', 'pointer-events-none');
+                    card.classList.remove('scale-95');
                 }
-            } catch(e) {}
+            }, 50);
+        }
+
+        function proceedToDigital() {
+            const modal = document.getElementById('digital-intro-modal');
+            const card = document.getElementById('digital-intro-card');
+            if(modal && card) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                card.classList.add('scale-95');
+            }
+            const catalog = document.getElementById('digital-catalog');
+            const filters = document.getElementById('digital-filters');
+            if(catalog && filters) {
+                setTimeout(() => {
+                    filters.classList.remove('opacity-0', 'translate-y-10');
+                    filters.classList.add('opacity-100', 'translate-y-0');
+                    setTimeout(() => {
+                        catalog.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+                        catalog.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    }, 150);
+                }, 300); 
+            }
+        }
+
+        // --- SISTEMA AUTOMATIZADO DE CARRITO ---
+        let cart = [];
+        const WA_NUMBER = "51937751224";
+        let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+        
+        try {
+            const elOrderId = document.getElementById('order-id-display');
+            if(elOrderId) elOrderId.innerText = "ID: " + orderId;
+        } catch(e) {}
+
+        function addToCart(id, name, price, category, btnElement) {
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            let item = cart.find(i => i.id === id);
+            
+            let dnisArray = [];
+            if (category === 'FINANCIERO') {
+                if (item) {
+                    item.dnis.push({type: 'DNI', num: ''});
+                    dnisArray = item.dnis;
+                } else {
+                    dnisArray = [{type: 'DNI', num: ''}];
+                }
+            }
+
+            if(item) {
+                item.qty++;
+                if(category === 'FINANCIERO') item.dnis = dnisArray;
+            } else {
+                cart.push({ id, name, price, category, qty: 1, dnis: dnisArray }); 
+            }
+            
+            if(btnElement) {
+                btnElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> PROCESANDO...';
+                if(category === 'FINANCIERO') {
+                    btnElement.classList.add('bg-blue-600/30', 'text-white', 'scale-95');
+                } else if(category === 'DIGITAL') {
+                    btnElement.classList.add('bg-emerald-600/30', 'text-white', 'scale-95');
+                } else {
+                    btnElement.classList.add('bg-cyan-600/30', 'text-white', 'scale-95');
+                }
+                
+                setTimeout(() => { 
+                    syncProductButtons(); updateFloatingAction(); renderCart();
+                }, 400);
+            } else {
+                syncProductButtons(); updateFloatingAction(); renderCart();
+            }
+        }
+
+        function updateQty(id, change) {
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                } else {
+                    if(item.category === 'FINANCIERO') {
+                        if(change > 0) item.dnis.push({type: 'DNI', num: ''}); 
+                        if(change < 0) item.dnis.pop();
+                    }
+                }
+            }
+            syncProductButtons(); updateFloatingAction(); renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        function removeItem(id) {
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            cart = cart.filter(i => i.id !== id);
+            syncProductButtons(); updateFloatingAction(); renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        function updateDocType(id, index, type) {
+            let item = cart.find(i => i.id === id);
+            if(item && item.category === 'FINANCIERO') {
+                item.dnis[index].type = type;
+                item.dnis[index].num = ''; 
+                renderCart();
+            }
+        }
+
+        function updateDni(id, index, value) {
+            let item = cart.find(i => i.id === id);
+            if(item && item.category === 'FINANCIERO') { item.dnis[index].num = value; }
+        }
+
+        function syncProductButtons() {
+            systemProducts.forEach(prod => {
+                let container = document.getElementById('action-' + prod.id);
+                if(!container) return;
+                
+                let inCartItem = cart.find(i => i.id === prod.id);
+                
+                let btnHex = '#3b82f6';
+                if(prod.color === 'red') btnHex = '#ef4444';
+                if(prod.color === 'cyan') btnHex = '#06b6d4';
+                if(prod.color === 'purple') btnHex = '#a855f7';
+                if(prod.color === 'emerald') btnHex = '#10b981';
+
+                let rgbGlow = '59,130,246';
+                if(prod.color === 'red') rgbGlow = '239,68,68';
+                if(prod.color === 'cyan') rgbGlow = '6,182,212';
+                if(prod.color === 'purple') rgbGlow = '168,85,247';
+                if(prod.color === 'emerald') rgbGlow = '16,185,129';
+                
+                if(inCartItem) {
+                    container.innerHTML = `
+                        <div class="flex justify-between items-center w-full bg-[${btnHex}] rounded-xl p-1.5 shadow-[0_0_15px_rgba(${rgbGlow},0.4)] border border-[${btnHex}] transition-all">
+                            <button onclick="updateQty('${prod.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
+                            <span class="font-mono text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN CARRITO</span>
+                            <button onclick="updateQty('${prod.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                        </div>
+                    `;
+                } else {
+                    let btnText = "Añadir al carrito";
+                    if(prod.portal === 'digital') btnText = "Añadir";
+                    if(prod.id === 'INV-PRO') btnText = "Evaluar Caso";
+                    
+                    container.innerHTML = `
+                        <button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.price}, '${prod.cat}', this)" class="w-full py-2.5 md:py-3 bg-${prod.color}-500/10 border border-${prod.color}-500/30 text-${prod.color}-400 hover:bg-${prod.color}-600 hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-cart-plus"></i> ${btnText}
+                        </button>
+                    `;
+                }
+            });
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if(!container) return;
+            
+            let html = '';
+            let total = 0;
+            
+            if(cart.length === 0) {
+                html = `
+                <div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10">
+                    <i class="fa-solid fa-cart-shopping text-6xl mb-4"></i>
+                    <p class="font-mono text-xs uppercase tracking-widest mt-4">Terminal vacía</p>
+                </div>`;
+            } else {
+                cart.forEach(item => {
+                    let itemTotal = item.price * item.qty;
+                    total += itemTotal;
+                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
+                    
+                    html += `
+                    <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 animate-fade-in-up mb-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 overflow-hidden">
+                                <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
+                                <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
+                                <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay} c/u</div>
+                            </div>
+                            <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
+                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                <span class="font-mono text-xs text-white w-3 text-center">${item.qty}</span>
+                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                            </div>
+                            <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>`;
+
+                    if(item.category === 'FINANCIERO' && item.dnis) {
+                        html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
+                        let isSBS = item.id === 'FIN-SBS';
+                        for(let i=0; i<item.qty; i++) {
+                            let doc = item.dnis[i];
+                            if(!doc) continue;
+                            if(isSBS) doc.type = 'DNI';
+                            let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
+                            let ph = doc.type === 'RUC' ? "Ingrese RUC" : `Ingrese ${doc.type}`;
+                            
+                            html += `<div class="flex relative">`;
+                            if(isSBS) {
+                                html += `<select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>`;
+                            } else {
+                                html += `<select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
+                                    <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
+                                    <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
+                                    <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
+                                </select>`;
+                            }
+                            html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1"></div>`;
+                        }
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+                });
+            }
+            
+            container.innerHTML = html;
+            const elSub = document.getElementById('cart-subtotal');
+            const elTotal = document.getElementById('cart-total');
+            if(elSub) elSub.innerText = 'S/ ' + total.toFixed(2);
+            if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
+        }
+
+        // --- SISTEMA DE NAVEGACIÓN Y EXTRAS ---
+        function updateFloatingAction() {
+            const btn = document.getElementById('floating-btn');
+            const icon = document.getElementById('floating-icon');
+            const label = document.getElementById('floating-label');
+            const badge = document.getElementById('cart-badge');
+            if(!btn || !icon || !label || !badge) return;
+
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+
+            if (totalItems > 0) {
+                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]');
+                btn.classList.remove('bg-[#25D366]');
+                icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all duration-300 text-xl"; 
+                label.innerText = "Revisar Orden";
+                label.classList.add('text-[#58a6ff]', 'border-[#1f6feb]/30');
+                label.classList.remove('text-[#25D366]');
+                badge.innerText = totalItems;
+                badge.classList.remove('opacity-0', 'scale-0');
+            } else {
+                btn.classList.add('bg-[#25D366]');
+                btn.classList.remove('bg-[#1f6feb]');
+                icon.className = "fa-brands fa-whatsapp relative z-10 transition-all duration-300 text-2xl";
+                label.innerText = "Soporte en línea";
+                label.classList.add('text-[#25D366]');
+                label.classList.remove('text-[#58a6ff]');
+                badge.classList.add('opacity-0', 'scale-0');
+            }
+        }
+
+        function handleFloatingAction() {
+            if (cart.length > 0) { openCart(); } 
+            else { window.open(`https://wa.me/${WA_NUMBER}?text=Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀`, '_blank'); }
+        }
+
+        function openCart() {
+            const el1 = document.getElementById('cart-overlay');
+            const el2 = document.getElementById('cart-drawer');
+            if(el1 && el2) {
+                el1.classList.remove('opacity-0', 'pointer-events-none');
+                el2.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden'; 
+                let hasFinanciero = cart.some(item => item.category === 'FINANCIERO');
+                if(hasFinanciero) setStep(1);
+            }
+        }
+
+        function closeCart() {
+            const el1 = document.getElementById('cart-overlay');
+            const el2 = document.getElementById('cart-drawer');
+            if(el1 && el2) {
+                el1.classList.add('opacity-0', 'pointer-events-none');
+                el2.classList.add('translate-x-full');
+                document.body.style.overflow = 'auto'; 
+            }
         }
 
         function setStep(step) {
@@ -1154,414 +2078,26 @@
             } catch(e) {}
         }
 
-        function setLiveStats() {
-            try {
-                const baseDate = new Date('2026-01-01').getTime();
-                const now = new Date();
-                const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
-                const baseGlobal = 8135;
-                const globalTotal = baseGlobal + (daysPassed * 12);
-                const hour = now.getHours();
-                const minutes = now.getMinutes();
-                const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
-                
-                const elGlobal = document.getElementById('stat-global');
-                const elHoy = document.getElementById('stat-hoy');
-                if(elGlobal) elGlobal.innerText = globalTotal.toLocaleString('en-US');
-                if(elHoy) elHoy.innerText = '+' + prospectosHoy;
-            } catch(e) {}
-        }
-
-        const evidenceData = [
-            { cat: 'finanzas', src: 'referencias/finanzas1.png', fallback: 'https://placehold.co/400x500/0d1117/1f6feb?text=Finanzas', border: 'border-[#1f6feb]/30' },
-            { cat: 'streaming', src: 'referencias/streaming1.png', fallback: 'https://placehold.co/400x500/0d1117/10b981?text=Streaming', border: 'border-[#10b981]/30' },
-            { cat: 'investigacion', src: 'referencias/doxeo1.png', fallback: 'https://placehold.co/400x500/0d1117/06b6d4?text=Doxeo', border: 'border-[#06b6d4]/30' }
-        ];
-
-        function renderCarousel(filterCategory) {
-            try {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-                    btn.classList.add('border-gray-800', 'text-gray-500');
-                });
-                const activeBtn = document.getElementById('btn-' + filterCategory);
-                if(activeBtn) {
-                    activeBtn.classList.add('active', 'bg-[#1f6feb]/20', 'border-[#58a6ff]', 'text-white');
-                    activeBtn.classList.remove('border-gray-800', 'text-gray-500');
-                }
-
-                const track = document.getElementById('carousel-track');
-                if(!track) return;
-                track.style.animation = 'none';
-                void track.offsetWidth; 
-
-                let filtered = evidenceData.filter(item => filterCategory === 'all' || item.cat === filterCategory);
-                if(filtered.length === 0) filtered = evidenceData;
-
-                let multiplier = filterCategory === 'all' ? 8 : 12; 
-                let htmlContent = '';
-                
-                for(let i=0; i<multiplier; i++) {
-                    filtered.forEach(item => {
-                        htmlContent += `
-                        <div class="w-[260px] md:w-[300px] rounded-xl overflow-hidden border ${item.border} relative flex-shrink-0 bg-[#0A0F16]/80 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.8)] p-2 flex items-center justify-center">
-                            <img src="${item.src}" onerror="this.src='${item.fallback}'" class="w-full h-auto rounded-lg object-contain relative z-0">
-                        </div>`;
-                    });
-                }
-                track.innerHTML = htmlContent;
-                let speed = filtered.length * multiplier * 5; 
-                if(speed < 20) speed = 20; 
-                track.style.animation = `scroll-left ${speed}s linear infinite`;
-            } catch(e) {}
-        }
-
-        // --- SISTEMA AUTOMATIZADO DE CARRITO ---
-        let cart = [];
-        const WA_NUMBER = "51937751224";
-        let currentView = 'hub';
-        let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-        
-        try {
-            const elOrderId = document.getElementById('order-id-display');
-            if(elOrderId) elOrderId.innerText = "ID: " + orderId;
-        } catch(e) {}
-
-        function addToCart(id, name, price, category, btnElement) {
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            let item = cart.find(i => i.id === id);
-            if(item) {
-                item.qty++;
-                item.dnis.push({type: 'DNI', num: ''}); 
-            } else {
-                cart.push({ id, name, price, category, qty: 1, dnis: [{type: 'DNI', num: ''}] }); 
-            }
-            
-            if(btnElement) {
-                btnElement.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> PROCESANDO...';
-                btnElement.classList.add('bg-blue-600/30', 'text-white', 'scale-95');
-                setTimeout(() => { 
-                    syncProductButtons(); updateFloatingAction(); renderCart();
-                }, 400);
-            } else {
-                syncProductButtons(); updateFloatingAction(); renderCart();
-            }
-        }
-
-        function updateQty(id, change) {
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            let item = cart.find(i => i.id === id);
-            if(item) {
-                item.qty += change;
-                if(item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                } else {
-                    if(change > 0) item.dnis.push({type: 'DNI', num: ''}); 
-                    if(change < 0) item.dnis.pop();
-                }
-            }
-            syncProductButtons(); updateFloatingAction(); renderCart();
-            if(cart.length === 0) closeCart();
-        }
-
-        function removeItem(id) {
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            cart = cart.filter(i => i.id !== id);
-            syncProductButtons(); updateFloatingAction(); renderCart();
-            if(cart.length === 0) closeCart();
-        }
-
-        function updateDocType(id, index, type) {
-            let item = cart.find(i => i.id === id);
-            if(item) {
-                item.dnis[index].type = type;
-                item.dnis[index].num = ''; 
-                renderCart();
-            }
-        }
-
-        function updateDni(id, index, value) {
-            let item = cart.find(i => i.id === id);
-            if(item) { item.dnis[index].num = value; }
-        }
-
-        function syncProductButtons() {
-            const finProducts = [
-                {id: 'FIN-SNT', name: 'Reporte Sentinel', price: 4.00},
-                {id: 'FIN-EQF', name: 'Reporte Equifax', price: 7.00},
-                {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', price: 8.00}
-            ];
-
-            finProducts.forEach(prod => {
-                let container = document.getElementById('action-' + prod.id);
-                let card = document.getElementById('card-' + prod.id);
-                if(!container) return;
-                
-                let inCartItem = cart.find(i => i.id === prod.id);
-                
-                if(inCartItem) {
-                    container.innerHTML = `
-                        <div class="flex justify-between items-center w-full bg-[#1f6feb] rounded-xl p-1.5 shadow-[0_0_15px_rgba(31,111,235,0.4)] border border-[#1f6feb] transition-all">
-                            <button onclick="updateQty('${prod.id}', -1)" class="w-10 h-10 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-minus"></i></button>
-                            <span class="font-mono text-[11px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN CARRITO</span>
-                            <button onclick="updateQty('${prod.id}', 1)" class="w-10 h-10 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                    `;
-                    if(card) {
-                        card.classList.remove('border-gray-800/80', 'bg-[#0A0F16]/60');
-                        card.classList.add('border-blue-500/50', 'bg-blue-900/10', 'shadow-[inset_0_0_30px_rgba(59,130,246,0.1)]');
-                        let glow = card.querySelector('.magnetic-glow');
-                        if(glow) { glow.classList.remove('opacity-0'); glow.classList.add('opacity-100'); }
-                        let radar = card.querySelector('.radar-ring');
-                        if(radar) { radar.classList.remove('border-blue-500/40'); radar.classList.add('border-blue-400', 'shadow-[0_0_10px_rgba(59,130,246,0.5)]'); }
-                    }
-                } else {
-                    container.innerHTML = `
-                        <button onclick="addToCart('${prod.id}', '${prod.name}', ${prod.price}, 'FINANCIERO', this)" class="w-full py-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
-                        </button>
-                    `;
-                    if(card) {
-                        card.classList.remove('border-blue-500/50', 'bg-blue-900/10', 'shadow-[inset_0_0_30px_rgba(59,130,246,0.1)]');
-                        card.classList.add('border-gray-800/80', 'bg-[#0A0F16]/60');
-                        let glow = card.querySelector('.magnetic-glow');
-                        if(glow) { glow.classList.remove('opacity-100'); glow.classList.add('opacity-0'); }
-                        let radar = card.querySelector('.radar-ring');
-                        if(radar) { radar.classList.remove('border-blue-400', 'shadow-[0_0_10px_rgba(59,130,246,0.5)]'); radar.classList.add('border-blue-500/40'); }
-                    }
-                }
-            });
-
-            document.querySelectorAll('.btn-product').forEach(btn => {
-                const btnId = btn.id.replace('btn-', ''); 
-                if(btnId.startsWith('FIN-')) return; 
-                
-                const inCartItem = cart.find(i => i.id === btnId);
-                
-                if (inCartItem) {
-                    btn.innerHTML = `<i class="fa-solid fa-check"></i> EN CARRITO (${inCartItem.qty})`;
-                    btn.classList.remove('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-red-600/10', 'border-red-500/30', 'text-red-400', 'bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400', 'bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
-                    btn.classList.add('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
-                } else {
-                    btn.classList.remove('bg-[#1f6feb]', 'border-[#1f6feb]', 'text-white', 'shadow-[0_0_15px_rgba(31,111,235,0.4)]');
-                    if(btnId.includes('DIG-WIN')) {
-                        btn.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Cotizar`;
-                        btn.classList.add('bg-emerald-600/10', 'border-emerald-500/30', 'text-emerald-400');
-                    } else if(btnId.includes('DIG-STR')) {
-                        btn.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Ver Catálogo`;
-                        btn.classList.add('bg-red-600/10', 'border-red-500/30', 'text-red-400');
-                    } else if(btnId.includes('INV-BAS')) {
-                        btn.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Añadir al carrito`;
-                        btn.classList.add('bg-cyan-600/10', 'border-cyan-500/30', 'text-cyan-400');
-                    } else if(btnId.includes('INV-PRO')) {
-                        btn.innerHTML = `<i class="fa-solid fa-cart-plus"></i> Evaluar Caso`;
-                        btn.classList.add('bg-purple-600/10', 'border-purple-500/30', 'text-purple-400');
-                    }
-                }
-            });
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            if(!container) return;
-            
-            let html = '';
-            let total = 0;
-            
-            if(cart.length === 0) {
-                html = `
-                <div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10">
-                    <i class="fa-solid fa-cart-shopping text-6xl mb-4"></i>
-                    <p class="font-mono text-xs uppercase tracking-widest mt-4">Terminal vacía</p>
-                </div>`;
-            } else {
-                cart.forEach(item => {
-                    let itemTotal = item.price * item.qty;
-                    total += itemTotal;
-                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
-                    
-                    html += `
-                    <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 animate-fade-in-up mb-4">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1 overflow-hidden">
-                                <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
-                                <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
-                                <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay} c/u</div>
-                            </div>
-                            <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
-                                <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                                <span class="font-mono text-xs text-white w-3 text-center">${item.qty}</span>
-                                <button onclick="updateQty('${item.id}', 1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
-                            </div>
-                            <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>`;
-
-                    if(item.category === 'FINANCIERO') {
-                        html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
-                        
-                        let isSBS = item.id === 'FIN-SBS';
-
-                        for(let i=0; i<item.qty; i++) {
-                            let doc = item.dnis[i];
-                            
-                            if(isSBS) doc.type = 'DNI';
-
-                            let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
-                            let ph = doc.type === 'RUC' ? "Ingrese RUC" : `Ingrese ${doc.type}`;
-                            
-                            html += `<div class="flex relative">`;
-                            
-                            if(isSBS) {
-                                html += `
-                                <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed">
-                                    <option value="DNI" selected>DNI</option>
-                                </select>`;
-                            } else {
-                                html += `
-                                <select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
-                                    <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
-                                    <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
-                                    <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
-                                </select>`;
-                            }
-
-                            html += `
-                                <input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
-                            </div>`;
-                        }
-                        html += `</div>`;
-                    }
-                    html += `</div>`;
-                });
-            }
-            
-            container.innerHTML = html;
-            const elSub = document.getElementById('cart-subtotal');
-            const elTotal = document.getElementById('cart-total');
-            if(elSub) elSub.innerText = 'S/ ' + total.toFixed(2);
-            if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
-        }
-
-        // --- SISTEMA DE NAVEGACIÓN CON HISTORIAL ---
-        function updateFloatingAction() {
-            const btn = document.getElementById('floating-btn');
-            const icon = document.getElementById('floating-icon');
-            const label = document.getElementById('floating-label');
-            const badge = document.getElementById('cart-badge');
-            if(!btn || !icon || !label || !badge) return;
-
-            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-
-            if (totalItems > 0) {
-                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]');
-                btn.classList.remove('bg-[#25D366]');
-                icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all duration-300 text-xl"; 
-                label.innerText = "Revisar Orden";
-                label.classList.add('text-[#58a6ff]', 'border-[#1f6feb]/30');
-                label.classList.remove('text-[#25D366]');
-                badge.innerText = totalItems;
-                badge.classList.remove('opacity-0', 'scale-0');
-            } else {
-                btn.classList.add('bg-[#25D366]');
-                btn.classList.remove('bg-[#1f6feb]');
-                icon.className = "fa-brands fa-whatsapp relative z-10 transition-all duration-300 text-2xl";
-                label.innerText = "Soporte en línea";
-                label.classList.add('text-[#25D366]');
-                label.classList.remove('text-[#58a6ff]');
-                badge.classList.add('opacity-0', 'scale-0');
-            }
-        }
-
-        function handleFloatingAction() {
-            if (cart.length > 0) { openCart(); } 
-            else { window.open(`https://wa.me/${WA_NUMBER}?text=Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀`, '_blank'); }
-        }
-
-        function openCart() {
-            const el1 = document.getElementById('cart-overlay');
-            const el2 = document.getElementById('cart-drawer');
-            if(el1 && el2) {
-                el1.classList.remove('opacity-0', 'pointer-events-none');
-                el2.classList.remove('translate-x-full');
-                document.body.style.overflow = 'hidden'; 
-                setStep(1); 
-            }
-        }
-
-        function closeCart() {
-            const el1 = document.getElementById('cart-overlay');
-            const el2 = document.getElementById('cart-drawer');
-            if(el1 && el2) {
-                el1.classList.add('opacity-0', 'pointer-events-none');
-                el2.classList.add('translate-x-full');
-                document.body.style.overflow = 'auto'; 
-            }
-        }
-
-        function navigate(viewId, isBack = false) {
-            currentView = viewId; 
-            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
-            views.forEach(v => {
-                const el = document.getElementById(v);
-                if(el) { el.classList.add('hidden-view'); el.classList.remove('animate-fade-in-up'); }
-            });
-            const target = document.getElementById('view-' + viewId);
-            if(target) {
-                target.classList.remove('hidden-view');
-                void target.offsetWidth; 
-                target.classList.add('animate-fade-in-up');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (!isBack) {
-                const newUrl = viewId === 'hub' ? window.location.pathname : window.location.pathname + '#' + viewId;
-                history.pushState({ view: viewId }, '', newUrl);
-            }
-
-            // Asegurarse de que el catálogo se vea si entran directo (sin pasar por la intro)
-            if(viewId === 'financiero') {
-                const catalog = document.getElementById('financiero-catalog');
-                if(catalog && document.getElementById('financiero-intro-modal').classList.contains('opacity-0')) {
-                    catalog.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
-                    catalog.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
-                }
-            }
-        }
-
-        window.addEventListener('popstate', (event) => {
-            if (event.state && event.state.view) {
-                navigate(event.state.view, true);
-            } else {
-                navigate('hub', true);
-            }
-        });
-
-        // --- LA BÓVEDA DE PAGO Y FLUJO FINAL ---
         function processToPaymentModal() {
             let errorMsg = "";
+            let hasFinanciero = false;
             cart.forEach(item => {
                 if(item.category === 'FINANCIERO') {
+                    hasFinanciero = true;
                     item.dnis.forEach((doc, idx) => {
                         let len = doc.num.length;
                         if(doc.type === 'DNI' && len !== 8) errorMsg = `El DNI en ${item.name} debe tener 8 números exactos.`;
-                        else if(doc.type === 'CE' && len < 8) errorMsg = `El Carnet de Extranjería en ${item.name} debe tener al menos 8 números.`;
-                        else if(doc.type === 'RUC' && len !== 10 && len !== 11) errorMsg = `El RUC en ${item.name} debe tener 10 u 11 números.`;
                     });
                 }
             });
-
-            if(errorMsg !== "") {
-                showNotification(errorMsg);
-                return;
-            }
-
+            if(errorMsg !== "") { showNotification(errorMsg); return; }
             closeCart();
             const modal = document.getElementById('payment-modal');
             const card = document.getElementById('payment-card');
             if(modal && card) {
                 modal.classList.remove('opacity-0', 'pointer-events-none');
                 card.classList.remove('scale-95');
-                setStep(2); 
+                if(hasFinanciero) setStep(2); 
             }
         }
 
@@ -1571,30 +2107,22 @@
             if(modal && card) {
                 modal.classList.add('opacity-0', 'pointer-events-none');
                 card.classList.add('scale-95');
-                setStep(1); 
+                let hasFinanciero = cart.some(item => item.category === 'FINANCIERO');
+                if(hasFinanciero) setStep(1); 
             }
         }
 
         function copyNumber() {
-            try { if(navigator.vibrate) navigator.vibrate([20, 50, 20]); } catch(e){}
             const num = "975040527";
             navigator.clipboard.writeText(num).then(() => {
                 const btnCopy = document.getElementById('btn-copy');
                 btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
-                btnCopy.classList.remove('bg-blue-500/10', 'text-blue-400');
-                btnCopy.classList.add('bg-emerald-500', 'text-black', 'shadow-[0_0_15px_rgba(16,185,129,0.5)]');
-
+                btnCopy.classList.add('bg-emerald-500', 'text-black');
                 setTimeout(() => {
                     closePaymentModal();
                     openFinalModal();
-                    setStep(3); 
-                    
-                    setTimeout(() => {
-                        btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar Número';
-                        btnCopy.classList.add('bg-blue-500/10', 'text-blue-400');
-                        btnCopy.classList.remove('bg-emerald-500', 'text-black', 'shadow-[0_0_15px_rgba(16,185,129,0.5)]');
-                    }, 500);
-
+                    let hasFinanciero = cart.some(item => item.category === 'FINANCIERO');
+                    if(hasFinanciero) setStep(3); 
                 }, 1000);
             });
         }
@@ -1602,93 +2130,51 @@
         function openFinalModal() {
             const modal = document.getElementById('final-modal');
             const card = document.getElementById('final-card');
-            if(modal && card) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                card.classList.remove('scale-95');
-            }
+            if(modal && card) { modal.classList.remove('opacity-0', 'pointer-events-none'); card.classList.remove('scale-95'); }
         }
 
         function closeFinalModal() {
             const modal = document.getElementById('final-modal');
             const card = document.getElementById('final-card');
-            if(modal && card) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                card.classList.add('scale-95');
-                setStep(1); 
-            }
+            if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); }
         }
 
         function sendFinalWhatsApp() {
             let total = 0;
-            let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL \n`;
-            message += `📍ID: ${orderId}\n\n`;
-            
+            let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL \n📍ID: ${orderId}\n\n`;
             cart.forEach(item => {
-                message += `✅ ${item.qty}x ${item.name} \n`;
-                message += ` S/ ${(item.price * item.qty).toFixed(2)}\n\n`;
-                
-                if(item.category === 'FINANCIERO' && item.dnis && item.dnis.length > 0) {
-                    message += `   🔍 Documentos: \n`;
-                    item.dnis.forEach(doc => {
-                        message += `${doc.type}: ${doc.num}\n`;
-                    });
-                    message += `\n`;
-                }
+                message += `✅ ${item.qty}x ${item.name} \n S/ ${(item.price * item.qty).toFixed(2)}\n\n`;
                 total += (item.price * item.qty);
             });
-            
-            message += `💰 TOTAL ABONADO: \n`;
-            message += `S/ ${total.toFixed(2)}\n\n`;
-            message += `⚠️ Estoy realizando mi pago; ahorita le comparto el comprobante.`;
-
+            message += `💰 TOTAL ESTIMADO: S/ ${total.toFixed(2)}\n\n⚠️ Estoy realizando mi pago; le comparto el comprobante.`;
             closeFinalModal();
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-            
-            // FALSO REINICIO MAESTRO (Cero alertas del navegador)
             cart = []; 
             syncProductButtons();
             updateFloatingAction();
-            
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.display = 'flex';
-                void splash.offsetWidth; 
-                splash.style.opacity = '1';
-                
-                setTimeout(() => {
-                    navigate('hub', false); 
-                    
-                    setTimeout(() => {
-                        splash.style.opacity = '0';
-                        setTimeout(() => {
-                            splash.style.display = 'none';
-                        }, 700);
-                    }, 1000);
-                }, 500);
-            }, 500);
         }
 
-        // --- ARRANQUE BLINDADO ---
+        // --- ARRANQUE E INICIALIZACIÓN ---
         window.onload = () => {
+            const hash = window.location.hash.replace('#', '');
+            if(hash && ['financiero', 'digital', 'investigacion'].includes(hash)) {
+                navigate(hash, true);
+            } else {
+                navigate('hub', true);
+            }
+
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 if(splash) {
                     splash.style.opacity = '0';
                     setTimeout(() => {
                         splash.style.display = 'none';
-                        const hub = document.getElementById('view-hub');
-                        if(hub && currentView === 'hub') {
-                            hub.classList.remove('hidden-view');
-                            hub.classList.add('animate-fade-in-up');
-                        }
+                        document.body.classList.remove('lock-scroll'); 
                     }, 700);
                 }
-            }, 1000); 
+            }, 800); 
 
             try { setLiveStats(); } catch(e) {}
-            try { initScrollObserver(); } catch(e) {}
-            try { renderCarousel('all'); } catch(e) {}
-            try { history.replaceState({ view: 'hub' }, '', window.location.pathname); } catch(e) {}
         };
     </script>
 </body>
