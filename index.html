@@ -11,6 +11,11 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+        // Bloqueo cuántico para prevenir comportamientos erráticos de Chrome
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -36,8 +41,8 @@
                             '50%': { opacity: '0.3' }
                         },
                         fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
                 }
@@ -82,22 +87,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* ANIMACIONES Y EFECTOS DEL HUB ORIGINALES RESTAURADOS */
-        .portfolio-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .portfolio-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
-        }
-        .card-fin:hover { border-color: rgba(59,130,246,0.5); }
-        .card-dig:hover { border-color: rgba(16,185,129,0.5); }
-        .card-inv:hover { border-color: rgba(6,182,212,0.5); }
-        
-        .card-fin:hover .glow-bg { opacity: 1; }
-        .card-dig:hover .glow-bg { opacity: 1; }
-        .card-inv:hover .glow-bg { opacity: 1; }
-
+        /* CARRUSELES DE PORTALES (DISCIPLINADOS) */
         .top-carousel-wrapper {
             width: 168px; 
             height: 48px;
@@ -110,12 +100,20 @@
             display: flex;
             width: max-content;
             animation: top-scroll linear infinite;
+            animation-play-state: paused; /* PAUSA POR DEFECTO */
+            will-change: transform;
+        }
+        @media (min-width: 768px) {
+            .portfolio-card:hover .top-carousel-track { animation-play-state: running; }
+        }
+        .portfolio-card.is-centered .top-carousel-track {
+            animation-play-state: running; /* SE ACTIVA CON EL SENSOR ESPACIAL EN CELULAR */
         }
         @keyframes top-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-        
+
         .circle-logo {
             width: 48px;
             height: 48px;
@@ -136,16 +134,56 @@
             transform: scale(0.85);
         }
 
+        /* EFECTOS HUB */
+        .portfolio-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .portfolio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+        .card-fin:hover { border-color: rgba(59,130,246,0.5); }
+        .card-dig:hover { border-color: rgba(16,185,129,0.5); }
+        .card-inv:hover { border-color: rgba(6,182,212,0.5); }
+        
+        .card-fin:hover .glow-bg { opacity: 1; }
+        .card-dig:hover .glow-bg { opacity: 1; }
+        .card-inv:hover .glow-bg { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .portfolio-card {
+                opacity: 0.4;
+                transform: scale(0.95) translateY(10px);
+                transition: transform 0.4s ease, opacity 0.4s ease, border-color 0.4s ease;
+            }
+            .portfolio-card.in-view {
+                opacity: 1;
+                transform: scale(1) translateY(0); 
+                background-color: rgba(13, 20, 31, 0.95) !important;
+            }
+            .card-fin.in-view { border-color: rgba(59,130,246,0.5) !important; box-shadow: 0 10px 30px -10px rgba(59,130,246,0.3) !important; }
+            .card-dig.in-view { border-color: rgba(16,185,129,0.5) !important; box-shadow: 0 10px 30px -10px rgba(16,185,129,0.3) !important; }
+            .card-inv.in-view { border-color: rgba(6,182,212,0.5) !important; box-shadow: 0 10px 30px -10px rgba(6,182,212,0.3) !important; }
+        }
+
+        /* TARJETAS DE SERVICIOS INDIVIDUALES */
         .card-digital-item {
             background-color: #0A0F16;
             border: 1px solid rgba(255,255,255,0.08);
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
         .card-hover-red:hover { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 10px 30px -10px rgba(239, 68, 68, 0.2); transform: translateY(-3px); }
         .card-hover-cyan:hover { border-color: rgba(6, 182, 212, 0.5); box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.2); transform: translateY(-3px); }
         .card-hover-purple:hover { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2); transform: translateY(-3px); }
         .card-hover-emerald:hover { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2); transform: translateY(-3px); }
         .card-hover-blue:hover { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
+
+        /* 🔥 CLASES DE RESALTADO CUANDO EL SERVICIO ESTÁ EN EL CARRITO 🔥 */
+        .card-selected-blue { border-color: #3b82f6 !important; box-shadow: 0 0 20px rgba(59,130,246,0.3) !important; background-color: rgba(59,130,246,0.05) !important; }
+        .card-selected-emerald { border-color: #10b981 !important; box-shadow: 0 0 20px rgba(16,185,129,0.3) !important; background-color: rgba(16,185,129,0.05) !important; }
+        .card-selected-red { border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239,68,68,0.3) !important; background-color: rgba(239,68,68,0.05) !important; }
+        .card-selected-cyan { border-color: #06b6d4 !important; box-shadow: 0 0 20px rgba(6,182,212,0.3) !important; background-color: rgba(6,182,212,0.05) !important; }
+        .card-selected-purple { border-color: #a855f7 !important; box-shadow: 0 0 20px rgba(168,85,247,0.3) !important; background-color: rgba(168,85,247,0.05) !important; }
 
         .premium-card {
             background: linear-gradient(145deg, rgba(10,15,22,0.9) 0%, rgba(5,8,13,0.95) 100%);
@@ -192,7 +230,7 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
-        .carousel-track { display: flex; width: max-content; animation: scroll-left 40s linear infinite; }
+        .carousel-track { display: flex; width: max-content; animation: scroll-left 30s linear infinite; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
@@ -233,7 +271,9 @@
     <div id="financiero-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="financiero-intro-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full transform scale-95 transition-transform duration-300 flex flex-col relative">
             <div class="p-6 md:p-8 relative z-10">
-                <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-6"><i class="fa-solid fa-wallet text-3xl text-blue-400"></i></div>
+                <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                    <i class="fa-solid fa-wallet text-3xl text-blue-400"></i>
+                </div>
                 <h3 class="text-2xl font-bold text-white mb-2">PORTAL FINANCIERO</h3>
                 <p class="text-gray-400 text-sm leading-relaxed mb-6">Obtén un análisis exacto de tu perfil crediticio y revisa al instante:</p>
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
@@ -351,17 +391,6 @@
         </div>
     </div>
 
-    <!-- BOOT SCREEN -->
-    <div id="splash-screen" class="fixed inset-0 z-[600] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-300">
-        <div class="relative animate-float">
-            <img src="logo.png" alt="Logo" class="relative z-10 w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-[0_0_20px_rgba(88,166,255,0.4)]">
-        </div>
-        <div class="mt-8 text-center px-4">
-            <h1 class="text-xl md:text-2xl font-bold text-white tracking-[0.2em] uppercase">ESTUDIO FINANCIERO Y DIGITAL</h1>
-            <p class="font-mono text-[10px] text-[#58a6ff] tracking-[0.3em] mt-2 uppercase">Autenticando...</p>
-        </div>
-    </div>
-
     <header class="sticky top-0 z-50 bg-[#02050A]/90 backdrop-blur-xl border-b border-gray-800/80">
         <div class="px-4 md:px-8 py-3.5 flex items-center justify-between max-w-7xl mx-auto">
             <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('hub')">
@@ -393,7 +422,7 @@
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white">Paneles de Gestión</h1>
                 <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light mb-8">Seleccione el portal de servicio para gestionar su solicitud de forma segura.</p>
                 
-                <!-- ⚡ NÚMEROS DE ESTADÍSTICAS REPARADOS ⚡ -->
+                <!-- ⚡ ESTADÍSTICAS GLOBALES ACTIVAS ⚡ -->
                 <div class="flex justify-center gap-4 md:gap-8 flex-wrap mb-10">
                     <div class="bg-[#0A0F16]/50 border border-blue-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
                         <span id="stat-global" class="font-bold text-2xl text-white font-mono">0</span>
@@ -406,20 +435,13 @@
                 </div>
             </div>
 
-            <!-- TARJETAS DEL HUB -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
-                                <div class="top-carousel-track" style="animation-duration: 12s;">
-                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><i class="fa-solid fa-wallet text-xl"></i></div>
-                                        <div class="circle-logo"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/sentinel.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/equifax.png" onerror="this.style.display='none'"></div>
-                                    </div>
+                                <div class="top-carousel-track">
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
                                         <div class="circle-logo"><i class="fa-solid fa-wallet text-xl"></i></div>
                                         <div class="circle-logo"><img src="logo/sbs.png" onerror="this.style.display='none'"></div>
@@ -443,18 +465,12 @@
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
-                                <div class="top-carousel-track" style="animation-duration: 8s;">
+                                <div class="top-carousel-track">
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><img src="logo/netflix.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=N'"></div>
-                                        <div class="circle-logo"><img src="logo/disney.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=D'"></div>
-                                        <div class="circle-logo"><img src="logo/hbo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=H'"></div>
-                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
-                                    </div>
-                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><img src="logo/netflix.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=N'"></div>
-                                        <div class="circle-logo"><img src="logo/disney.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=D'"></div>
-                                        <div class="circle-logo"><img src="logo/hbo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=H'"></div>
-                                        <div class="circle-logo"><img src="logo/prime.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
+                                        <div class="circle-logo"><img src="publi/netflix.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=N'"></div>
+                                        <div class="circle-logo"><img src="publi/Disney.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=D'"></div>
+                                        <div class="circle-logo"><img src="publi/hbo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=H'"></div>
+                                        <div class="circle-logo"><img src="publi/primevideo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
                                     </div>
                                 </div>
                             </div>
@@ -473,13 +489,7 @@
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
-                                <div class="top-carousel-track" style="animation-duration: 10s;">
-                                    <div class="flex gap-[12px] pr-[12px] shrink-0">
-                                        <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/3.png" onerror="this.style.display='none'"></div>
-                                        <div class="circle-logo"><img src="logo/4.png" onerror="this.style.display='none'"></div>
-                                    </div>
+                                <div class="top-carousel-track">
                                     <div class="flex gap-[12px] pr-[12px] shrink-0">
                                         <div class="circle-logo"><img src="logo/1.png" onerror="this.style.display='none'"></div>
                                         <div class="circle-logo"><img src="logo/2.png" onerror="this.style.display='none'"></div>
@@ -495,6 +505,55 @@
                             <span class="font-mono text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Ingresar</span>
                             <div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors"><i class="fa-solid fa-arrow-right text-xs"></i></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ⚡ SECCIÓN CANAL OFICIAL Y EVIDENCIAS INYECTADA EN EL HUB ⚡ -->
+            <div class="w-full mb-16 relative z-10">
+                <div class="bg-[#0A0F16] rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
+                    <div class="flex flex-col lg:flex-row items-center gap-10">
+                        <div class="w-full lg:w-1/2 flex justify-center">
+                            <div class="relative w-full max-w-sm p-1 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-[0_0_40px_rgba(37,211,102,0.1)]">
+                                <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain">
+                            </div>
+                        </div>
+                        <div class="w-full lg:w-1/2 flex flex-col justify-center">
+                            <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/30">
+                                <i class="fa-solid fa-bell animate-pulse"></i> Promociones Activas
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-4 leading-tight">Optimiza tus finanzas y entretenimiento en un solo lugar.</h3>
+                            <div class="space-y-3 mb-8">
+                                <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros</strong>.</p></div>
+                                <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> y <strong class="text-white">Herramientas Digitales</strong>.</p></div>
+                                <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Servicios de <strong class="text-white">Auditoría e Investigación OSINT</strong>.</p></div>
+                            </div>
+                            <div class="flex flex-col gap-4">
+                                <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="w-full py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
+                                    <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal Oficial
+                                </a>
+                                <a href="https://wa.me/51937751224?text=Hola%20Administrador,%20deseo%20hacer%20una%20consulta." target="_blank" class="w-full py-4 bg-[#0A0F16] border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-headset text-lg"></i> Contactar al Administrador
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-col items-center text-center mb-8">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
+                        <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Base de evidencias y entregas exitosas</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-1.5 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-[10px] font-mono uppercase tracking-widest transition-colors">Todo</button>
+                        <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Finanzas</button>
+                        <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Streaming</button>
+                        <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Investigación</button>
+                    </div>
+                    <div class="carousel-container">
+                        <div id="carousel-track" class="carousel-track gap-4"></div>
                     </div>
                 </div>
             </div>
@@ -516,7 +575,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <!-- COMBO SENTINEL + SBS -->
-                    <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
+                    <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-xl font-bold text-white mb-2">Combo Total</h3>
@@ -532,7 +591,7 @@
                     </div>
 
                     <!-- SENTINEL -->
-                    <div id="card-FIN-SNT" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
+                    <div id="card-FIN-SNT" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-2">Sentinel</h3>
@@ -545,7 +604,7 @@
                     </div>
                     
                     <!-- EQUIFAX -->
-                    <div id="card-FIN-EQF" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
+                    <div id="card-FIN-EQF" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-2">Equifax</h3>
@@ -558,7 +617,7 @@
                     </div>
                     
                     <!-- SBS -->
-                    <div id="card-FIN-SBS" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
+                    <div id="card-FIN-SBS" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-2">SBS Deudas</h3>
@@ -588,8 +647,8 @@
             <div id="digital-filters" class="flex overflow-x-auto gap-2 mb-6 pb-2 no-scrollbar">
                 <button onclick="filterDigital('all')" id="btn-dig-all" class="dig-filter-btn px-4 py-2 rounded-lg border border-emerald-500 bg-emerald-500/20 text-white text-[10px] font-bold font-mono uppercase tracking-widest whitespace-nowrap transition-colors">Todo</button>
                 <button onclick="filterDigital('streaming')" id="btn-dig-streaming" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-play mr-1"></i> Streaming</button>
-                <button onclick="filterDigital('ia')" id="btn-dig-ia" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-brain mr-1"></i> Inteligencia Artificial</button>
-                <button onclick="filterDigital('musica')" id="btn-dig-musica" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-music mr-1"></i> Música & Educación</button>
+                <button onclick="filterDigital('ia')" id="btn-dig-ia" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-brain mr-1"></i> IA & Tech</button>
+                <button onclick="filterDigital('musica')" id="btn-dig-musica" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-music mr-1"></i> Música & Edu</button>
                 <button onclick="filterDigital('diseno')" id="btn-dig-diseno" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-pen-nib mr-1"></i> Diseño</button>
                 <button onclick="filterDigital('software')" id="btn-dig-software" class="dig-filter-btn px-4 py-2 rounded-lg border border-gray-800 bg-[#0A0F16] text-gray-400 hover:text-white text-[10px] font-mono uppercase tracking-widest whitespace-nowrap transition-colors"><i class="fa-solid fa-compact-disc mr-1"></i> Software</button>
             </div>
@@ -598,185 +657,163 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                     
                     <!-- ============================================== -->
-                    <!-- 1. STREAMING                                   -->
+                    <!-- CATEGORIA: STREAMING                           -->
                     <!-- ============================================== -->
                     <div class="category-section cat-streaming w-full col-span-full mt-2 mb-1">
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-play text-red-500 mr-2"></i>Streaming Premium</h3>
                     </div>
 
-                    <!-- NETFLIX -->
-                    <div id="card-DIG-NTF" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- NETFLIX 14 -->
+                    <div id="card-DIG-NTF" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/netflix.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Netflix" onerror="this.src='https://placehold.co/400x400/111/fff?text=NETFLIX'">
+                            <img src="publi/netflix.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Netflix" onerror="this.src='https://placehold.co/400x400/111/fff?text=NETFLIX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Netflix</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">14.00</span>
                             </div>
-                            <div id="action-DIG-NTF" class="w-full">
-                                <button onclick="addToCart('DIG-NTF', 'Netflix', 14.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-NTF" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- DISNEY+ -->
-                    <div id="card-DIG-DSN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- DISNEY PREMIUM 10 -->
+                    <div id="card-DIG-DSN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Disney.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Disney+" onerror="this.src='https://placehold.co/400x400/111/fff?text=DISNEY'">
+                            <img src="publi/Disney.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Disney+" onerror="this.src='https://placehold.co/400x400/111/fff?text=DISNEY'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Disney Premium</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
                             </div>
-                            <div id="action-DIG-DSN" class="w-full">
-                                <button onclick="addToCart('DIG-DSN', 'Disney Premium', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-DSN" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- PRIME VIDEO -->
-                    <div id="card-DIG-PRM" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- PRIME VIDEO 7 -->
+                    <div id="card-DIG-PRM" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/primevideo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Prime Video" onerror="this.src='https://placehold.co/400x400/111/fff?text=PRIME'">
+                            <img src="publi/primevideo.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Prime Video" onerror="this.src='https://placehold.co/400x400/111/fff?text=PRIME'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Prime Video</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">7.00</span>
                             </div>
-                            <div id="action-DIG-PRM" class="w-full">
-                                <button onclick="addToCart('DIG-PRM', 'Prime Video', 7.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-PRM" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- HBO MAX -->
-                    <div id="card-DIG-MAX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- HBO MAX 7 -->
+                    <div id="card-DIG-MAX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/hbo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="HBO Max" onerror="this.src='https://placehold.co/400x400/111/fff?text=MAX'">
+                            <img src="publi/hbo.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="HBO Max" onerror="this.src='https://placehold.co/400x400/111/fff?text=MAX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">HBO Max</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">7.00</span>
                             </div>
-                            <div id="action-DIG-MAX" class="w-full">
-                                <button onclick="addToCart('DIG-MAX', 'HBO Max', 7.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-MAX" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- DIRECTV GO -->
-                    <div id="card-DIG-DTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- DIRECTV GO 15 -->
+                    <div id="card-DIG-DTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/directv.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="DirecTV GO" onerror="this.src='https://placehold.co/400x400/111/fff?text=DTV'">
+                            <img src="publi/directv.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="DirecTV GO" onerror="this.src='https://placehold.co/400x400/111/fff?text=DTV'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">DirecTV GO</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
-                            <div id="action-DIG-DTV" class="w-full">
-                                <button onclick="addToCart('DIG-DTV', 'DirecTV GO', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-DTV" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- MOVISTAR PLAY -->
-                    <div id="card-DIG-MOV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- MOVISTAR PLAY 15 -->
+                    <div id="card-DIG-MOV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/movistar.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Movistar Play" onerror="this.src='https://placehold.co/400x400/111/fff?text=MOVISTAR'">
+                            <img src="publi/movistar.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Movistar Play" onerror="this.src='https://placehold.co/400x400/111/fff?text=MOVISTAR'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Movistar Play</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
-                            <div id="action-DIG-MOV" class="w-full">
-                                <button onclick="addToCart('DIG-MOV', 'Movistar Play', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-MOV" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- IPTV -->
-                    <div id="card-DIG-IPTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- IPTV 10 -->
+                    <div id="card-DIG-IPTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/iptv.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="IPTV" onerror="this.src='https://placehold.co/400x400/111/fff?text=IPTV'">
+                            <img src="publi/iptv.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="IPTV" onerror="this.src='https://placehold.co/400x400/111/fff?text=IPTV'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">IPTV Smarters</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
                             </div>
-                            <div id="action-DIG-IPTV" class="w-full">
-                                <button onclick="addToCart('DIG-IPTV', 'IPTV Smarters', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-IPTV" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- PARAMOUNT -->
-                    <div id="card-DIG-PAR" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- PARAMOUNT 8 -->
+                    <div id="card-DIG-PAR" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Paramount.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Paramount+" onerror="this.src='https://placehold.co/400x400/111/fff?text=PARAMOUNT'">
+                            <img src="publi/Paramount.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Paramount+" onerror="this.src='https://placehold.co/400x400/111/fff?text=PARAMOUNT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Paramount</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">8.00</span>
                             </div>
-                            <div id="action-DIG-PAR" class="w-full">
-                                <button onclick="addToCart('DIG-PAR', 'Paramount', 8.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-PAR" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- VIX -->
-                    <div id="card-DIG-VIX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- VIX 8 -->
+                    <div id="card-DIG-VIX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/ViX.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="VIX" onerror="this.src='https://placehold.co/400x400/111/fff?text=VIX'">
+                            <img src="publi/ViX.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="VIX" onerror="this.src='https://placehold.co/400x400/111/fff?text=VIX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">VIX</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">8.00</span>
                             </div>
-                            <div id="action-DIG-VIX" class="w-full">
-                                <button onclick="addToCart('DIG-VIX', 'VIX', 8.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-VIX" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- CRUNCHYROLL -->
-                    <div id="card-DIG-CRN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- CRUNCHYROLL 8 -->
+                    <div id="card-DIG-CRN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Crunchyroll.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Crunchyroll" onerror="this.src='https://placehold.co/400x400/111/fff?text=CRUNCHYROLL'">
+                            <img src="publi/Crunchyroll.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Crunchyroll" onerror="this.src='https://placehold.co/400x400/111/fff?text=CRUNCHYROLL'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Crunchyroll</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">8.00</span>
                             </div>
-                            <div id="action-DIG-CRN" class="w-full">
-                                <button onclick="addToCart('DIG-CRN', 'Crunchyroll', 8.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-CRN" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- APPLE TV -->
-                    <div id="card-DIG-APL" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <!-- APPLE TV 10 -->
+                    <div id="card-DIG-APL" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/AppleTV.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Apple TV" onerror="this.src='https://placehold.co/400x400/111/fff?text=APPLE'">
+                            <img src="publi/AppleTV.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Apple TV" onerror="this.src='https://placehold.co/400x400/111/fff?text=APPLE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Apple TV</h3>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
                             </div>
-                            <div id="action-DIG-APL" class="w-full">
-                                <button onclick="addToCart('DIG-APL', 'Apple TV', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-APL" class="w-full"></div>
                         </div>
                     </div>
 
@@ -787,10 +824,10 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-brain text-cyan-500 mr-2"></i>Inteligencia Artificial</h3>
                     </div>
 
-                    <!-- CHATGPT -->
-                    <div id="card-DIG-GPT" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-cyan">
+                    <!-- CHATGPT PLUS 15 -->
+                    <div id="card-DIG-GPT" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/chatgpt.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="ChatGPT Plus" onerror="this.src='https://placehold.co/400x400/111/fff?text=GPT'">
+                            <img src="publi/chatgpt.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="ChatGPT Plus" onerror="this.src='https://placehold.co/400x400/111/fff?text=GPT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">ChatGPT Plus</h3>
@@ -801,26 +838,22 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-GPT" class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
-                            <div id="action-DIG-GPT" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-GPT', 'ChatGPT Plus (1 Disp.)', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-GPT" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- GEMINI -->
-                    <div id="card-DIG-GEM" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-cyan">
+                    <!-- GEMINI 18 MESES 18 -->
+                    <div id="card-DIG-GEM" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Gemini.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
+                            <img src="publi/Gemini.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Gemini</h3>
-                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">18 Meses</span>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini</h3>
+                            <span class="text-gray-400 font-mono text-[10px] mb-2 uppercase">18 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">18.00</span>
                             </div>
-                            <div id="action-DIG-GEM" class="w-full">
-                                <button onclick="addToCart('DIG-GEM', 'Gemini Advanced 18 Meses', 18.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-GEM" class="w-full"></div>
                         </div>
                     </div>
 
@@ -832,9 +865,9 @@
                     </div>
 
                     <!-- YOUTUBE PREMIUM -->
-                    <div id="card-DIG-YTB" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
+                    <div id="card-DIG-YTB" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/youtube.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="YouTube" onerror="this.src='https://placehold.co/400x400/111/fff?text=YOUTUBE'">
+                            <img src="publi/youtube.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="YouTube" onerror="this.src='https://placehold.co/400x400/111/fff?text=YOUTUBE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">YouTube Premium</h3>
@@ -845,16 +878,14 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-YTB" class="text-xl md:text-3xl font-black text-white tracking-tighter">9.00</span>
                             </div>
-                            <div id="action-DIG-YTB" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-YTB', 'YouTube Premium (1 Mes)', 9.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-YTB" class="w-full"></div>
                         </div>
                     </div>
 
                     <!-- SPOTIFY PREMIUM -->
-                    <div id="card-DIG-SPT" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-emerald">
+                    <div id="card-DIG-SPT" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/spotify.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Spotify" onerror="this.src='https://placehold.co/400x400/111/fff?text=SPOTIFY'">
+                            <img src="publi/spotify.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Spotify" onerror="this.src='https://placehold.co/400x400/111/fff?text=SPOTIFY'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Spotify Premium</h3>
@@ -865,26 +896,22 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-SPT" class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
                             </div>
-                            <div id="action-DIG-SPT" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-SPT', 'Spotify Premium (1 Mes)', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-SPT" class="w-full"></div>
                         </div>
                     </div>
 
                     <!-- DUOLINGO -->
-                    <div id="card-DIG-DUO" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-emerald">
+                    <div id="card-DIG-DUO" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Duolingo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Duolingo" onerror="this.src='https://placehold.co/400x400/111/fff?text=DUOLINGO'">
+                            <img src="publi/Duolingo.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Duolingo" onerror="this.src='https://placehold.co/400x400/111/fff?text=DUOLINGO'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Duolingo Super</h3>
-                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">12 Meses</span>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Duolingo Super</h3>
+                            <span class="text-gray-400 font-mono text-[10px] mb-2 uppercase">12 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">20.00</span>
                             </div>
-                            <div id="action-DIG-DUO" class="w-full">
-                                <button onclick="addToCart('DIG-DUO', 'Duolingo Super 12 Meses', 20.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-DUO" class="w-full"></div>
                         </div>
                     </div>
 
@@ -896,9 +923,9 @@
                     </div>
 
                     <!-- CANVA PRO -->
-                    <div id="card-DIG-CNV" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-purple">
+                    <div id="card-DIG-CNV" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Canva.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Canva" onerror="this.src='https://placehold.co/400x400/111/fff?text=CANVA'">
+                            <img src="publi/Canva.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Canva" onerror="this.src='https://placehold.co/400x400/111/fff?text=CANVA'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Canva Pro</h3>
@@ -910,16 +937,14 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-CNV" class="text-xl md:text-3xl font-black text-white tracking-tighter">2.00</span>
                             </div>
-                            <div id="action-DIG-CNV" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-CNV', 'Canva Pro (1 Mes)', 2.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-CNV" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- CAPCUT PRO -->
-                    <div id="card-DIG-CPT" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-purple">
+                    <!-- CAPCUT PRO 15 -->
+                    <div id="card-DIG-CPT" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/capcut.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="CapCut" onerror="this.src='https://placehold.co/400x400/111/fff?text=CAPCUT'">
+                            <img src="publi/capcut.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="CapCut" onerror="this.src='https://placehold.co/400x400/111/fff?text=CAPCUT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">CapCut Pro</h3>
@@ -927,9 +952,7 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
-                            <div id="action-DIG-CPT" class="w-full">
-                                <button onclick="addToCart('DIG-CPT', 'CapCut Pro', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-CPT" class="w-full"></div>
                         </div>
                     </div>
 
@@ -940,10 +963,10 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-compact-disc text-blue-500 mr-2"></i>Software</h3>
                     </div>
 
-                    <!-- WINDOWS -->
-                    <div id="card-DIG-WIN" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-blue">
+                    <!-- WINDOWS 10/11 15 SOLES -->
+                    <div id="card-DIG-WIN" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Windows.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Windows 10/11" onerror="this.src='https://placehold.co/400x400/111/fff?text=WINDOWS'">
+                            <img src="publi/Windows.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Windows 10/11" onerror="this.src='https://placehold.co/400x400/111/fff?text=WINDOWS'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Windows 10/11 Pro</h3>
@@ -951,16 +974,14 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
-                            <div id="action-DIG-WIN" class="w-full">
-                                <button onclick="addToCart('DIG-WIN', 'Windows 10/11 Pro', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-WIN" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- OFFICE -->
-                    <div id="card-DIG-OFF" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-blue">
+                    <!-- MICROSOFT 365 20 SOLES -->
+                    <div id="card-DIG-OFF" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16]">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Office.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Microsoft 365" onerror="this.src='https://placehold.co/400x400/111/fff?text=OFFICE'">
+                            <img src="publi/Office.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Microsoft 365" onerror="this.src='https://placehold.co/400x400/111/fff?text=OFFICE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Microsoft 365</h3>
@@ -968,9 +989,7 @@
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">20.00</span>
                             </div>
-                            <div id="action-DIG-OFF" class="w-full">
-                                <button onclick="addToCart('DIG-OFF', 'Microsoft 365', 20.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-                            </div>
+                            <div id="action-DIG-OFF" class="w-full"></div>
                         </div>
                     </div>
 
@@ -995,7 +1014,7 @@
             </div>
 
             <!-- CARD DE INFORMACIÓN GENERAL PREMIUM -->
-            <div id="card-INV-GEN" class="mb-8 premium-card relative bg-gradient-to-br from-[#0A0F16] to-[#02050A] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between border border-cyan-500/50 hover:border-cyan-400 transition-colors group shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+            <div id="card-INV-GEN" class="mb-8 card-digital-item relative bg-gradient-to-br from-[#0A0F16] to-[#02050A] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between group shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                 <div class="absolute top-0 inset-x-0 h-1 bg-cyan-500"></div>
                 <div class="absolute -top-3 right-6 bg-orange-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(249,115,22,0.6)] animate-pulse">
                     🔥 El Más Solicitado
@@ -1011,11 +1030,7 @@
                     <div class="flex items-baseline gap-1">
                         <span class="text-gray-500 font-mono text-lg">S/</span><span class="text-4xl md:text-5xl font-black text-cyan-400 tracking-tighter">15.00</span>
                     </div>
-                    <div id="action-INV-GEN" class="w-full">
-                        <button onclick="addToCart('INV-GEN', 'Información General', 15.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl text-center font-bold text-[11px] tracking-widest transition-all uppercase flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-                            <i class="fa-solid fa-cart-plus"></i> Añadir Pack Completo
-                        </button>
-                    </div>
+                    <div id="action-INV-GEN" class="w-full"></div>
                 </div>
             </div>
 
@@ -1028,145 +1043,114 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 
                 <!-- RENIEC / IDENTIDAD -->
-                <div id="card-INV-C4" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-C4" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-address-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">FICHA RENIEC (C4)</h4></div>
-                    <div id="action-INV-C4"><button onclick="addToCart('INV-C4', 'Ficha RENIEC (C4)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-C4"></div>
                 </div>
-                <div id="card-INV-DNI" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
-                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-id-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DNI VIRTUAL (AMARILLO/AZUL/ELECT)</h4></div>
-                    <div id="action-INV-DNI"><button onclick="addToCart('INV-DNI', 'DNI Virtual', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                <div id="card-INV-DNI" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-id-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DNI VIRTUAL</h4></div>
+                    <div id="action-INV-DNI"></div>
                 </div>
-                <div id="card-INV-DIR" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-DIR" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-map-location-dot text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DIRECCIONES</h4></div>
-                    <div id="action-INV-DIR"><button onclick="addToCart('INV-DIR', 'Direcciones', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-DIR"></div>
                 </div>
-                <div id="card-INV-ARB" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-ARB" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-network-wired text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ÁRBOL GENEALÓGICO</h4></div>
-                    <div id="action-INV-ARB"><button onclick="addToCart('INV-ARB', 'Árbol Genealógico', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-ARB"></div>
                 </div>
                 
                 <!-- TELEFONÍA Y MIGRACIONES -->
-                <div id="card-INV-TEL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-TEL" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-phone text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">TITULARIDAD LÍNEA TELEFÓNICA</h4></div>
-                    <div id="action-INV-TEL"><button onclick="addToCart('INV-TEL', 'Titularidad Línea', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-TEL"></div>
                 </div>
-                <div id="card-INV-MIG" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-MIG" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-plane-arrival text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REGISTRO MIGRATORIO DNI/C.E</h4></div>
-                    <div id="action-INV-MIG"><button onclick="addToCart('INV-MIG', 'Registro Migratorio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-MIG"></div>
                 </div>
 
                 <!-- VEHICULAR Y SUNARP -->
-                <div id="card-INV-SNP" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-SNP" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">SUNARP PDF</h4></div>
-                    <div id="action-INV-SNP"><button onclick="addToCart('INV-SNP', 'SUNARP PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-SNP"></div>
                 </div>
-                <div id="card-INV-LIT" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-LIT" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-invoice text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">COPIA LITERAL</h4></div>
-                    <div id="action-INV-LIT"><button onclick="addToCart('INV-LIT', 'Copia Literal', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-LIT"></div>
                 </div>
-                <div id="card-INV-TIV" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-TIV" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">TIVE PDF</h4></div>
-                    <div id="action-INV-TIV"><button onclick="addToCart('INV-TIV', 'TIVE PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-TIV"></div>
                 </div>
-                <div id="card-INV-BOL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-BOL" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">BOLETA INFORMATIVA PDF</h4></div>
-                    <div id="action-INV-BOL"><button onclick="addToCart('INV-BOL', 'Boleta Informativa PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-BOL"></div>
                 </div>
-                <div id="card-INV-REV" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-REV" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car-burst text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REVISIÓN TÉCNICA PDF</h4></div>
-                    <div id="action-INV-REV"><button onclick="addToCart('INV-REV', 'Revisión Técnica PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-REV"></div>
                 </div>
-                <div id="card-INV-SOA" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-SOA" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-clipboard-check text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">SOAT PDF</h4></div>
-                    <div id="action-INV-SOA"><button onclick="addToCart('INV-SOA', 'SOAT PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-SOA"></div>
                 </div>
 
                 <!-- ACTAS Y ESTUDIOS -->
-                <div id="card-INV-NAC" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-NAC" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE NACIMIENTO</h4></div>
-                    <div id="action-INV-NAC"><button onclick="addToCart('INV-NAC', 'Acta de Nacimiento', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-NAC"></div>
                 </div>
-                <div id="card-INV-DEF" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-DEF" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE DEFUNCIÓN</h4></div>
-                    <div id="action-INV-DEF"><button onclick="addToCart('INV-DEF', 'Acta de Defunción', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-DEF"></div>
                 </div>
-                <div id="card-INV-MAT" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-MAT" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE MATRIMONIO</h4></div>
-                    <div id="action-INV-MAT"><button onclick="addToCart('INV-MAT', 'Acta de Matrimonio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-MAT"></div>
                 </div>
-                <div id="card-INV-EST" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-EST" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-building-columns text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">LUGARES DE ESTUDIO</h4></div>
-                    <div id="action-INV-EST"><button onclick="addToCart('INV-EST', 'Lugares de Estudio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-EST"></div>
                 </div>
-                <div id="card-INV-CER" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-CER" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-graduation-cap text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">CERTIFICADO DE ESTUDIOS</h4></div>
-                    <div id="action-INV-CER"><button onclick="addToCart('INV-CER', 'Certificado de Estudios', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-CER"></div>
                 </div>
 
                 <!-- ANTECEDENTES Y JUDICIAL -->
-                <div id="card-INV-POL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-POL" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-handcuffs text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES POLICIALES</h4></div>
-                    <div id="action-INV-POL"><button onclick="addToCart('INV-POL', 'Antecedentes Policiales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-POL"></div>
                 </div>
-                <div id="card-INV-PEN" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-PEN" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-handcuffs text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES PENALES</h4></div>
-                    <div id="action-INV-PEN"><button onclick="addToCart('INV-PEN', 'Antecedentes Penales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-PEN"></div>
                 </div>
-                <div id="card-INV-JUD" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-JUD" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-gavel text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES JUDICIALES</h4></div>
-                    <div id="action-INV-JUD"><button onclick="addToCart('INV-JUD', 'Antecedentes Judiciales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-JUD"></div>
                 </div>
-                <div id="card-INV-DEN" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-DEN" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-building-shield text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DENUNCIAS POLICIALES</h4></div>
-                    <div id="action-INV-DEN"><button onclick="addToCart('INV-DEN', 'Denuncias Policiales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-DEN"></div>
                 </div>
-                <div id="card-INV-REQ" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-REQ" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-user-lock text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REQUISITORIAS</h4></div>
-                    <div id="action-INV-REQ"><button onclick="addToCart('INV-REQ', 'Requisitorias', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-REQ"></div>
                 </div>
-                <div id="card-INV-FIS" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-FIS" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-scale-balanced text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">FISCALÍA / MPFN</h4></div>
-                    <div id="action-INV-FIS"><button onclick="addToCart('INV-FIS', 'Fiscalía/MPFN', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-FIS"></div>
                 </div>
-                <div id="card-INV-FAC" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                <div id="card-INV-FAC" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-face-scan text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">RECONOCIMIENTO FACIAL</h4></div>
-                    <div id="action-INV-FAC"><button onclick="addToCart('INV-FAC', 'Reconocimiento Facial', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    <div id="action-INV-FAC"></div>
                 </div>
-
             </div>
         </div>
 
     </main>
-
-    <!-- RESPALDOS Y EVIDENCIAS -->
-    <div id="shared-sections" class="hidden-view opacity-0 px-4 md:px-8 max-w-7xl mx-auto w-full mb-16 relative z-10 transition-opacity duration-300">
-        <div>
-            <div class="flex flex-col items-center text-center mb-8">
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
-                <p class="text-gray-400 font-mono text-xs uppercase tracking-widest">/// Base de evidencias y entregas exitosas</p>
-            </div>
-            <div class="flex flex-wrap justify-center gap-2 mb-8">
-                <button id="btn-all" onclick="renderCarousel('all')" class="filter-btn active px-4 py-1.5 rounded border border-[#58a6ff] bg-[#1f6feb]/20 text-white text-[10px] font-mono uppercase tracking-widest transition-colors">Todo</button>
-                <button id="btn-finanzas" onclick="renderCarousel('finanzas')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Finanzas</button>
-                <button id="btn-streaming" onclick="renderCarousel('streaming')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Streaming</button>
-                <button id="btn-investigacion" onclick="renderCarousel('investigacion')" class="filter-btn px-4 py-1.5 rounded border border-gray-800 text-gray-500 text-[10px] font-mono uppercase tracking-widest transition-colors">Investigación</button>
-            </div>
-            <div class="carousel-container">
-                <div id="carousel-track" class="carousel-track gap-4"></div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="border-t border-gray-800/80 bg-[#030712]/95 mt-auto relative z-10">
-        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span class="font-mono text-[9px] text-gray-500 uppercase tracking-widest">ESTUDIO FINANCIERO Y DIGITAL © 2026</span>
-            <div class="flex items-center gap-4 font-mono text-[9px] text-gray-500 uppercase tracking-widest">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-lock text-gray-600"></i> CONEXIÓN CIFRADA</span>
-                <span class="w-1 h-1 bg-gray-800 rounded-full"></span>
-                <span>PIURA, PERÚ</span>
-            </div>
-        </div>
-    </footer>
 
     <script>
         // ⚡ REGISTRO DE PLANES DINÁMICOS ⚡
@@ -1212,7 +1196,6 @@
             addToCart(id, name, price, category, btn);
         }
 
-        // ⚡ CATÁLOGO COMPLETO PARA BÚSQUEDA GLOBAL ⚡
         const systemProducts = [
             {id: 'FIN-CMB', name: 'Combo Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
@@ -1240,7 +1223,7 @@
             {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Office Completo', price: 20.00, portal: 'digital', color: 'blue'},
             {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-C4', name: 'FICHA RENIEC (C4)', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Amarillo/Azul/Elect', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Validación de Identidad', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-DIR', name: 'DIRECCIONES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-ARB', name: 'ÁRBOL GENEALÓGICO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-TEL', name: 'TITULARIDAD LÍNEA TELEFÓNICA', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
@@ -1382,45 +1365,33 @@
             }, 4000);
         }
 
-        // --- SISTEMA NAVEGACIÓN ---
+        // --- SISTEMA NAVEGACIÓN ENRUTAMIENTO ---
         function navigate(viewId, isBack = false) {
-            const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
+            const views = ['hub', 'financiero', 'digital', 'investigacion'];
             
-            const shared = document.getElementById('shared-sections');
-            if(shared) {
-                if(viewId === 'hub') {
-                    shared.classList.remove('hidden-view');
-                    setTimeout(() => shared.classList.remove('opacity-0'), 10);
-                } else {
-                    shared.classList.add('opacity-0');
-                    setTimeout(() => shared.classList.add('hidden-view'), 300);
-                }
-            }
-
             views.forEach(v => {
-                const el = document.getElementById(v);
-                if(el) { el.classList.add('hidden-view'); }
+                const el = document.getElementById('view-' + v);
+                if(el) {
+                    if (v === viewId) {
+                        el.classList.remove('hidden-view');
+                        el.classList.add('animate-fade-in');
+                    } else {
+                        el.classList.add('hidden-view');
+                        el.classList.remove('animate-fade-in');
+                    }
+                }
             });
-            const target = document.getElementById('view-' + viewId);
-            if(target) {
-                target.classList.remove('hidden-view');
-            }
 
             window.scrollTo(0, 0);
-
-            if (!isBack) {
-                const newUrl = viewId === 'hub' ? window.location.pathname : window.location.pathname + '#' + viewId;
-                history.pushState({ view: viewId }, '', newUrl);
-            }
+            window.location.hash = viewId;
         }
 
-        window.addEventListener('popstate', (event) => {
-            const hash = window.location.hash.replace('#', '');
-            if (hash && ['financiero', 'digital', 'investigacion', 'hub'].includes(hash)) {
-                navigate(hash, true);
-            } else {
-                navigate('hub', true);
+        window.addEventListener('hashchange', () => {
+            let hash = window.location.hash.replace('#', '');
+            if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) {
+                hash = 'hub';
             }
+            navigate(hash, true);
         });
 
         // PRE-FILTROS Y NAVEGACIÓN A PORTALES
@@ -1479,6 +1450,37 @@
                 card.classList.add('scale-95');
             }
             navigate('investigacion');
+        }
+
+        function filterDigital(category) {
+            document.querySelectorAll('.dig-filter-btn').forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold');
+                btn.classList.add('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
+            });
+            const activeBtn = document.getElementById('btn-dig-' + category);
+            if(activeBtn) {
+                activeBtn.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold');
+                activeBtn.classList.remove('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
+            }
+
+            const sections = document.querySelectorAll('.category-section');
+            const cards = document.querySelectorAll('.card-digital-item');
+            
+            sections.forEach(sec => {
+                if(category === 'all' || sec.classList.contains('cat-' + category)) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.classList.contains('cat-' + category)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
         // --- SISTEMA DE CARRITO DE COMPRAS ---
@@ -1594,11 +1596,22 @@
         function syncProductButtons() {
             systemProducts.forEach(prod => {
                 let container = document.getElementById('action-' + prod.id);
+                let card = document.getElementById('card-' + prod.id);
+                
                 if(!container) return;
                 
                 let inCartItem = cart.find(i => i.id === prod.id);
                 let c = colorMap[prod.color];
                 
+                // ⚡ LÓGICA DE RESALTADO VISUAL NEÓN ⚡
+                if (card) {
+                    if (inCartItem) {
+                        card.classList.add('card-selected-' + prod.color);
+                    } else {
+                        card.classList.remove('card-selected-' + prod.color);
+                    }
+                }
+
                 if(inCartItem) {
                     if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
                         container.innerHTML = `
@@ -1630,10 +1643,10 @@
 
                     if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
                         container.innerHTML = `
-                            <button onclick="${clickFn}" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors">
+                            <button onclick="${clickFn}" class="btn-product w-full py-2 bg-[cyan]-500/10 text-[cyan]-400 border border-[cyan]-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-[cyan]-500 hover:text-white transition-colors">
                                 <i class="fa-solid fa-cart-plus"></i> ${btnText}
                             </button>
-                        `;
+                        `.replace(/\[cyan\]/g, 'cyan');
                     } else {
                         container.innerHTML = `
                             <button onclick="${clickFn}" class="w-full py-2.5 md:py-3 ${c.lightBg} border ${c.lightBorder} ${c.text} hover:${c.bg} hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
@@ -1663,7 +1676,8 @@
                     let itemTotal = item.price * item.qty;
                     total += itemTotal;
                     
-                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : '<span class="text-orange-400 font-bold">⚠️ Cotizar</span>';
+                    // Lógica visual para servicios a cotizar
+                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : '<span class="text-orange-400 font-bold">⚠️ Por Cotizar</span>';
                     
                     html += `
                     <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 animate-fade-in mb-4">
@@ -1692,7 +1706,7 @@
                             
                             if (isCombo) {
                                 html += `<div class="flex flex-col gap-2 mt-2">
-                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest">>> Target Sentinel:</div>
+                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest">>> Reporte Sentinel:</div>
                                     <div class="flex relative">
                                         <select onchange="updateDocType('${item.id}', ${i}, this.value, 1)" class="type-selector rounded-l-md border-r-0">
                                             <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
@@ -1701,7 +1715,7 @@
                                         </select>
                                         <input type="tel" inputmode="numeric" maxlength="11" placeholder="Ingrese ${doc.type}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, 1)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
                                     </div>
-                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">>> Target SBS (Solo DNI):</div>
+                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">>> Reporte SBS (Solo DNI):</div>
                                     <div class="flex relative">
                                         <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed">
                                             <option value="DNI" selected>DNI</option>
@@ -1712,7 +1726,7 @@
                             } else {
                                 if(isSBS) doc.type = 'DNI';
                                 let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
-                                let ph = doc.type === 'RUC' ? "Ingrese RUC del Target" : `Ingrese ${doc.type} del Target`;
+                                let ph = doc.type === 'RUC' ? "Ingrese RUC del Reporte" : `Ingrese ${doc.type} del Reporte`;
                                 
                                 html += `<div class="flex relative">`;
                                 if(isSBS) {
@@ -1842,6 +1856,7 @@
             if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); }
         }
 
+        // LÓGICA DE MENSAJE WHATSAPP (SISTEMA DE COTIZACIÓN)
         function sendFinalWhatsApp() {
             let total = 0;
             let hasZeroPrice = false;
@@ -1858,11 +1873,11 @@
                 }
                 
                 if((item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN') && item.dnis && item.dnis.length > 0) {
-                    message += `   🔍 Documentos del Target: \n`;
+                    message += `   🔍 Documentos del Reporte: \n`;
                     item.dnis.forEach(doc => {
                         if(item.id === 'FIN-CMB') {
-                            message += `   Sentinel (${doc.type}): ${doc.num}\n`;
-                            message += `   SBS (DNI): ${doc.num2}\n`;
+                            message += `   Reporte Sentinel (${doc.type}): ${doc.num}\n`;
+                            message += `   Reporte SBS (DNI): ${doc.num2}\n`;
                         } else {
                             message += `   ${doc.type}: ${doc.num}\n`;
                         }
@@ -1884,15 +1899,50 @@
             updateFloatingAction();
         }
 
-        // --- ARRANQUE OPTIMIZADO ---
+        // SENSOR ESPACIAL PARA EL HUB
+        function initScrollObserver() {
+            if (window.innerWidth >= 768) return;
+            const cards = document.querySelectorAll('.portfolio-card');
+            if(cards.length === 0) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view', 'is-centered');
+                    } else {
+                        entry.target.classList.remove('in-view', 'is-centered');
+                    }
+                });
+            }, { threshold: 0.6 }); 
+
+            cards.forEach(card => observer.observe(card));
+        }
+
+        function setLiveStats() {
+            try {
+                const baseDate = new Date('2026-01-01').getTime();
+                const now = new Date();
+                const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
+                const baseGlobal = 8135;
+                const globalTotal = baseGlobal + (daysPassed * 12);
+                const hour = now.getHours();
+                const minutes = now.getMinutes();
+                const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
+                
+                const elGlobal = document.getElementById('stat-global');
+                const elHoy = document.getElementById('stat-hoy');
+                if(elGlobal) elGlobal.innerText = globalTotal.toLocaleString('en-US');
+                if(elHoy) elHoy.innerText = '+' + prospectosHoy;
+            } catch(e) {}
+        }
+
         window.onload = () => {
-            const hash = window.location.hash.replace('#', '');
-            if(hash && ['financiero', 'digital', 'investigacion'].includes(hash)) {
-                navigate(hash, true);
-            } else {
-                history.replaceState({ view: 'hub' }, '', window.location.pathname);
-                navigate('hub', true);
+            let hash = window.location.hash.replace('#', '');
+            if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) {
+                hash = 'hub';
+                history.replaceState(null, '', window.location.pathname + '#hub');
             }
+            navigate(hash);
 
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -1905,6 +1955,7 @@
             }, 500); 
 
             try { setLiveStats(); } catch(e) {}
+            try { initScrollObserver(); } catch(e) {}
             syncProductButtons(); 
         };
     </script>
