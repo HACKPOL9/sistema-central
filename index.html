@@ -11,10 +11,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        if ('scrollRestoration' in history) {
-            history.scrollRestoration = 'manual';
-        }
-
         tailwind.config = {
             theme: {
                 extend: {
@@ -86,6 +82,22 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* ANIMACIONES Y EFECTOS DEL HUB ORIGINALES RESTAURADOS */
+        .portfolio-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .portfolio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+        .card-fin:hover { border-color: rgba(59,130,246,0.5); }
+        .card-dig:hover { border-color: rgba(16,185,129,0.5); }
+        .card-inv:hover { border-color: rgba(6,182,212,0.5); }
+        
+        .card-fin:hover .glow-bg { opacity: 1; }
+        .card-dig:hover .glow-bg { opacity: 1; }
+        .card-inv:hover .glow-bg { opacity: 1; }
+
         .top-carousel-wrapper {
             width: 168px; 
             height: 48px;
@@ -98,19 +110,12 @@
             display: flex;
             width: max-content;
             animation: top-scroll linear infinite;
-            animation-play-state: paused;
-            will-change: transform;
-        }
-        @media (min-width: 768px) {
-            .portfolio-card:hover .top-carousel-track { animation-play-state: running; }
-        }
-        .portfolio-card.is-centered .top-carousel-track {
-            animation-play-state: running;
         }
         @keyframes top-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
+        
         .circle-logo {
             width: 48px;
             height: 48px;
@@ -122,7 +127,6 @@
             flex-shrink: 0;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
         }
         .circle-logo img {
             width: 100%;
@@ -130,22 +134,6 @@
             object-fit: cover;
             border-radius: 50%;
             transform: scale(0.85);
-        }
-
-        @media (max-width: 768px) {
-            .portfolio-card {
-                opacity: 0.4;
-                transform: scale(0.95) translateY(10px);
-                transition: transform 0.4s ease, opacity 0.4s ease, border-color 0.4s ease;
-            }
-            .portfolio-card.in-view {
-                opacity: 1;
-                transform: scale(1) translateY(0); 
-                background-color: rgba(13, 20, 31, 0.95) !important;
-            }
-            .card-fin.in-view { border-color: rgba(59,130,246,0.5) !important; box-shadow: 0 10px 30px -10px rgba(59,130,246,0.3) !important; }
-            .card-dig.in-view { border-color: rgba(16,185,129,0.5) !important; box-shadow: 0 10px 30px -10px rgba(16,185,129,0.3) !important; }
-            .card-inv.in-view { border-color: rgba(6,182,212,0.5) !important; box-shadow: 0 10px 30px -10px rgba(6,182,212,0.3) !important; }
         }
 
         .card-digital-item {
@@ -158,6 +146,17 @@
         .card-hover-purple:hover { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.2); transform: translateY(-3px); }
         .card-hover-emerald:hover { border-color: rgba(16, 185, 129, 0.5); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2); transform: translateY(-3px); }
         .card-hover-blue:hover { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2); transform: translateY(-3px); }
+
+        .premium-card {
+            background: linear-gradient(145deg, rgba(10,15,22,0.9) 0%, rgba(5,8,13,0.95) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.15);
+        }
 
         .dni-input {
             background-color: rgba(0,0,0,0.3);
@@ -184,6 +183,17 @@
             outline: none;
             cursor: pointer;
         }
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 10px 0 20px 0;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+        .carousel-track { display: flex; width: max-content; animation: scroll-left 40s linear infinite; }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
@@ -192,6 +202,11 @@
     <div class="fixed inset-0 z-0 bg-[#02050A]"></div>
     <div class="bg-noise"></div>
     <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-60"></div>
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="orb-1 absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-blue-600/15 rounded-full blur-[120px] mix-blend-screen"></div>
+        <div class="orb-2 absolute top-[20%] right-[-10%] w-[45vw] h-[45vw] max-w-[700px] max-h-[700px] bg-emerald-600/10 rounded-full blur-[100px] mix-blend-screen"></div>
+        <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
+    </div>
 
     <!-- NOTIFICACIONES TOAST -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none w-full max-w-md px-4"></div>
@@ -204,11 +219,11 @@
             </button>
             <div class="relative mb-6 group">
                 <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl group-focus-within:text-blue-400 transition-colors"></i>
-                <input type="text" id="modal-search-input" oninput="executeSearch(this.value)" placeholder="Buscar Netflix, Sentinel, Canva, Disney..." class="w-full bg-[#0A0F16] border border-gray-800 text-white text-base md:text-lg rounded-2xl py-4 pl-14 pr-6 focus:outline-none focus:border-blue-500/50 shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all">
+                <input type="text" id="modal-search-input" oninput="executeSearch(this.value)" placeholder="Buscar Netflix, Sentinel, RENIEC..." class="w-full bg-[#0A0F16] border border-gray-800 text-white text-base md:text-lg rounded-2xl py-4 pl-14 pr-6 focus:outline-none focus:border-blue-500/50 shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition-all">
             </div>
             <div id="search-results-container" class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pb-10">
                 <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
-                    <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el catálogo
+                    <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el sistema
                 </div>
             </div>
         </div>
@@ -216,11 +231,9 @@
 
     <!-- ⚡ MODAL INTRO PORTAL FINANCIERO ⚡ -->
     <div id="financiero-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
-        <div id="financiero-intro-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col relative">
+        <div id="financiero-intro-card" class="bg-[#0A0F16] border border-blue-500/40 rounded-2xl max-w-sm w-full transform scale-95 transition-transform duration-300 flex flex-col relative">
             <div class="p-6 md:p-8 relative z-10">
-                <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-6 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-                    <i class="fa-solid fa-wallet text-3xl text-blue-400"></i>
-                </div>
+                <div class="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30 mb-6"><i class="fa-solid fa-wallet text-3xl text-blue-400"></i></div>
                 <h3 class="text-2xl font-bold text-white mb-2">PORTAL FINANCIERO</h3>
                 <p class="text-gray-400 text-sm leading-relaxed mb-6">Obtén un análisis exacto de tu perfil crediticio y revisa al instante:</p>
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
@@ -228,16 +241,14 @@
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚦</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Semaforización</strong> actual.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">📊</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Deudas vigentes y vencidas</strong>.</p></div>
                 </div>
-                <button onclick="proceedToFinanciero()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)] flex justify-center gap-2">
-                    ACCEDER <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <button onclick="proceedToFinanciero()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
 
     <!-- ⚡ MODAL INTRO PORTAL DIGITAL ⚡ -->
     <div id="digital-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
-        <div id="digital-intro-card" class="bg-[#0A0F16] border border-emerald-500/40 rounded-2xl max-w-sm w-full shadow-[0_0_80px_rgba(0,0,0,0.9)] transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col relative">
+        <div id="digital-intro-card" class="bg-[#0A0F16] border border-emerald-500/40 rounded-2xl max-w-sm w-full transform scale-95 transition-transform duration-300 flex flex-col relative">
             <div class="p-6 md:p-8 relative z-10">
                 <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/30 mb-6 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                     <i class="fa-solid fa-terminal text-3xl text-emerald-400"></i>
@@ -245,13 +256,30 @@
                 <h3 class="text-2xl font-bold text-white mb-2">PORTAL DIGITAL</h3>
                 <p class="text-gray-400 text-[13px] leading-relaxed mb-6">Disfruta de tus series favoritas, música y herramientas de trabajo al instante. Cuentas 100% seguras y con garantía total.</p>
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
-                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎬</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Entretenimiento:</strong> Netflix, Prime, Disney+, YouTube, HBO Max.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎬</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Entretenimiento:</strong> Netflix, Prime, Disney+, YouTube.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">I.A y Herramientas:</strong> ChatGPT Plus, Gemini, Canva Pro.</p></div>
-                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">💻</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Software y Extras:</strong> Windows 10/11, Office 365, Spotify, Duolingo.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">💻</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Software y Extras:</strong> Windows, Office.</p></div>
                 </div>
-                <button onclick="proceedToDigital()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] flex justify-center gap-2">
-                    ACCEDER <i class="fa-solid fa-arrow-right"></i>
-                </button>
+                <button onclick="proceedToDigital()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚡ MODAL INTRO PORTAL INVESTIGACIÓN ⚡ -->
+    <div id="investigacion-intro-modal" class="fixed inset-0 z-[400] bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="investigacion-intro-card" class="bg-[#0A0F16] border border-cyan-500/40 rounded-2xl max-w-sm w-full transform scale-95 transition-transform duration-300 flex flex-col relative">
+            <div class="p-6 md:p-8 relative z-10">
+                <div class="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center border border-cyan-500/30 mb-6 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+                    <i class="fa-solid fa-radar text-3xl text-cyan-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">PORTAL DE INVESTIGACIÓN</h3>
+                <p class="text-gray-400 text-[13px] leading-relaxed mb-6">Central de Inteligencia y Datos Estructurados. Auditoría y extracción de información a nivel nacional.</p>
+                <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">👤</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Identidad:</strong> Fichas RENIEC, Árbol Genealógico.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚔</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Antecedentes:</strong> Policiales, Penales, Judiciales.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚗</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Vehicular:</strong> SUNARP, SOAT, Boletas Informativas.</p></div>
+                </div>
+                <button onclick="proceedToInvestigacion()" class="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
@@ -261,15 +289,20 @@
     <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-[#0A0F16]/95 backdrop-blur-2xl z-[200] border-l border-gray-800 transform translate-x-full transition-transform duration-500 flex flex-col">
         <div class="px-6 py-5 border-b border-gray-800 flex justify-between items-center bg-[#02050A]/50">
             <div class="flex flex-col">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2"><i class="fa-solid fa-layer-group text-[#58a6ff]"></i> Terminal de Órdenes</h3>
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-[#58a6ff]"></i> Terminal de Órdenes
+                </h3>
                 <span id="order-id-display" class="font-mono text-[10px] text-gray-500 tracking-widest uppercase mt-1">ID: PENDIENTE</span>
             </div>
-            <button onclick="closeCart()" class="w-8 h-8 rounded-full bg-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 hover:text-red-400 transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeCart()" class="w-8 h-8 rounded-full bg-gray-800/50 flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 hover:text-red-400 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
         <div id="cart-items" class="flex-grow p-6 overflow-y-auto no-scrollbar space-y-4"></div>
         <div class="p-6 border-t border-gray-800 bg-[#02050A]/80">
             <div class="flex justify-between items-center mb-2"><span class="text-gray-400 text-sm">Subtotal</span><span id="cart-subtotal" class="font-mono text-white text-sm">S/ 0.00</span></div>
-            <div class="flex justify-between items-end mb-6"><span class="text-white font-bold text-lg">TOTAL</span><span id="cart-total" class="font-mono text-[#58a6ff] text-3xl font-bold">S/ 0.00</span></div>
+            <div class="flex justify-between items-center mb-6"><span class="text-gray-400 text-sm">Costos de Sistema</span><span class="font-mono text-emerald-400 text-sm">S/ 0.00</span></div>
+            <div class="flex justify-between items-end mb-6"><span class="text-white font-bold text-lg">TOTAL ESTIMADO</span><span id="cart-total" class="font-mono text-[#58a6ff] text-3xl font-bold">S/ 0.00</span></div>
             <button onclick="processToPaymentModal()" class="w-full py-4 bg-[#1f6feb] hover:bg-blue-600 text-white rounded-xl font-bold text-xs tracking-widest uppercase shadow-[0_0_20px_rgba(31,111,235,0.4)] flex justify-center gap-3"><i class="fa-solid fa-bolt"></i> IR A PAGAR</button>
         </div>
     </div>
@@ -290,7 +323,7 @@
                 <div class="text-xl font-bold text-white mb-6">EDGAR POL</div>
                 <div class="bg-black/50 border border-gray-800 rounded-xl w-full p-4 flex flex-col items-center mb-6 relative">
                     <span class="text-gray-500 text-[10px] uppercase font-mono tracking-widest absolute top-2 left-3">N° Billetera:</span>
-                    <div id="payment-number" class="text-4xl font-black text-[#58a6ff] tracking-wider mt-4">975040527</div>
+                    <div id="payment-number" class="text-4xl font-black text-[#58a6ff] tracking-wider mt-4">938748277</div>
                     <button onclick="copyNumber()" id="btn-copy" class="mt-4 w-full py-3 bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg text-[10px] tracking-widest uppercase font-bold flex justify-center gap-2"><i class="fa-regular fa-copy"></i> Copiar Número</button>
                 </div>
             </div>
@@ -359,8 +392,21 @@
                 </div>
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white">Paneles de Gestión</h1>
                 <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light mb-8">Seleccione el portal de servicio para gestionar su solicitud de forma segura.</p>
+                
+                <!-- ⚡ NÚMEROS DE ESTADÍSTICAS REPARADOS ⚡ -->
+                <div class="flex justify-center gap-4 md:gap-8 flex-wrap mb-10">
+                    <div class="bg-[#0A0F16]/50 border border-blue-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
+                        <span id="stat-global" class="font-bold text-2xl text-white font-mono">0</span>
+                        <span class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Consultas Globales</span>
+                    </div>
+                    <div class="bg-[#0A0F16]/50 border border-emerald-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
+                        <span id="stat-hoy" class="font-bold text-2xl text-emerald-400 font-mono">+0</span>
+                        <span class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Prospectos Hoy</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- TARJETAS DEL HUB -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
@@ -414,7 +460,7 @@
                             </div>
                         </div>
                         <h2 class="text-2xl font-bold text-white mb-2 group-hover:text-emerald-50 transition-colors">Portal Digital</h2>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Despliegue de software, licencias operativas y suscripciones de streaming corporativo.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">Despliegue de software, licencias operativas y suscripciones premium.</p>
                         <div class="mt-auto flex items-center justify-between border-t border-gray-800/80 pt-4 group-hover:border-emerald-500/30">
                             <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Ingresar</span>
                             <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors"><i class="fa-solid fa-arrow-right text-xs"></i></div>
@@ -423,7 +469,7 @@
                 </div>
 
                 <!-- INVESTIGACION -->
-                <div onclick="navigate('investigacion')" class="portfolio-card card-inv group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-cyan-500/50 cursor-pointer overflow-hidden flex flex-col">
+                <div onclick="initInvestigacionPortal()" class="portfolio-card card-inv group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-cyan-500/50 cursor-pointer overflow-hidden flex flex-col">
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -463,11 +509,28 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-wallet text-blue-500 mr-2"></i>Financiero</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Catálogo de Riesgo</p>
                 </div>
-                <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white"><i class="fa-solid fa-arrow-left"></i> Hub</button>
+                <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
             </div>
 
             <div id="financiero-catalog">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- COMBO SENTINEL + SBS -->
+                    <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Combo Total</h3>
+                                <span class="text-[9px] font-mono text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-1 rounded">Sentinel + SBS</span>
+                                <div class="mt-4 flex items-baseline gap-1"><span class="text-gray-500 font-mono text-sm">S/</span><span class="text-4xl font-black text-white tracking-tighter">10.00</span></div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <img src="logo/sentinel.png" class="w-10 h-10 object-contain" onerror="this.style.display='none'">
+                                <img src="logo/sbs.png" class="w-10 h-10 object-contain" onerror="this.style.display='none'">
+                            </div>
+                        </div>
+                        <div id="action-FIN-CMB" class="mt-auto pt-4"><button onclick="addToCart('FIN-CMB', 'Combo Sentinel + SBS', 10.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                    </div>
+
                     <!-- SENTINEL -->
                     <div id="card-FIN-SNT" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
                         <div class="flex justify-between items-start mb-4">
@@ -478,8 +541,9 @@
                             </div>
                             <img src="logo/sentinel.png" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
                         </div>
-                        <div id="action-FIN-SNT" class="mt-auto pt-4"><button onclick="addToCart('FIN-SNT', 'Reporte Sentinel', 4.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                        <div id="action-FIN-SNT" class="mt-auto pt-4"><button onclick="addToCart('FIN-SNT', 'Reporte Sentinel', 4.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                     </div>
+                    
                     <!-- EQUIFAX -->
                     <div id="card-FIN-EQF" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
                         <div class="flex justify-between items-start mb-4">
@@ -490,8 +554,9 @@
                             </div>
                             <img src="logo/equifax.png" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
                         </div>
-                        <div id="action-FIN-EQF" class="mt-auto pt-4"><button onclick="addToCart('FIN-EQF', 'Reporte Equifax', 7.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                        <div id="action-FIN-EQF" class="mt-auto pt-4"><button onclick="addToCart('FIN-EQF', 'Reporte Equifax', 7.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                     </div>
+                    
                     <!-- SBS -->
                     <div id="card-FIN-SBS" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all hover:border-blue-500/50">
                         <div class="flex justify-between items-start mb-4">
@@ -502,14 +567,14 @@
                             </div>
                             <img src="logo/sbs.png" class="w-16 h-16 object-contain" onerror="this.style.display='none'">
                         </div>
-                        <div id="action-FIN-SBS" class="mt-auto pt-4"><button onclick="addToCart('FIN-SBS', 'SBS Deudas Antiguas', 8.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                        <div id="action-FIN-SBS" class="mt-auto pt-4"><button onclick="addToCart('FIN-SBS', 'SBS Deudas Antiguas', 8.00, 'FINANCIERO', this)" class="btn-product w-full py-3 bg-blue-500/10 text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- ========================================================= -->
-        <!-- ================ PORTAL DIGITAL (IMÁGENES COMPLETAS) ==== -->
+        <!-- ================ PORTAL DIGITAL ========================= -->
         <!-- ========================================================= -->
         <div id="view-digital" class="hidden-view w-full animate-fade-in">
             <div class="mb-8 border-b border-gray-800 pb-4 flex justify-between items-center">
@@ -517,7 +582,7 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-terminal text-emerald-500 mr-2"></i>Digital</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Streaming & Tech</p>
                 </div>
-                <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white"><i class="fa-solid fa-arrow-left"></i> Hub</button>
+                <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
             </div>
 
             <div id="digital-filters" class="flex overflow-x-auto gap-2 mb-6 pb-2 no-scrollbar">
@@ -536,13 +601,13 @@
                     <!-- 1. STREAMING                                   -->
                     <!-- ============================================== -->
                     <div class="category-section cat-streaming w-full col-span-full mt-2 mb-1">
-                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-play text-red-500 mr-2"></i>Streaming</h3>
+                        <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-play text-red-500 mr-2"></i>Streaming Premium</h3>
                     </div>
 
-                    <!-- NETFLIX 14 -->
+                    <!-- NETFLIX -->
                     <div id="card-DIG-NTF" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/netflix.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Netflix" onerror="this.src='https://placehold.co/400x400/111/fff?text=NETFLIX'">
+                            <img src="publi/netflix.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Netflix" onerror="this.src='https://placehold.co/400x400/111/fff?text=NETFLIX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Netflix</h3>
@@ -555,10 +620,10 @@
                         </div>
                     </div>
 
-                    <!-- DISNEY PREMIUM 10 -->
+                    <!-- DISNEY+ -->
                     <div id="card-DIG-DSN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Disney.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Disney+" onerror="this.src='https://placehold.co/400x400/111/fff?text=DISNEY'">
+                            <img src="publi/Disney.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Disney+" onerror="this.src='https://placehold.co/400x400/111/fff?text=DISNEY'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Disney Premium</h3>
@@ -571,10 +636,10 @@
                         </div>
                     </div>
 
-                    <!-- PRIME VIDEO 7 -->
+                    <!-- PRIME VIDEO -->
                     <div id="card-DIG-PRM" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/primevideo.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Prime Video" onerror="this.src='https://placehold.co/400x400/111/fff?text=PRIME'">
+                            <img src="publi/primevideo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Prime Video" onerror="this.src='https://placehold.co/400x400/111/fff?text=PRIME'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Prime Video</h3>
@@ -587,10 +652,10 @@
                         </div>
                     </div>
 
-                    <!-- HBO MAX 7 -->
+                    <!-- HBO MAX -->
                     <div id="card-DIG-MAX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/hbo.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="HBO Max" onerror="this.src='https://placehold.co/400x400/111/fff?text=MAX'">
+                            <img src="publi/hbo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="HBO Max" onerror="this.src='https://placehold.co/400x400/111/fff?text=MAX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">HBO Max</h3>
@@ -603,10 +668,10 @@
                         </div>
                     </div>
 
-                    <!-- DIRECTV GO 15 -->
+                    <!-- DIRECTV GO -->
                     <div id="card-DIG-DTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/directv.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="DirecTV GO" onerror="this.src='https://placehold.co/400x400/111/fff?text=DTV'">
+                            <img src="publi/directv.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="DirecTV GO" onerror="this.src='https://placehold.co/400x400/111/fff?text=DTV'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">DirecTV GO</h3>
@@ -619,10 +684,10 @@
                         </div>
                     </div>
 
-                    <!-- MOVISTAR PLAY 15 -->
+                    <!-- MOVISTAR PLAY -->
                     <div id="card-DIG-MOV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/movistar.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Movistar Play" onerror="this.src='https://placehold.co/400x400/111/fff?text=MOVISTAR'">
+                            <img src="publi/movistar.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Movistar Play" onerror="this.src='https://placehold.co/400x400/111/fff?text=MOVISTAR'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Movistar Play</h3>
@@ -635,10 +700,10 @@
                         </div>
                     </div>
 
-                    <!-- IPTV 10 -->
+                    <!-- IPTV -->
                     <div id="card-DIG-IPTV" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/iptv.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="IPTV" onerror="this.src='https://placehold.co/400x400/111/fff?text=IPTV'">
+                            <img src="publi/iptv.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="IPTV" onerror="this.src='https://placehold.co/400x400/111/fff?text=IPTV'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">IPTV Smarters</h3>
@@ -651,10 +716,10 @@
                         </div>
                     </div>
 
-                    <!-- PARAMOUNT 8 -->
+                    <!-- PARAMOUNT -->
                     <div id="card-DIG-PAR" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Paramount.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Paramount+" onerror="this.src='https://placehold.co/400x400/111/fff?text=PARAMOUNT'">
+                            <img src="publi/Paramount.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Paramount+" onerror="this.src='https://placehold.co/400x400/111/fff?text=PARAMOUNT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Paramount</h3>
@@ -667,10 +732,10 @@
                         </div>
                     </div>
 
-                    <!-- VIX 8 -->
+                    <!-- VIX -->
                     <div id="card-DIG-VIX" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/ViX.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="VIX" onerror="this.src='https://placehold.co/400x400/111/fff?text=VIX'">
+                            <img src="publi/ViX.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="VIX" onerror="this.src='https://placehold.co/400x400/111/fff?text=VIX'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">VIX</h3>
@@ -683,10 +748,10 @@
                         </div>
                     </div>
 
-                    <!-- CRUNCHYROLL 8 -->
+                    <!-- CRUNCHYROLL -->
                     <div id="card-DIG-CRN" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Crunchyroll.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Crunchyroll" onerror="this.src='https://placehold.co/400x400/111/fff?text=CRUNCHYROLL'">
+                            <img src="publi/Crunchyroll.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Crunchyroll" onerror="this.src='https://placehold.co/400x400/111/fff?text=CRUNCHYROLL'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Crunchyroll</h3>
@@ -699,10 +764,10 @@
                         </div>
                     </div>
 
-                    <!-- APPLE TV 10 -->
+                    <!-- APPLE TV -->
                     <div id="card-DIG-APL" class="card-digital-item cat-streaming flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/AppleTV.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Apple TV" onerror="this.src='https://placehold.co/400x400/111/fff?text=APPLE'">
+                            <img src="publi/AppleTV.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Apple TV" onerror="this.src='https://placehold.co/400x400/111/fff?text=APPLE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Apple TV</h3>
@@ -722,30 +787,34 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-brain text-cyan-500 mr-2"></i>Inteligencia Artificial</h3>
                     </div>
 
-                    <!-- CHATGPT PLUS 15 -->
+                    <!-- CHATGPT -->
                     <div id="card-DIG-GPT" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-cyan">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/chatgpt.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="ChatGPT Plus" onerror="this.src='https://placehold.co/400x400/111/fff?text=GPT'">
+                            <img src="publi/chatgpt.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="ChatGPT Plus" onerror="this.src='https://placehold.co/400x400/111/fff?text=GPT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">ChatGPT Plus</h3>
+                            <div class="flex gap-1 mb-3">
+                                <button type="button" onclick="selectPlan('DIG-GPT', '1 Disp.', 15.00, this)" class="plan-btn-DIG-GPT px-1.5 py-1 rounded bg-cyan-500/20 border border-cyan-500 text-cyan-400 text-[9px] font-mono font-bold transition-colors">1 Disp.</button>
+                                <button type="button" onclick="selectPlan('DIG-GPT', '2 Disp.', 20.00, this)" class="plan-btn-DIG-GPT px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors">2 Disp.</button>
+                            </div>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
-                                <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
+                                <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-GPT" class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
                             <div id="action-DIG-GPT" class="w-full">
-                                <button onclick="addToCart('DIG-GPT', 'ChatGPT Plus', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                                <button onclick="addConfiguredProduct('DIG-GPT', 'ChatGPT Plus (1 Disp.)', 15.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- GEMINI 18 MESES 18 -->
+                    <!-- GEMINI -->
                     <div id="card-DIG-GEM" class="card-digital-item cat-ia flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-cyan">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Gemini.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
+                            <img src="publi/Gemini.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini Advanced</h3>
-                            <span class="text-gray-400 font-mono text-[10px] mb-2">18 Meses</span>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Gemini</h3>
+                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">18 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">18.00</span>
                             </div>
@@ -762,51 +831,54 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-music text-emerald-500 mr-2"></i>Música & Educación</h3>
                     </div>
 
-                    <!-- YOUTUBE PREMIUM (1 MES 9, 3 MESES 18) -->
+                    <!-- YOUTUBE PREMIUM -->
                     <div id="card-DIG-YTB" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-red">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/youtube.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="YouTube" onerror="this.src='https://placehold.co/400x400/111/fff?text=YOUTUBE'">
+                            <img src="publi/youtube.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="YouTube" onerror="this.src='https://placehold.co/400x400/111/fff?text=YOUTUBE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">YouTube Premium</h3>
-                            <!-- SELECTOR DE PLAN -->
-                            <div class="flex gap-1.5 mb-3">
-                                <button type="button" onclick="selectPlan('DIG-YTB', '1 Mes', 9.00, this)" class="plan-btn-DIG-YTB px-2 py-1 rounded bg-red-500/20 border border-red-500 text-red-400 text-[10px] font-mono font-bold">1 Mes</button>
-                                <button type="button" onclick="selectPlan('DIG-YTB', '3 Meses', 18.00, this)" class="plan-btn-DIG-YTB px-2 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[10px] font-mono hover:text-white">3 Meses</button>
+                            <div class="flex gap-1 mb-3">
+                                <button type="button" onclick="selectPlan('DIG-YTB', '1 Mes', 9.00, this)" class="plan-btn-DIG-YTB px-1.5 py-1 rounded bg-red-500/20 border border-red-500 text-red-400 text-[9px] font-mono font-bold transition-colors">1 Mes</button>
+                                <button type="button" onclick="selectPlan('DIG-YTB', '3 Meses', 18.00, this)" class="plan-btn-DIG-YTB px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors">3 Meses</button>
                             </div>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-YTB" class="text-xl md:text-3xl font-black text-white tracking-tighter">9.00</span>
                             </div>
                             <div id="action-DIG-YTB" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-YTB', 'YouTube Premium', 9.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                                <button onclick="addConfiguredProduct('DIG-YTB', 'YouTube Premium (1 Mes)', 9.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SPOTIFY PREMIUM 10 -->
+                    <!-- SPOTIFY PREMIUM -->
                     <div id="card-DIG-SPT" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-emerald">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/spotify.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Spotify" onerror="this.src='https://placehold.co/400x400/111/fff?text=SPOTIFY'">
+                            <img src="publi/spotify.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Spotify" onerror="this.src='https://placehold.co/400x400/111/fff?text=SPOTIFY'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Spotify Premium</h3>
+                            <div class="flex gap-1 mb-3">
+                                <button type="button" onclick="selectPlan('DIG-SPT', '1 Mes', 10.00, this)" class="plan-btn-DIG-SPT px-1.5 py-1 rounded bg-emerald-500/20 border border-emerald-500 text-emerald-400 text-[9px] font-mono font-bold transition-colors">1 Mes</button>
+                                <button type="button" onclick="selectPlan('DIG-SPT', '3 Meses', 18.00, this)" class="plan-btn-DIG-SPT px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors">3 Meses</button>
+                            </div>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
-                                <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
+                                <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-SPT" class="text-xl md:text-3xl font-black text-white tracking-tighter">10.00</span>
                             </div>
                             <div id="action-DIG-SPT" class="w-full">
-                                <button onclick="addToCart('DIG-SPT', 'Spotify Premium', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                                <button onclick="addConfiguredProduct('DIG-SPT', 'Spotify Premium (1 Mes)', 10.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DUOLINGO SUPER 12 MESES 20 -->
+                    <!-- DUOLINGO -->
                     <div id="card-DIG-DUO" class="card-digital-item cat-musica flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-emerald">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Duolingo.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Duolingo" onerror="this.src='https://placehold.co/400x400/111/fff?text=DUOLINGO'">
+                            <img src="publi/Duolingo.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Duolingo" onerror="this.src='https://placehold.co/400x400/111/fff?text=DUOLINGO'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Duolingo Super</h3>
-                            <span class="text-gray-400 font-mono text-[10px] mb-2">12 Meses</span>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Duolingo Super</h3>
+                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">12 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">20.00</span>
                             </div>
@@ -823,35 +895,35 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-pen-nib text-purple-500 mr-2"></i>Diseño & Edición</h3>
                     </div>
 
-                    <!-- CANVA PRO (1 MES 2, 6 MESES 5, 1 AÑO 8) -->
+                    <!-- CANVA PRO -->
                     <div id="card-DIG-CNV" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-purple">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Canva.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Canva" onerror="this.src='https://placehold.co/400x400/111/fff?text=CANVA'">
+                            <img src="publi/Canva.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Canva" onerror="this.src='https://placehold.co/400x400/111/fff?text=CANVA'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Canva Pro</h3>
-                            <!-- SELECTOR DE PLAN -->
                             <div class="flex gap-1 mb-3">
-                                <button type="button" onclick="selectPlan('DIG-CNV', '1 Mes', 2.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-purple-500/20 border border-purple-500 text-purple-400 text-[9px] font-mono font-bold">1 Mes</button>
-                                <button type="button" onclick="selectPlan('DIG-CNV', '6 Meses', 5.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white">6 Meses</button>
-                                <button type="button" onclick="selectPlan('DIG-CNV', '1 Año', 8.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white">1 Año</button>
+                                <button type="button" onclick="selectPlan('DIG-CNV', '1 Mes', 2.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-purple-500/20 border border-purple-500 text-purple-400 text-[9px] font-mono font-bold transition-colors">1 Mes</button>
+                                <button type="button" onclick="selectPlan('DIG-CNV', '6 Meses', 5.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors">6 Mes</button>
+                                <button type="button" onclick="selectPlan('DIG-CNV', '1 Año', 8.00, this)" class="plan-btn-DIG-CNV px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors">1 Año</button>
                             </div>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span id="price-display-DIG-CNV" class="text-xl md:text-3xl font-black text-white tracking-tighter">2.00</span>
                             </div>
                             <div id="action-DIG-CNV" class="w-full">
-                                <button onclick="addConfiguredProduct('DIG-CNV', 'Canva Pro', 2.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                                <button onclick="addConfiguredProduct('DIG-CNV', 'Canva Pro (1 Mes)', 2.00, 'DIGITAL', this)" class="btn-product w-full py-2.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600 hover:text-white rounded-xl text-center font-mono text-[10px] md:text-[11px] tracking-widest uppercase font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- CAPCUT PRO 15 -->
+                    <!-- CAPCUT PRO -->
                     <div id="card-DIG-CPT" class="card-digital-item cat-diseno flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-purple">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/capcut.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="CapCut" onerror="this.src='https://placehold.co/400x400/111/fff?text=CAPCUT'">
+                            <img src="publi/capcut.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="CapCut" onerror="this.src='https://placehold.co/400x400/111/fff?text=CAPCUT'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">CapCut Pro</h3>
+                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">Efectos Premium</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
@@ -868,13 +940,14 @@
                         <h3 class="text-white text-base md:text-lg font-bold border-b border-gray-800 pb-2"><i class="fa-solid fa-compact-disc text-blue-500 mr-2"></i>Software</h3>
                     </div>
 
-                    <!-- WINDOWS 10/11 15 SOLES -->
+                    <!-- WINDOWS -->
                     <div id="card-DIG-WIN" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-blue">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Windows.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Windows 10/11" onerror="this.src='https://placehold.co/400x400/111/fff?text=WINDOWS'">
+                            <img src="publi/Windows.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Windows 10/11" onerror="this.src='https://placehold.co/400x400/111/fff?text=WINDOWS'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Windows 10/11 Pro</h3>
+                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">Licencia OEM</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">15.00</span>
                             </div>
@@ -884,13 +957,14 @@
                         </div>
                     </div>
 
-                    <!-- MICROSOFT 365 20 SOLES -->
+                    <!-- OFFICE -->
                     <div id="card-DIG-OFF" class="card-digital-item cat-software flex flex-col group rounded-2xl overflow-hidden border border-gray-800 bg-[#0A0F16] card-hover-blue">
                         <div class="aspect-square w-full relative flex items-center justify-center overflow-hidden shrink-0 border-b border-gray-800/80">
-                            <img src="publi/Office.png" class="w-full h-full object-contain p-2.5 group-hover:scale-105 transition-transform duration-300" alt="Microsoft 365" onerror="this.src='https://placehold.co/400x400/111/fff?text=OFFICE'">
+                            <img src="publi/Office.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="Microsoft 365" onerror="this.src='https://placehold.co/400x400/111/fff?text=OFFICE'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
                             <h3 class="text-sm md:text-lg font-bold text-white mb-2 leading-tight">Microsoft 365</h3>
+                            <span class="text-gray-500 font-mono text-[10px] mb-2 uppercase">Suscripción Anual</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">20.00</span>
                             </div>
@@ -911,99 +985,161 @@
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
                 <div>
                     <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded border border-gray-800 transition-all mb-6 uppercase tracking-widest w-fit">
-                        <i class="fa-solid fa-arrow-left"></i> Retornar
+                        <i class="fa-solid fa-arrow-left"></i> Regresar
                     </button>
                     <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
                         <i class="fa-solid fa-radar text-cyan-500"></i> Investigación
                     </h2>
-                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Inteligencia de Datos Estructurados</p>
+                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Inteligencia de Datos y Antecedentes</p>
                 </div>
             </div>
-            
-            <div class="mb-10 bg-[#0A0F16]/90 border border-cyan-500/30 rounded-2xl p-6 shadow-[0_0_30px_rgba(6,182,212,0.1)] relative overflow-hidden backdrop-blur-md">
-                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50"></div>
-                <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-terminal text-cyan-400"></i> Terminal de Rastreo (OSINT)
-                </h3>
-                <p class="text-gray-400 text-xs font-mono mb-6">/// CONEXIÓN DIRECTA AL MOTOR (BETA)</p>
+
+            <!-- CARD DE INFORMACIÓN GENERAL PREMIUM -->
+            <div id="card-INV-GEN" class="mb-8 premium-card relative bg-gradient-to-br from-[#0A0F16] to-[#02050A] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between border border-cyan-500/50 hover:border-cyan-400 transition-colors group shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                <div class="absolute top-0 inset-x-0 h-1 bg-cyan-500"></div>
+                <div class="absolute -top-3 right-6 bg-orange-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(249,115,22,0.6)] animate-pulse">
+                    🔥 El Más Solicitado
+                </div>
+                <div class="flex-1 mb-6 md:mb-0">
+                    <div class="flex items-center gap-3 mb-3">
+                        <i class="fa-solid fa-fingerprint text-cyan-400 text-3xl"></i>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white">INFORMACIÓN GENERAL</h3>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-2xl">Todo lo que se pueda buscar de dicha persona. Reporte estructurado y detallado de múltiples bases de datos a nivel nacional.</p>
+                </div>
+                <div class="flex flex-col items-start md:items-end gap-4 min-w-[200px]">
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-gray-500 font-mono text-lg">S/</span><span class="text-4xl md:text-5xl font-black text-cyan-400 tracking-tighter">15.00</span>
+                    </div>
+                    <div id="action-INV-GEN" class="w-full">
+                        <button onclick="addToCart('INV-GEN', 'Información General', 15.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl text-center font-bold text-[11px] tracking-widest transition-all uppercase flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                            <i class="fa-solid fa-cart-plus"></i> Añadir Pack Completo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 mt-8 flex items-center gap-3 border-b border-gray-800 pb-2">
+                <i class="fa-solid fa-list-check text-gray-500"></i>
+                <h3 class="text-white font-mono text-sm uppercase tracking-widest">Módulos de Extracción Individual</h3>
+            </div>
+
+            <!-- GRID DE MÓDULOS DE INVESTIGACIÓN -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 
-                <div class="flex flex-col md:flex-row gap-4">
-                    <div class="relative flex-grow">
-                        <i class="fa-solid fa-car absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-500/50"></i>
-                        <input type="text" id="input-placa" placeholder="Ingrese Placa Vehicular (Ej: ABC-123)" class="w-full bg-[#02050A] border border-cyan-500/30 text-white font-mono text-sm rounded-xl py-4 pl-12 pr-4 focus:border-cyan-400 focus:outline-none transition-colors uppercase">
-                    </div>
-                    <button onclick="ejecutarRastreo()" id="btn-rastreo" class="py-4 px-8 bg-cyan-600/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-xl font-bold font-mono text-xs tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] flex items-center justify-center gap-2 whitespace-nowrap">
-                        <i class="fa-solid fa-radar"></i> Iniciar Escaneo
-                    </button>
+                <!-- RENIEC / IDENTIDAD -->
+                <div id="card-INV-C4" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-address-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">FICHA RENIEC (C4)</h4></div>
+                    <div id="action-INV-C4"><button onclick="addToCart('INV-C4', 'Ficha RENIEC (C4)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-DNI" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-id-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DNI VIRTUAL (AMARILLO/AZUL/ELECT)</h4></div>
+                    <div id="action-INV-DNI"><button onclick="addToCart('INV-DNI', 'DNI Virtual', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-DIR" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-map-location-dot text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DIRECCIONES</h4></div>
+                    <div id="action-INV-DIR"><button onclick="addToCart('INV-DIR', 'Direcciones', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-ARB" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-network-wired text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ÁRBOL GENEALÓGICO</h4></div>
+                    <div id="action-INV-ARB"><button onclick="addToCart('INV-ARB', 'Árbol Genealógico', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                
+                <!-- TELEFONÍA Y MIGRACIONES -->
+                <div id="card-INV-TEL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-phone text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">TITULARIDAD LÍNEA TELEFÓNICA</h4></div>
+                    <div id="action-INV-TEL"><button onclick="addToCart('INV-TEL', 'Titularidad Línea', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-MIG" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-plane-arrival text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REGISTRO MIGRATORIO DNI/C.E</h4></div>
+                    <div id="action-INV-MIG"><button onclick="addToCart('INV-MIG', 'Registro Migratorio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                 </div>
 
-                <div id="pantalla-resultados" class="hidden mt-6 bg-[#02050A] border border-gray-800 rounded-xl p-6"></div>
-            </div>
+                <!-- VEHICULAR Y SUNARP -->
+                <div id="card-INV-SNP" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">SUNARP PDF</h4></div>
+                    <div id="action-INV-SNP"><button onclick="addToCart('INV-SNP', 'SUNARP PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-LIT" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-invoice text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">COPIA LITERAL</h4></div>
+                    <div id="action-INV-LIT"><button onclick="addToCart('INV-LIT', 'Copia Literal', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-TIV" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">TIVE PDF</h4></div>
+                    <div id="action-INV-TIV"><button onclick="addToCart('INV-TIV', 'TIVE PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-BOL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">BOLETA INFORMATIVA PDF</h4></div>
+                    <div id="action-INV-BOL"><button onclick="addToCart('INV-BOL', 'Boleta Informativa PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-REV" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-car-burst text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REVISIÓN TÉCNICA PDF</h4></div>
+                    <div id="action-INV-REV"><button onclick="addToCart('INV-REV', 'Revisión Técnica PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-SOA" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-clipboard-check text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">SOAT PDF</h4></div>
+                    <div id="action-INV-SOA"><button onclick="addToCart('INV-SOA', 'SOAT PDF', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div id="card-INV-BAS" class="premium-card relative bg-[#0A0F16] rounded-2xl p-8 flex flex-col justify-between border border-cyan-500/30 hover:border-cyan-500/50 transition-colors group">
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-01</span>
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Perfilado Básico</h3>
-                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Validación de identidad y estado en registros públicos.</p>
-                        <div class="text-3xl font-bold text-white mb-8 font-mono">S/ 40.00</div>
-                    </div>
-                    <div id="action-INV-BAS">
-                        <button onclick="addToCart('INV-BAS', 'Perfilado Básico', 40.00, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-cyan-600/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-600/20 hover:text-cyan-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
-                        </button>
-                    </div>
+                <!-- ACTAS Y ESTUDIOS -->
+                <div id="card-INV-NAC" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE NACIMIENTO</h4></div>
+                    <div id="action-INV-NAC"><button onclick="addToCart('INV-NAC', 'Acta de Nacimiento', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                 </div>
-                <div id="card-INV-PRO" class="premium-card relative bg-[#0A0F16] rounded-2xl p-8 flex flex-col justify-between border border-purple-500/30 hover:border-purple-500/50 transition-colors group">
-                    <span class="absolute top-6 right-6 font-mono text-[9px] text-gray-600 border border-gray-800 px-2 py-1 rounded">SKU: INV-02</span>
-                    <div>
-                        <h3 class="text-2xl font-bold text-white mb-3">Rastreo Profundo</h3>
-                        <p class="text-gray-400 text-sm mb-6 leading-relaxed">Auditoría de huella digital y presencia en la red.</p>
-                        <div class="inline-block text-[10px] text-purple-400 border border-purple-500/30 bg-purple-500/10 font-mono mb-8 uppercase px-3 py-1 rounded">Previa Evaluación</div>
-                    </div>
-                    <div id="action-INV-PRO">
-                        <button onclick="addToCart('INV-PRO', 'Rastreo Profundo (Previa Evaluación)', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-4 bg-purple-600/10 border border-purple-500/30 text-purple-400 hover:bg-purple-600/20 hover:text-purple-300 rounded-lg text-center font-mono text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cart-plus"></i> Evaluar Caso
-                        </button>
-                    </div>
+                <div id="card-INV-DEF" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE DEFUNCIÓN</h4></div>
+                    <div id="action-INV-DEF"><button onclick="addToCart('INV-DEF', 'Acta de Defunción', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
                 </div>
+                <div id="card-INV-MAT" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-file-lines text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ACTA DE MATRIMONIO</h4></div>
+                    <div id="action-INV-MAT"><button onclick="addToCart('INV-MAT', 'Acta de Matrimonio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-EST" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-building-columns text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">LUGARES DE ESTUDIO</h4></div>
+                    <div id="action-INV-EST"><button onclick="addToCart('INV-EST', 'Lugares de Estudio', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-CER" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-graduation-cap text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">CERTIFICADO DE ESTUDIOS</h4></div>
+                    <div id="action-INV-CER"><button onclick="addToCart('INV-CER', 'Certificado de Estudios', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+
+                <!-- ANTECEDENTES Y JUDICIAL -->
+                <div id="card-INV-POL" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-handcuffs text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES POLICIALES</h4></div>
+                    <div id="action-INV-POL"><button onclick="addToCart('INV-POL', 'Antecedentes Policiales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-PEN" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-handcuffs text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES PENALES</h4></div>
+                    <div id="action-INV-PEN"><button onclick="addToCart('INV-PEN', 'Antecedentes Penales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-JUD" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-gavel text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">ANTECEDENTES JUDICIALES</h4></div>
+                    <div id="action-INV-JUD"><button onclick="addToCart('INV-JUD', 'Antecedentes Judiciales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-DEN" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-building-shield text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">DENUNCIAS POLICIALES</h4></div>
+                    <div id="action-INV-DEN"><button onclick="addToCart('INV-DEN', 'Denuncias Policiales', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-REQ" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-user-lock text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">REQUISITORIAS</h4></div>
+                    <div id="action-INV-REQ"><button onclick="addToCart('INV-REQ', 'Requisitorias', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-FIS" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-scale-balanced text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">FISCALÍA / MPFN</h4></div>
+                    <div id="action-INV-FIS"><button onclick="addToCart('INV-FIS', 'Fiscalía/MPFN', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+                <div id="card-INV-FAC" class="bg-[#0A0F16] border border-gray-800 rounded-xl p-4 flex flex-col justify-between hover:border-cyan-500/50 transition-colors group">
+                    <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-face-scan text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">RECONOCIMIENTO FACIAL</h4></div>
+                    <div id="action-INV-FAC"><button onclick="addToCart('INV-FAC', 'Reconocimiento Facial', 0, 'INVESTIGACIÓN', this)" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors"><i class="fa-solid fa-cart-plus"></i> Añadir</button></div>
+                </div>
+
             </div>
         </div>
 
     </main>
 
-    <!-- CANAL OFICIAL Y EVIDENCIAS -->
+    <!-- RESPALDOS Y EVIDENCIAS -->
     <div id="shared-sections" class="hidden-view opacity-0 px-4 md:px-8 max-w-7xl mx-auto w-full mb-16 relative z-10 transition-opacity duration-300">
-        <div class="bg-[#0A0F16] rounded-xl p-6 md:p-10 mb-16 relative overflow-hidden border border-[#25D366]/30 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
-            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-600 to-[#25D366]"></div>
-            <div class="flex flex-col lg:flex-row items-center gap-10">
-                <div class="w-full lg:w-1/2 flex justify-center">
-                    <div class="relative w-full max-w-sm p-1 bg-gray-900/50 rounded-2xl border border-gray-800 shadow-[0_0_40px_rgba(37,211,102,0.1)]">
-                        <img src="promo.png" alt="Promo WhatsApp" class="w-full h-auto rounded-xl object-contain">
-                    </div>
-                </div>
-                <div class="w-full lg:w-1/2 flex flex-col justify-center">
-                    <div class="inline-flex items-center gap-2 bg-[#25D366]/10 text-[#25D366] px-3 py-1 rounded text-xs font-mono mb-4 w-fit border border-[#25D366]/30">
-                        <i class="fa-solid fa-bell animate-pulse"></i> Promociones Activas
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4 leading-tight">Optimiza tus finanzas y entretenimiento en un solo lugar.</h3>
-                    <div class="space-y-3 mb-8">
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Alertas y descuentos en <strong class="text-white">Reportes Financieros</strong>.</p></div>
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">El mejor catálogo de <strong class="text-white">Streaming</strong> y <strong class="text-white">Herramientas Digitales</strong>.</p></div>
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-check text-[#25D366] mt-1"></i><p class="text-gray-300 text-sm leading-relaxed">Servicios de <strong class="text-white">Auditoría e Investigación OSINT</strong>.</p></div>
-                    </div>
-                    <div class="flex flex-col gap-4">
-                        <a href="https://whatsapp.com/channel/0029VbDN78TA2pLAWqK1ct2O" target="_blank" class="w-full py-4 bg-[#25D366] text-black hover:bg-[#1ebd5a] rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(37,211,102,0.3)] flex items-center justify-center gap-2">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> Unirte al Canal Oficial
-                        </a>
-                        <a href="https://wa.me/51937751224?text=Hola%20Administrador,%20deseo%20hacer%20una%20consulta." target="_blank" class="w-full py-4 bg-[#0A0F16] border border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 rounded-lg text-center font-bold text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-headset text-lg"></i> Contactar al Administrador
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div>
             <div class="flex flex-col items-center text-center mb-8">
                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Respaldos de Confianza</h2>
@@ -1021,25 +1157,46 @@
         </div>
     </div>
 
+    <footer class="border-t border-gray-800/80 bg-[#030712]/95 mt-auto relative z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <span class="font-mono text-[9px] text-gray-500 uppercase tracking-widest">ESTUDIO FINANCIERO Y DIGITAL © 2026</span>
+            <div class="flex items-center gap-4 font-mono text-[9px] text-gray-500 uppercase tracking-widest">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-lock text-gray-600"></i> CONEXIÓN CIFRADA</span>
+                <span class="w-1 h-1 bg-gray-800 rounded-full"></span>
+                <span>PIURA, PERÚ</span>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // ⚡ REGISTRO DE PLANES DINÁMICOS (YOUTUBE Y CANVA) ⚡
+        // ⚡ REGISTRO DE PLANES DINÁMICOS ⚡
         const configuredPlans = {
             'DIG-YTB': { name: 'YouTube Premium (1 Mes)', price: 9.00 },
+            'DIG-SPT': { name: 'Spotify Premium (1 Mes)', price: 10.00 },
+            'DIG-GPT': { name: 'ChatGPT Plus (1 Disp.)', price: 15.00 },
             'DIG-CNV': { name: 'Canva Pro (1 Mes)', price: 2.00 }
         };
 
         function selectPlan(id, planLabel, price, btn) {
-            configuredPlans[id] = { 
-                name: (id === 'DIG-YTB' ? 'YouTube Premium' : 'Canva Pro') + ` (${planLabel})`, 
-                price: price 
-            };
+            let baseName = '';
+            if(id === 'DIG-YTB') baseName = 'YouTube Premium';
+            if(id === 'DIG-SPT') baseName = 'Spotify Premium';
+            if(id === 'DIG-GPT') baseName = 'ChatGPT Plus';
+            if(id === 'DIG-CNV') baseName = 'Canva Pro';
+
+            configuredPlans[id] = { name: baseName + ` (${planLabel})`, price: price };
             
-            document.querySelectorAll('.plan-btn-' + id).forEach(b => {
-                b.className = b.className.replace(/border-(red|purple)-500 bg-(red|purple)-500\/20 text-(red|purple)-400 font-bold/, 'border-gray-700 bg-gray-800 text-gray-400');
+            let color = 'cyan';
+            if(id === 'DIG-YTB') color = 'red';
+            if(id === 'DIG-SPT') color = 'emerald';
+            if(id === 'DIG-CNV') color = 'purple';
+            
+            const container = btn.parentElement;
+            container.querySelectorAll('button').forEach(b => {
+                b.className = `px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors`;
             });
             
-            let color = id === 'DIG-YTB' ? 'red' : 'purple';
-            btn.className = `plan-btn-${id} px-2 py-1 rounded bg-${color}-500/20 border border-${color}-500 text-${color}-400 text-[10px] font-mono font-bold`;
+            btn.className = `px-1.5 py-1 rounded bg-${color}-500/20 border border-${color}-500 text-${color}-400 text-[9px] font-mono font-bold transition-colors`;
             
             const priceDisplay = document.getElementById('price-display-' + id);
             if(priceDisplay) priceDisplay.innerText = price.toFixed(2);
@@ -1057,9 +1214,13 @@
 
         // ⚡ CATÁLOGO COMPLETO PARA BÚSQUEDA GLOBAL ⚡
         const systemProducts = [
+            {id: 'FIN-CMB', name: 'Combo Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', desc: 'Historial bancario', price: 8.00, portal: 'financiero', color: 'blue'},
+            {id: 'DIG-YTB', name: 'YouTube Premium', desc: 'Sin Anuncios', price: 9.00, portal: 'digital', color: 'red'},
+            {id: 'DIG-SPT', name: 'Spotify Premium', desc: 'Música Ilimitada', price: 10.00, portal: 'digital', color: 'emerald'},
+            {id: 'DIG-DUO', name: 'Duolingo Super 12 Meses', desc: 'Vidas Ilimitadas', price: 20.00, portal: 'digital', color: 'emerald'},
             {id: 'DIG-NTF', name: 'Netflix', desc: '4K Ultra HD', price: 14.00, portal: 'digital', color: 'red'},
             {id: 'DIG-DSN', name: 'Disney Premium', desc: 'Estrenos y Star', price: 10.00, portal: 'digital', color: 'red'},
             {id: 'DIG-PRM', name: 'Prime Video', desc: 'Ultra HD', price: 7.00, portal: 'digital', color: 'red'},
@@ -1073,15 +1234,35 @@
             {id: 'DIG-APL', name: 'Apple TV', desc: 'Originals 4K', price: 10.00, portal: 'digital', color: 'red'},
             {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 15.00, portal: 'digital', color: 'cyan'},
             {id: 'DIG-GEM', name: 'Gemini Advanced 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
-            {id: 'DIG-YTB', name: 'YouTube Premium', desc: 'Sin Anuncios', price: 9.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-SPT', name: 'Spotify Premium', desc: 'Música Ilimitada', price: 10.00, portal: 'digital', color: 'emerald'},
-            {id: 'DIG-DUO', name: 'Duolingo Super 12 Meses', desc: 'Vidas Ilimitadas', price: 20.00, portal: 'digital', color: 'emerald'},
             {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Diseño Pro', price: 2.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue'},
             {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Office Completo', price: 20.00, portal: 'digital', color: 'blue'},
-            {id: 'INV-BAS', name: 'Perfilado Básico', desc: 'Identidad y Registros', price: 40.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-PRO', name: 'Rastreo Profundo', desc: 'Huella digital', price: 0.00, portal: 'investigacion', color: 'purple'}
+            {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-C4', name: 'FICHA RENIEC (C4)', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Amarillo/Azul/Elect', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-DIR', name: 'DIRECCIONES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-ARB', name: 'ÁRBOL GENEALÓGICO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-TEL', name: 'TITULARIDAD LÍNEA TELEFÓNICA', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-MIG', name: 'REGISTRO MIGRATORIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-SNP', name: 'SUNARP PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-LIT', name: 'COPIA LITERAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-TIV', name: 'TIVE PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-BOL', name: 'BOLETA INFORMATIVA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-REV', name: 'REVISIÓN TÉCNICA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-SOA', name: 'SOAT PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-NAC', name: 'ACTA DE NACIMIENTO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-DEF', name: 'ACTA DE DEFUNCIÓN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-MAT', name: 'ACTA DE MATRIMONIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-EST', name: 'LUGARES DE ESTUDIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-CER', name: 'CERTIFICADO DE ESTUDIOS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-POL', name: 'ANTECEDENTES POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-PEN', name: 'ANTECEDENTES PENALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-JUD', name: 'ANTECEDENTES JUDICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-DEN', name: 'DENUNCIAS POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-REQ', name: 'REQUISITORIAS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-FIS', name: 'FISCALÍA/MPFN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-FAC', name: 'RECONOCIMIENTO FACIAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'}
         ];
 
         function openSearch() {
@@ -1201,60 +1382,7 @@
             }, 4000);
         }
 
-        async function ejecutarRastreo() {
-            const placaInput = document.getElementById('input-placa');
-            const placa = placaInput.value.trim().toUpperCase();
-            const btn = document.getElementById('btn-rastreo');
-            const pantalla = document.getElementById('pantalla-resultados');
-
-            if(placa === '') { showNotification('Error: Ingrese una placa vehicular válida.'); return; }
-
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> HACKEANDO RED...';
-            btn.classList.add('bg-cyan-600', 'text-white');
-            pantalla.classList.remove('hidden');
-            pantalla.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-8">
-                    <div class="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mb-4"></div>
-                    <p class="text-cyan-400 font-mono text-xs animate-pulse">Conectando con Motor OSINT (127.0.0.1:8000)...</p>
-                </div>
-            `;
-
-            try {
-                const response = await fetch(`http://127.0.0.1:8000/consultar/${placa}`);
-                if(!response.ok) throw new Error('Error de conexión');
-                const data = await response.json();
-                
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fa-solid fa-radar"></i> Nuevo Escaneo';
-                    btn.classList.remove('bg-cyan-600', 'text-white');
-                    pantalla.innerHTML = `
-                        <div class="border-b border-gray-800 pb-4 mb-4 flex justify-between items-center">
-                            <span class="text-emerald-400 font-mono text-[10px] uppercase tracking-widest"><i class="fa-solid fa-circle-check"></i> Extracción Exitosa</span>
-                            <span class="text-gray-500 font-mono text-[10px]">TARGET: ${data.placa_consultada}</span>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
-                            <div><span class="text-gray-500 block mb-1">PROPIETARIO SIMULADO:</span> <span class="text-white font-bold">${data.propietario_simulado}</span></div>
-                            <div><span class="text-gray-500 block mb-1">PAPELETAS DETECTADAS:</span> <span class="text-red-400 font-bold">${data.papeletas_simuladas} Registros</span></div>
-                            <div><span class="text-gray-500 block mb-1">ESTADO DEL SISTEMA:</span> <span class="text-cyan-400">${data.mensaje}</span></div>
-                            <div><span class="text-gray-500 block mb-1">FUENTE DE EXTRACCIÓN:</span> <span class="text-white">${data.datos_obtenidos_de}</span></div>
-                        </div>
-                    `;
-                }, 1500); 
-
-            } catch (error) {
-                btn.innerHTML = '<i class="fa-solid fa-radar"></i> Reintentar Escaneo';
-                btn.classList.remove('bg-cyan-600', 'text-white');
-                pantalla.innerHTML = `
-                    <div class="text-center py-6">
-                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-3xl mb-3 animate-pulse"></i>
-                        <p class="text-red-400 font-mono text-xs uppercase tracking-widest">CONEXIÓN RECHAZADA O MOTOR APAGADO</p>
-                        <p class="text-gray-500 font-mono text-[10px] mt-2">Verifique que su servidor FastAPI esté corriendo y con CORS habilitado.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // --- SISTEMA NAVEGACIÓN INSTANTÁNEO ---
+        // --- SISTEMA NAVEGACIÓN ---
         function navigate(viewId, isBack = false) {
             const views = ['view-hub', 'view-financiero', 'view-digital', 'view-investigacion'];
             
@@ -1265,7 +1393,7 @@
                     setTimeout(() => shared.classList.remove('opacity-0'), 10);
                 } else {
                     shared.classList.add('opacity-0');
-                    setTimeout(() => shared.classList.add('hidden-view'), 10);
+                    setTimeout(() => shared.classList.add('hidden-view'), 300);
                 }
             }
 
@@ -1288,14 +1416,14 @@
 
         window.addEventListener('popstate', (event) => {
             const hash = window.location.hash.replace('#', '');
-            if (hash && ['financiero', 'digital', 'investigacion'].includes(hash)) {
+            if (hash && ['financiero', 'digital', 'investigacion', 'hub'].includes(hash)) {
                 navigate(hash, true);
             } else {
                 navigate('hub', true);
             }
         });
 
-        // PRE-FILTROS
+        // PRE-FILTROS Y NAVEGACIÓN A PORTALES
         function initFinancieroPortal() {
             const modal = document.getElementById('financiero-intro-modal');
             const card = document.getElementById('financiero-intro-card');
@@ -1334,43 +1462,23 @@
             navigate('digital');
         }
 
-        function filterDigital(category) {
-            document.querySelectorAll('.dig-filter-btn').forEach(btn => {
-                btn.classList.remove('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold');
-                btn.classList.add('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
-            });
-            const activeBtn = document.getElementById('btn-dig-' + category);
-            if(activeBtn) {
-                activeBtn.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold');
-                activeBtn.classList.remove('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
+        function initInvestigacionPortal() {
+            const modal = document.getElementById('investigacion-intro-modal');
+            const card = document.getElementById('investigacion-intro-card');
+            if(modal && card) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                card.classList.remove('scale-95');
             }
+        }
 
-            const sections = document.querySelectorAll('.category-section');
-            const cards = document.querySelectorAll('.card-digital-item');
-            
-            sections.forEach(sec => {
-                if(category === 'all' || sec.classList.contains('cat-' + category)) {
-                    sec.style.display = 'block';
-                } else {
-                    sec.style.display = 'none';
-                }
-            });
-
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    if (category === 'all' || card.classList.contains('cat-' + category)) {
-                        card.style.display = 'flex';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'scale(1)';
-                        }, 50);
-                    } else {
-                        card.style.display = 'none';
-                    }
-                }, 200); 
-            });
+        function proceedToInvestigacion() {
+            const modal = document.getElementById('investigacion-intro-modal');
+            const card = document.getElementById('investigacion-intro-card');
+            if(modal && card) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                card.classList.add('scale-95');
+            }
+            navigate('investigacion');
         }
 
         // --- SISTEMA DE CARRITO DE COMPRAS ---
@@ -1383,23 +1491,35 @@
             if(elOrderId) elOrderId.innerText = "ID: " + orderId;
         } catch(e) {}
 
+        window.addEventListener('beforeunload', function (e) {
+            if (cart.length > 0) { e.preventDefault(); e.returnValue = ''; }
+        });
+
         function addToCart(id, name, price, category, btnElement) {
             try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             let item = cart.find(i => i.id === id);
             
             let dnisArray = [];
-            if (category === 'FINANCIERO') {
+            if (category === 'INVESTIGACIÓN' || category === 'FINANCIERO') {
                 if (item) {
-                    item.dnis.push({type: 'DNI', num: ''});
+                    if (id === 'FIN-CMB') {
+                        item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''});
+                    } else {
+                        item.dnis.push({type: 'DNI', num: ''});
+                    }
                     dnisArray = item.dnis;
                 } else {
-                    dnisArray = [{type: 'DNI', num: ''}];
+                    if (id === 'FIN-CMB') {
+                        dnisArray = [{type: 'DNI', num: '', type2: 'DNI', num2: ''}];
+                    } else {
+                        dnisArray = [{type: 'DNI', num: ''}];
+                    }
                 }
             }
 
             if(item) {
                 item.qty++;
-                if(category === 'FINANCIERO') item.dnis = dnisArray;
+                if(category === 'INVESTIGACIÓN' || category === 'FINANCIERO') item.dnis = dnisArray;
             } else {
                 cart.push({ id, name, price, category, qty: 1, dnis: dnisArray }); 
             }
@@ -1415,8 +1535,14 @@
                 if(item.qty <= 0) {
                     cart = cart.filter(i => i.id !== id);
                 } else {
-                    if(item.category === 'FINANCIERO') {
-                        if(change > 0) item.dnis.push({type: 'DNI', num: ''}); 
+                    if(item.category === 'INVESTIGACIÓN' || item.category === 'FINANCIERO') {
+                        if(change > 0) {
+                            if(id === 'FIN-CMB') {
+                                item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''}); 
+                            } else {
+                                item.dnis.push({type: 'DNI', num: ''}); 
+                            }
+                        }
                         if(change < 0) item.dnis.pop();
                     }
                 }
@@ -1432,18 +1558,29 @@
             if(cart.length === 0) closeCart();
         }
 
-        function updateDocType(id, index, type) {
+        function updateDocType(id, index, type, targetNum = 1) {
             let item = cart.find(i => i.id === id);
-            if(item && item.category === 'FINANCIERO') {
-                item.dnis[index].type = type;
-                item.dnis[index].num = ''; 
+            if(item && (item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN')) {
+                if(targetNum === 1) {
+                    item.dnis[index].type = type;
+                    item.dnis[index].num = ''; 
+                } else {
+                    item.dnis[index].type2 = type;
+                    item.dnis[index].num2 = '';
+                }
                 renderCart();
             }
         }
 
-        function updateDni(id, index, value) {
+        function updateDni(id, index, value, targetNum = 1) {
             let item = cart.find(i => i.id === id);
-            if(item && item.category === 'FINANCIERO') { item.dnis[index].num = value; }
+            if(item && (item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN')) { 
+                if(targetNum === 1) {
+                    item.dnis[index].num = value; 
+                } else {
+                    item.dnis[index].num2 = value; 
+                }
+            }
         }
 
         const colorMap = {
@@ -1463,28 +1600,47 @@
                 let c = colorMap[prod.color];
                 
                 if(inCartItem) {
-                    container.innerHTML = `
-                        <div class="flex justify-between items-center w-full ${c.bg} rounded-xl p-1.5 border ${c.border} transition-all">
-                            <button onclick="updateQty('${prod.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
-                            <span class="font-mono text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN CARRITO</span>
-                            <button onclick="updateQty('${prod.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
-                        </div>
-                    `;
+                    if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
+                        container.innerHTML = `
+                            <div class="flex justify-between items-center w-full bg-cyan-600 rounded p-1 shadow-[0_0_10px_rgba(6,182,212,0.4)] border border-cyan-500 transition-all">
+                                <button onclick="updateQty('${prod.id}', -1)" class="w-6 h-6 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded transition-colors"><i class="fa-solid fa-minus text-[8px]"></i></button>
+                                <span class="font-mono text-[9px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN ORDEN</span>
+                                <button onclick="updateQty('${prod.id}', 1)" class="w-6 h-6 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded transition-colors"><i class="fa-solid fa-plus text-[8px]"></i></button>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div class="flex justify-between items-center w-full ${c.bg} rounded-xl p-1.5 border ${c.border} transition-all">
+                                <button onclick="updateQty('${prod.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
+                                <span class="font-mono text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN CARRITO</span>
+                                <button onclick="updateQty('${prod.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                            </div>
+                        `;
+                    }
                 } else {
                     let btnText = "Añadir al carrito";
                     if(prod.portal === 'digital') btnText = "Añadir";
-                    if(prod.id === 'INV-PRO') btnText = "Evaluar Caso";
+                    if(prod.portal === 'investigacion' && prod.id === 'INV-GEN') btnText = "Añadir Pack Completo";
+                    if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') btnText = "Añadir";
                     
                     let clickFn = `addToCart('${prod.id}', '${prod.name}', ${prod.price}, '${prod.portal.toUpperCase()}', this)`;
-                    if(prod.id === 'DIG-YTB' || prod.id === 'DIG-CNV') {
+                    if(prod.id === 'DIG-YTB' || prod.id === 'DIG-CNV' || prod.id === 'DIG-GPT' || prod.id === 'DIG-SPT') {
                         clickFn = `addConfiguredProduct('${prod.id}', '${prod.name}', ${prod.price}, 'DIGITAL', this)`;
                     }
 
-                    container.innerHTML = `
-                        <button onclick="${clickFn}" class="w-full py-2.5 md:py-3 ${c.lightBg} border ${c.lightBorder} ${c.text} hover:${c.bg} hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-cart-plus"></i> ${btnText}
-                        </button>
-                    `;
+                    if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
+                        container.innerHTML = `
+                            <button onclick="${clickFn}" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors">
+                                <i class="fa-solid fa-cart-plus"></i> ${btnText}
+                            </button>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <button onclick="${clickFn}" class="w-full py-2.5 md:py-3 ${c.lightBg} border ${c.lightBorder} ${c.text} hover:${c.bg} hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-cart-plus"></i> ${btnText}
+                            </button>
+                        `;
+                    }
                 }
             });
         }
@@ -1506,7 +1662,8 @@
                 cart.forEach(item => {
                     let itemTotal = item.price * item.qty;
                     total += itemTotal;
-                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
+                    
+                    let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : '<span class="text-orange-400 font-bold">⚠️ Cotizar</span>';
                     
                     html += `
                     <div class="bg-[#02050A]/50 border border-gray-800 rounded-xl p-4 flex flex-col gap-3 animate-fade-in mb-4">
@@ -1514,7 +1671,7 @@
                             <div class="flex-1 overflow-hidden">
                                 <span class="font-mono text-[8px] text-gray-500 uppercase tracking-widest">${item.category}</span>
                                 <h4 class="text-white text-sm font-bold truncate mt-0.5">${item.name}</h4>
-                                <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay} c/u</div>
+                                <div class="text-[#58a6ff] font-mono text-[10px] mt-1">${priceDisplay}</div>
                             </div>
                             <div class="flex items-center gap-3 bg-[#0A0F16] rounded-lg p-1 border border-gray-800 shadow-inner">
                                 <button onclick="updateQty('${item.id}', -1)" class="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
@@ -1524,27 +1681,51 @@
                             <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10"><i class="fa-solid fa-trash-can"></i></button>
                         </div>`;
 
-                    if(item.category === 'FINANCIERO' && item.dnis) {
+                    if((item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN') && item.dnis) {
                         html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
                         let isSBS = item.id === 'FIN-SBS';
+                        let isCombo = item.id === 'FIN-CMB';
+                        
                         for(let i=0; i<item.qty; i++) {
                             let doc = item.dnis[i];
                             if(!doc) continue;
-                            if(isSBS) doc.type = 'DNI';
-                            let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
-                            let ph = doc.type === 'RUC' ? "Ingrese RUC" : `Ingrese ${doc.type}`;
                             
-                            html += `<div class="flex relative">`;
-                            if(isSBS) {
-                                html += `<select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>`;
+                            if (isCombo) {
+                                html += `<div class="flex flex-col gap-2 mt-2">
+                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest">>> Target Sentinel:</div>
+                                    <div class="flex relative">
+                                        <select onchange="updateDocType('${item.id}', ${i}, this.value, 1)" class="type-selector rounded-l-md border-r-0">
+                                            <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
+                                            <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
+                                            <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
+                                        </select>
+                                        <input type="tel" inputmode="numeric" maxlength="11" placeholder="Ingrese ${doc.type}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, 1)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
+                                    </div>
+                                    <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">>> Target SBS (Solo DNI):</div>
+                                    <div class="flex relative">
+                                        <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed">
+                                            <option value="DNI" selected>DNI</option>
+                                        </select>
+                                        <input type="tel" inputmode="numeric" maxlength="8" placeholder="Ingrese DNI" value="${doc.num2}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, 2)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
+                                    </div>
+                                </div>`;
                             } else {
-                                html += `<select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
-                                    <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
-                                    <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
-                                    <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
-                                </select>`;
+                                if(isSBS) doc.type = 'DNI';
+                                let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
+                                let ph = doc.type === 'RUC' ? "Ingrese RUC del Target" : `Ingrese ${doc.type} del Target`;
+                                
+                                html += `<div class="flex relative">`;
+                                if(isSBS) {
+                                    html += `<select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>`;
+                                } else {
+                                    html += `<select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
+                                        <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
+                                        <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
+                                        <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
+                                    </select>`;
+                                }
+                                html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1"></div>`;
                             }
-                            html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1"></div>`;
                         }
                         html += `</div>`;
                     }
@@ -1559,7 +1740,6 @@
             if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
         }
 
-        // --- SISTEMA NAVEGACIÓN CARRO/EXTRA ---
         function updateFloatingAction() {
             const btn = document.getElementById('floating-btn');
             const icon = document.getElementById('floating-icon');
@@ -1610,10 +1790,11 @@
         function processToPaymentModal() {
             let errorMsg = "";
             cart.forEach(item => {
-                if(item.category === 'FINANCIERO') {
+                if(item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN') {
                     item.dnis.forEach((doc, idx) => {
                         let len = doc.num.length;
-                        if(doc.type === 'DNI' && len !== 8) errorMsg = `El DNI en ${item.name} debe tener 8 números exactos.`;
+                        if(doc.type === 'DNI' && len !== 8) errorMsg = `El DNI para ${item.name} debe tener 8 números exactos.`;
+                        if(item.id === 'FIN-CMB' && doc.num2.length !== 8) errorMsg = `El DNI de SBS en Combo Total debe tener 8 números exactos.`;
                     });
                 }
             });
@@ -1637,7 +1818,7 @@
         }
 
         function copyNumber() {
-            const num = "975040527";
+            const num = "938748277";
             navigator.clipboard.writeText(num).then(() => {
                 const btnCopy = document.getElementById('btn-copy');
                 btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
@@ -1663,36 +1844,44 @@
 
         function sendFinalWhatsApp() {
             let total = 0;
+            let hasZeroPrice = false;
             let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL \n📍ID: ${orderId}\n\n`;
+            
             cart.forEach(item => {
-                message += `✅ ${item.qty}x ${item.name} \n S/ ${(item.price * item.qty).toFixed(2)}\n\n`;
-                total += (item.price * item.qty);
+                message += `✅ ${item.qty}x ${item.name} \n`;
+                if(item.price > 0) {
+                    message += ` S/ ${(item.price * item.qty).toFixed(2)}\n\n`;
+                    total += (item.price * item.qty);
+                } else {
+                    message += ` ⚠️ Requiere Cotización\n\n`;
+                    hasZeroPrice = true;
+                }
+                
+                if((item.category === 'FINANCIERO' || item.category === 'INVESTIGACIÓN') && item.dnis && item.dnis.length > 0) {
+                    message += `   🔍 Documentos del Target: \n`;
+                    item.dnis.forEach(doc => {
+                        if(item.id === 'FIN-CMB') {
+                            message += `   Sentinel (${doc.type}): ${doc.num}\n`;
+                            message += `   SBS (DNI): ${doc.num2}\n`;
+                        } else {
+                            message += `   ${doc.type}: ${doc.num}\n`;
+                        }
+                    });
+                    message += `\n`;
+                }
             });
-            message += `💰 TOTAL ESTIMADO: S/ ${total.toFixed(2)}\n\n⚠️ Estoy realizando mi pago; le comparto el comprobante.`;
+
+            if(hasZeroPrice) {
+                message += `💰 TOTAL ESTIMADO: S/ ${total.toFixed(2)}\n\n⚠️ Por favor, indícame cuánto sería el total por los servicios a cotizar para proceder a depositar.`;
+            } else {
+                message += `💰 TOTAL ESTIMADO: S/ ${total.toFixed(2)}\n\n⚠️ Estoy realizando mi pago; le comparto el comprobante.`;
+            }
+            
             closeFinalModal();
-            window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/51937751224?text=${encodeURIComponent(message)}`, '_blank');
             cart = []; 
             syncProductButtons();
             updateFloatingAction();
-        }
-
-        // SENSOR ESPACIAL PARA EL HUB
-        function initScrollObserver() {
-            if (window.innerWidth >= 768) return;
-            const cards = document.querySelectorAll('.portfolio-card');
-            if(cards.length === 0) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('in-view', 'is-centered');
-                    } else {
-                        entry.target.classList.remove('in-view', 'is-centered');
-                    }
-                });
-            }, { threshold: 0.6 }); 
-
-            cards.forEach(card => observer.observe(card));
         }
 
         // --- ARRANQUE OPTIMIZADO ---
@@ -1701,6 +1890,7 @@
             if(hash && ['financiero', 'digital', 'investigacion'].includes(hash)) {
                 navigate(hash, true);
             } else {
+                history.replaceState({ view: 'hub' }, '', window.location.pathname);
                 navigate('hub', true);
             }
 
@@ -1714,8 +1904,8 @@
                 }
             }, 500); 
 
-            try { initScrollObserver(); } catch(e) {}
-            syncProductButtons();
+            try { setLiveStats(); } catch(e) {}
+            syncProductButtons(); 
         };
     </script>
 </body>
