@@ -162,6 +162,8 @@
         .card-selected-red { border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239,68,68,0.3) !important; background-color: rgba(239,68,68,0.05) !important; }
         .card-selected-cyan { border-color: #06b6d4 !important; box-shadow: 0 0 20px rgba(6,182,212,0.3) !important; background-color: rgba(6,182,212,0.05) !important; }
         .card-selected-purple { border-color: #a855f7 !important; box-shadow: 0 0 20px rgba(168,85,247,0.3) !important; background-color: rgba(168,85,247,0.05) !important; }
+        
+        .card-selected-yellow { border-color: #eab308 !important; box-shadow: 0 0 20px rgba(234,179,8,0.3) !important; background-color: rgba(234,179,8,0.05) !important; }
 
         .dni-input {
             background-color: rgba(0,0,0,0.3);
@@ -188,7 +190,6 @@
             cursor: pointer;
         }
 
-        /* Animación carrusel Referencias más rápido (12s) */
         .carousel-container {
             width: 100%;
             overflow: hidden;
@@ -204,11 +205,12 @@
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
 
-    <!-- SPLASH SCREEN LENTO CON EFECTO FLOAT -->
+    <!-- SPLASH SCREEN -->
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex flex-col items-center">
             <img src="logo.png" alt="Logo" class="w-24 h-24 object-contain animate-float mb-6 drop-shadow-[0_0_15px_rgba(88,166,255,0.5)]" onerror="this.src='https://placehold.co/100x100/111/fff?text=LOGO'">
-            <div class="font-mono text-[#58a6ff] text-xs tracking-widest uppercase animate-pulse">Sistema Central V.2.0</div>
+            <div class="font-sans text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-400 to-cyan-400 text-lg md:text-xl font-bold tracking-[0.2em] uppercase animate-pulse text-center px-4">ESTUDIO FINANCIERO Y DIGITAL</div>
+            <div class="font-mono text-gray-500 text-[9px] tracking-widest mt-2 uppercase">Sistema Central V.2.0</div>
         </div>
     </div>
 
@@ -335,7 +337,6 @@
             <div class="p-6 flex flex-col items-center">
                 <img src="publi/metodos.png" alt="Métodos de Pago" class="h-10 w-auto object-contain mb-4" onerror="this.style.display='none'">
                 
-                <!-- INSTRUCCIONES PASO A PASO CORRECTAS -->
                 <div class="bg-[#02050A]/50 border border-[#58a6ff]/20 rounded-lg p-3 mb-5 w-full text-center shadow-inner">
                     <p class="text-gray-400 text-[10px] uppercase font-mono tracking-widest leading-relaxed">
                         <span class="text-[#58a6ff] font-bold">1.</span> Seleccione "Copiar Número"<br>
@@ -386,7 +387,8 @@
             <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('hub')">
                 <img src="logo.png" alt="Logo" class="w-9 h-9 object-contain" onerror="this.src='https://placehold.co/36x36/111/fff?text=L'">
                 <div class="flex flex-col">
-                    <span class="font-bold text-[11px] md:text-sm tracking-widest text-white uppercase leading-tight">ESTUDIO FINANCIERO</span>
+                    <!-- TÍTULO DEL HEADER ACTUALIZADO COMPLETO -->
+                    <span class="font-bold text-[10px] sm:text-[11px] md:text-sm tracking-widest text-white uppercase leading-tight whitespace-nowrap">ESTUDIO FINANCIERO Y DIGITAL</span>
                     <span class="font-mono text-[8px] text-[#58a6ff] tracking-widest mt-0.5">SISTEMA CENTRAL V.2.0</span>
                 </div>
             </div>
@@ -453,7 +455,7 @@
                     </div>
                 </div>
 
-                <!-- DIGITAL (RUTAS CORREGIDAS SEGÚN FOTO) -->
+                <!-- DIGITAL -->
                 <div onclick="initDigitalPortal()" class="portfolio-card card-dig group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-emerald-500/50 cursor-pointer overflow-hidden flex flex-col">
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
@@ -464,10 +466,19 @@
                                         <div class="circle-logo"><img src="logo/disney.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=D'"></div>
                                         <div class="circle-logo"><img src="logo/hbo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=H'"></div>
                                         <div class="circle-logo"><img src="logo/prime.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
+                                        <div class="circle-logo"><img src="logo/windows.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=W'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=C'"></div>
+                                        <div class="circle-logo"><img src="logo/youtube.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=Y'"></div>
+
                                         <div class="circle-logo"><img src="logo/netflix.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=N'"></div>
                                         <div class="circle-logo"><img src="logo/disney.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=D'"></div>
                                         <div class="circle-logo"><img src="logo/hbo.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=H'"></div>
                                         <div class="circle-logo"><img src="logo/prime.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
+                                        <div class="circle-logo"><img src="logo/paramount.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=P'"></div>
+                                        <div class="circle-logo"><img src="logo/windows.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=W'"></div>
+                                        <div class="circle-logo"><img src="logo/canva.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=C'"></div>
+                                        <div class="circle-logo"><img src="logo/youtube.png" onerror="this.src='https://placehold.co/48x48/111/fff?text=Y'"></div>
                                     </div>
                                 </div>
                             </div>
@@ -579,22 +590,26 @@
 
             <div id="financiero-catalog">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
-                        <div class="flex justify-between items-start mb-4">
+                    
+                    <!-- ⚡ SE AÑADIÓ OVERFLOW-VISIBLE PARA QUE LA ETIQUETA NO SE CORTE NUNCA MÁS ⚡ -->
+                    <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl border border-yellow-500/50 bg-gradient-to-br from-[#0A0F16] to-[#1a1500] p-6 transition-all shadow-[0_0_20px_rgba(234,179,8,0.15)] relative mt-4 overflow-visible">
+                        <!-- ⚡ Z-20 AÑADIDO A LA ETIQUETA ⚡ -->
+                        <div class="absolute -top-3 right-6 z-20 bg-yellow-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse">🔥 Opción Recomendada</div>
+                        <div class="flex justify-between items-start mb-4 mt-2">
                             <div>
                                 <h3 class="text-xl font-bold text-white mb-2">Combo Total</h3>
-                                <span class="text-[9px] font-mono text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-1 rounded">Sentinel + SBS</span>
-                                <div class="mt-4 flex items-baseline gap-1"><span class="text-gray-500 font-mono text-sm">S/</span><span class="text-4xl font-black text-white tracking-tighter">10.00</span></div>
+                                <span class="text-[9px] font-mono text-yellow-400 bg-yellow-500/10 border border-yellow-500/30 px-2 py-1 rounded">Sentinel + SBS</span>
+                                <div class="mt-4 flex items-baseline gap-1"><span class="text-gray-500 font-mono text-sm">S/</span><span class="text-4xl font-black text-yellow-400 tracking-tighter">10.00</span></div>
                             </div>
-                            <div class="flex flex-col gap-2">
-                                <img src="logo/sentinel.png" class="w-10 h-10 object-contain" onerror="this.style.display='none'">
-                                <img src="logo/sbs.png" class="w-10 h-10 object-contain" onerror="this.style.display='none'">
+                            <div class="flex gap-2">
+                                <img src="logo/sentinel.png" class="w-16 h-16 object-contain rounded-full border-2 border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.3)]" onerror="this.style.display='none'">
+                                <img src="logo/sbs.png" class="w-16 h-16 object-contain rounded-full border-2 border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.3)]" onerror="this.style.display='none'">
                             </div>
                         </div>
                         <div id="action-FIN-CMB" class="mt-auto pt-4"></div>
                     </div>
 
-                    <div id="card-FIN-SNT" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
+                    <div id="card-FIN-SNT" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all mt-4">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-2">Sentinel</h3>
@@ -606,7 +621,7 @@
                         <div id="action-FIN-SNT" class="mt-auto pt-4"></div>
                     </div>
                     
-                    <div id="card-FIN-EQF" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
+                    <div id="card-FIN-EQF" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all mt-4">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-2xl font-bold text-white mb-2">Equifax</h3>
@@ -618,7 +633,7 @@
                         <div id="action-FIN-EQF" class="mt-auto pt-4"></div>
                     </div>
                     
-                    <div id="card-FIN-SBS" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all">
+                    <div id="card-FIN-SBS" class="card-digital-item flex flex-col group rounded-2xl overflow-hidden border border-gray-800 p-6 transition-all mt-4">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <h3 class="text-xl font-bold text-white mb-2 leading-tight">SBS Deudas Antiguas</h3>
@@ -979,21 +994,22 @@
                 </div>
             </div>
 
-            <div id="card-INV-GEN" class="mb-8 card-digital-item relative bg-gradient-to-br from-[#0A0F16] to-[#02050A] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between group shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-                <div class="absolute top-0 inset-x-0 h-1 bg-cyan-500"></div>
-                <div class="absolute -top-3 right-6 bg-orange-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(249,115,22,0.6)] animate-pulse">
-                    🔥 El Más Solicitado
+            <!-- ⚡ INFO GENERAL DORADO CON OVERFLOW-VISIBLE ⚡ -->
+            <div id="card-INV-GEN" class="mb-8 card-digital-item relative bg-gradient-to-br from-[#0A0F16] to-[#1a1500] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between group shadow-[0_0_30px_rgba(234,179,8,0.15)] border border-yellow-500/30 overflow-visible mt-4">
+                <!-- Z-20 Y -TOP-3 CON OVERFLOW-VISIBLE -->
+                <div class="absolute -top-3 right-6 z-20 bg-yellow-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse">
+                    🔥 Paquete Completo
                 </div>
-                <div class="flex-1 mb-6 md:mb-0">
+                <div class="flex-1 mb-6 md:mb-0 mt-2">
                     <div class="flex items-center gap-3 mb-3">
-                        <i class="fa-solid fa-fingerprint text-cyan-400 text-3xl"></i>
+                        <i class="fa-solid fa-fingerprint text-yellow-400 text-3xl"></i>
                         <h3 class="text-2xl md:text-3xl font-bold text-white">INFORMACIÓN GENERAL</h3>
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed max-w-2xl">Todo lo que se pueda buscar de dicha persona. Reporte estructurado y detallado de múltiples bases de datos a nivel nacional.</p>
                 </div>
                 <div class="flex flex-col items-start md:items-end gap-4 min-w-[200px]">
                     <div class="flex items-baseline gap-1">
-                        <span class="text-gray-500 font-mono text-lg">S/</span><span class="text-4xl md:text-5xl font-black text-cyan-400 tracking-tighter">15.00</span>
+                        <span class="text-gray-500 font-mono text-lg">S/</span><span class="text-4xl md:text-5xl font-black text-yellow-400 tracking-tighter">15.00</span>
                     </div>
                     <div id="action-INV-GEN" class="w-full"></div>
                 </div>
@@ -1198,7 +1214,7 @@
         }
 
         const systemProducts = [
-            {id: 'FIN-CMB', name: 'Combo Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'blue'},
+            {id: 'FIN-CMB', name: 'Combo Total Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'yellow'},
             {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', desc: 'Historial bancario', price: 8.00, portal: 'financiero', color: 'blue'},
@@ -1222,7 +1238,7 @@
             {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue'},
             {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Office Completo', price: 20.00, portal: 'digital', color: 'blue'},
-            {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'cyan'},
+            {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'yellow'},
             {id: 'INV-C4', name: 'FICHA RENIEC (C4)', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Validación de Identidad', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-DIR', name: 'DIRECCIONES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
@@ -1500,7 +1516,7 @@
             let item = cart.find(i => i.id === id);
             
             let dnisArray = [];
-            if (category === 'INVESTIGACION' || category === 'INVESTIGACIÓN' || category === 'FINANCIERO') {
+            if (category === 'FINANCIERO') {
                 if (item) {
                     if (id === 'FIN-CMB') {
                         item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''});
@@ -1519,7 +1535,7 @@
 
             if(item) {
                 item.qty++;
-                if(category === 'INVESTIGACION' || category === 'INVESTIGACIÓN' || category === 'FINANCIERO') item.dnis = dnisArray;
+                if(category === 'FINANCIERO') item.dnis = dnisArray;
             } else {
                 cart.push({ id, name, price, category, qty: 1, dnis: dnisArray }); 
             }
@@ -1535,7 +1551,7 @@
                 if(item.qty <= 0) {
                     cart = cart.filter(i => i.id !== id);
                 } else {
-                    if(item.category === 'INVESTIGACION' || item.category === 'INVESTIGACIÓN' || item.category === 'FINANCIERO') {
+                    if(item.category === 'FINANCIERO') {
                         if(change > 0) {
                             if(id === 'FIN-CMB') {
                                 item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''}); 
@@ -1560,7 +1576,7 @@
 
         function updateDocType(id, index, type, targetNum = 1) {
             let item = cart.find(i => i.id === id);
-            if(item && (item.category === 'FINANCIERO' || item.category === 'INVESTIGACION' || item.category === 'INVESTIGACIÓN')) {
+            if(item && item.category === 'FINANCIERO') {
                 if(targetNum === 1) {
                     item.dnis[index].type = type;
                     item.dnis[index].num = ''; 
@@ -1574,7 +1590,7 @@
 
         function updateDni(id, index, value, targetNum = 1) {
             let item = cart.find(i => i.id === id);
-            if(item && (item.category === 'FINANCIERO' || item.category === 'INVESTIGACION' || item.category === 'INVESTIGACIÓN')) { 
+            if(item && item.category === 'FINANCIERO') { 
                 if(targetNum === 1) {
                     item.dnis[index].num = value; 
                 } else {
@@ -1588,7 +1604,8 @@
             'red': { bg: 'bg-red-600', text: 'text-red-400', border: 'border-red-600', lightBg: 'bg-red-500/10', lightBorder: 'border-red-500/30' },
             'cyan': { bg: 'bg-cyan-600', text: 'text-cyan-400', border: 'border-cyan-600', lightBg: 'bg-cyan-500/10', lightBorder: 'border-cyan-500/30' },
             'purple': { bg: 'bg-purple-600', text: 'text-purple-400', border: 'border-purple-600', lightBg: 'bg-purple-500/10', lightBorder: 'border-purple-500/30' },
-            'emerald': { bg: 'bg-emerald-600', text: 'text-emerald-400', border: 'border-emerald-600', lightBg: 'bg-emerald-500/10', lightBorder: 'border-emerald-500/30' }
+            'emerald': { bg: 'bg-emerald-600', text: 'text-emerald-400', border: 'border-emerald-600', lightBg: 'bg-emerald-500/10', lightBorder: 'border-emerald-500/30' },
+            'yellow': { bg: 'bg-yellow-600', text: 'text-yellow-400', border: 'border-yellow-600', lightBg: 'bg-yellow-500/10', lightBorder: 'border-yellow-500/30' }
         };
 
         function syncProductButtons() {
@@ -1691,7 +1708,7 @@
                             <button onclick="removeItem('${item.id}')" class="text-gray-600 hover:text-red-500 transition-colors ml-2 w-8 h-8 flex items-center justify-center rounded hover:bg-red-500/10"><i class="fa-solid fa-trash-can"></i></button>
                         </div>`;
 
-                    if((item.category === 'FINANCIERO' || item.category === 'INVESTIGACION' || item.category === 'INVESTIGACIÓN') && item.dnis) {
+                    if(item.category === 'FINANCIERO' && item.dnis) {
                         html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
                         let isSBS = item.id === 'FIN-SBS';
                         let isCombo = item.id === 'FIN-CMB';
@@ -1773,8 +1790,22 @@
         }
 
         function handleFloatingAction() {
-            if (cart.length > 0) { openCart(); } 
-            else { window.open(`https://wa.me/${WA_NUMBER}?text=Hola 👋, vengo del Sistema Central y necesito hacer una consulta rápida. 🚀`, '_blank'); }
+            if (cart.length > 0) { 
+                openCart(); 
+            } else { 
+                let hash = window.location.hash.replace('#', '');
+                let msg = "Hola 👋, vengo del *Sistema Central* y necesito hacer una consulta rápida. 🚀";
+                
+                if (hash === 'financiero') {
+                    msg = "Hola 👋, estoy en el *Portal Financiero* y deseo consultar sobre los reportes de riesgo y deudas.";
+                } else if (hash === 'digital') {
+                    msg = "Hola 👋, estoy en el *Portal Digital* y deseo realizar una consulta sobre las cuentas premium de Streaming/Software.";
+                } else if (hash === 'investigacion') {
+                    msg = "Hola 👋, estoy en el *Portal de Investigación* y requiero información sobre una auditoría o extracción de datos.";
+                }
+                
+                window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank'); 
+            }
         }
 
         function openCart() {
@@ -1800,7 +1831,7 @@
         function processToPaymentModal() {
             let errorMsg = "";
             cart.forEach(item => {
-                if(item.category === 'FINANCIERO' || item.category === 'INVESTIGACION' || item.category === 'INVESTIGACIÓN') {
+                if(item.category === 'FINANCIERO') {
                     item.dnis.forEach((doc, idx) => {
                         let len = doc.num.length;
                         if(doc.type === 'DNI' && len !== 8) errorMsg = `El DNI para ${item.name} debe tener 8 números exactos.`;
@@ -1852,23 +1883,20 @@
             if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); }
         }
 
-        // ⚡ NUEVO GENERADOR DE MENSAJES AGRUPADO Y CON EMOJIS ⚡
         function sendFinalWhatsApp() {
             let total = 0;
             let hasZeroPrice = false;
             let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL\n🔒ID: ${orderId}\n\n`;
             
-            // Agrupar por categoría
             const grouped = { 'DIGITAL': [], 'FINANCIERO': [], 'INVESTIGACIÓN': [] };
             
             cart.forEach(item => {
                 let cat = item.category.toUpperCase();
-                if (cat === 'INVESTIGACION') cat = 'INVESTIGACIÓN'; // Normalizar
+                if (cat === 'INVESTIGACION') cat = 'INVESTIGACIÓN'; 
                 if (!grouped[cat]) grouped[cat] = [];
                 grouped[cat].push(item);
             });
 
-            // Construir el mensaje categoría por categoría
             for (const [cat, items] of Object.entries(grouped)) {
                 if (items.length === 0) continue;
                 
@@ -1884,7 +1912,7 @@
                         hasZeroPrice = true;
                     }
                     
-                    if (item.dnis && item.dnis.length > 0) {
+                    if (item.category === 'FINANCIERO' && item.dnis && item.dnis.length > 0) {
                         message += `🔍Documentos a evaluar:\n`;
                         item.dnis.forEach(doc => {
                             if (item.id === 'FIN-CMB') {
