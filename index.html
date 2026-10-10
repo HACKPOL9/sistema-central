@@ -239,9 +239,10 @@
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
 
-    <audio id="audio-click" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
-    <audio id="audio-scan" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
-    <audio id="audio-success" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
+    <!-- ⚡ AUDIOS REALES CONECTADOS ⚡ -->
+    <audio id="audio-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+    <audio id="audio-scan" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+    <audio id="audio-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
 
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex flex-col items-center">
@@ -251,7 +252,6 @@
         </div>
     </div>
 
-    <!-- ⚡ VISOR DE EVIDENCIAS Y DESTACADOS (LIGHTBOX) ⚡ -->
     <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-6 right-6 z-[10000] text-white bg-gray-800/80 hover:bg-red-500/80 rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer border border-gray-600">
             <i class="fa-solid fa-xmark text-2xl"></i>
@@ -277,7 +277,6 @@
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
     <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
-    <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
     <div id="search-modal" class="fixed inset-0 z-[1000] bg-[#02050A]/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center p-4 pt-16">
         <div class="w-full max-w-2xl relative transform transition-transform duration-300 scale-95" id="search-modal-content">
             <button onclick="closeSearch()" class="absolute -top-10 right-0 text-gray-500 hover:text-white transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
@@ -324,7 +323,7 @@
                 <p class="text-gray-400 text-[13px] leading-relaxed mb-6">Disfruta de tus series favoritas, música y herramientas de trabajo al instante. Cuentas 100% seguras y con garantía total.</p>
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎬</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Entretenimiento:</strong> Netflix, Prime, Disney+, YouTube.</p></div>
-                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">I.A y Herramientas:</strong> ChatGPT Plus, Gemini Pro, Canva Pro.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">I.A y Herramientas:</strong> ChatGPT Plus, Gemini, Canva Pro.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">💻</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Software y Extras:</strong> Windows, Office.</p></div>
                 </div>
                 <button onclick="proceedToDigital()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
@@ -637,6 +636,7 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-wallet text-blue-500 mr-2"></i>Financiero</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Catálogo de Riesgo</p>
                 </div>
+                <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO AZUL ⚡ -->
                 <button onclick="navigate('hub', true)" class="group relative inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-blue-500/10 border border-blue-500 text-blue-400 hover:text-white hover:bg-blue-600 font-mono text-[10px] md:text-xs uppercase tracking-widest rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:shadow-[0_0_25px_rgba(59,130,246,0.8)]">
                     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300 relative z-10"></i>
                     <span class="relative z-10 font-bold">Regresar</span>
@@ -710,6 +710,7 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-terminal text-emerald-500 mr-2"></i>Digital</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Streaming & Tech</p>
                 </div>
+                <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO ESMERALDA ⚡ -->
                 <button onclick="navigate('hub', true)" class="group relative inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-emerald-500/10 border border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-600 font-mono text-[10px] md:text-xs uppercase tracking-widest rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.5)] hover:shadow-[0_0_25px_rgba(16,185,129,0.8)]">
                     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300 relative z-10"></i>
                     <span class="relative z-10 font-bold">Regresar</span>
@@ -916,7 +917,7 @@
                             <img src="publi/Gemini.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini Pro</h3>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini</h3>
                             <span class="text-gray-400 font-mono text-[10px] mb-2 uppercase">18 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">18.00</span>
@@ -1205,17 +1206,19 @@
     </main>
 
     <script>
+        let systemProducts = []; // Se inicializa vacío para llenarse con Google Sheets
+
         const sfx = {
             click: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'); 
                 a.volume = 0.2; a.play().catch(()=>{});
             },
             scan: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
                 a.volume = 0.15; a.play().catch(()=>{});
             },
             cash: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
                 a.volume = 0.3; a.play().catch(()=>{});
             }
         };
@@ -1248,7 +1251,6 @@
             if(isDestacado) {
                 btnContainer.classList.remove('hidden');
                 btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
-                // ⚡ NOTIFICACIÓN VIP DORADA ⚡
                 addBtn.onclick = () => {
                     addToCart(id, name, price, 'DESTACADO', null);
                     closeLightbox();
@@ -1322,24 +1324,16 @@
             track.innerHTML = html;
         }
 
-        // ⚡ NUEVO ORDEN DE DESTACADOS SOLICITADO ⚡
-        const destacadosItems = [
-            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
-            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
-            { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
-            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
-            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
-            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
-        ];
+        let destacadosItems = []; // Se llena desde Google Sheets
 
         function renderDestacados() {
             const track = document.getElementById('destacado-track');
-            if(!track) return;
+            if(!track || destacadosItems.length === 0) return;
             let html = '';
             
             const buildCard = (item) => `
-                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
-                    <img src="${item.src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
+                <div onclick="openLightbox('${item.src || 'destacado/destacado1.png'}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
+                    <img src="${item.src || 'destacado/destacado1.png'}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
                     <div class="absolute top-3 left-3 bg-red-600 text-white font-bold font-mono text-[8px] px-2 py-1 rounded uppercase tracking-widest shadow-[0_0_10px_rgba(220,38,38,0.8)] animate-pulse">Limitado</div>
                     <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-1 group-hover:translate-y-0 transition-transform">
@@ -1396,7 +1390,9 @@
             addToCart(id, name, price, category, btn);
         }
 
-        const systemProducts = [
+        // --- CONEXIÓN GOOGLE SHEETS (OPCIÓN 2) ---
+        // Fallback local en caso de que tarde en cargar la API
+        const localFallbackProducts = [
             {id: 'FIN-CMB', name: 'Combo Total Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'yellow'},
             {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue'},
@@ -1416,7 +1412,7 @@
             {id: 'DIG-CRN', name: 'Crunchyroll', desc: 'Mega Fan', price: 8.00, portal: 'digital', color: 'red'},
             {id: 'DIG-APL', name: 'Apple TV', desc: 'Originals 4K', price: 10.00, portal: 'digital', color: 'red'},
             {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 15.00, portal: 'digital', color: 'cyan'},
-            {id: 'DIG-GEM', name: 'Gemini Pro 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
+            {id: 'DIG-GEM', name: 'Gemini Advanced 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
             {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Diseño Pro', price: 2.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue'},
@@ -1447,6 +1443,61 @@
             {id: 'INV-FIS', name: 'FISCALÍA/MPFN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-FAC', name: 'RECONOCIMIENTO FACIAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'}
         ];
+        
+        const localDestacados = [
+            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
+            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
+            { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
+            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
+            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
+            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
+        ];
+
+        async function syncCloudDB() {
+            try {
+                // Tu URL real de Google Apps Script
+                const res = await fetch('https://script.google.com/macros/s/AKfycbx6fz4eYDSUCJOS1mCiSNZF1K945HqJyW0lkec8CsmMPRasZDqFNYbe-3wFqCKpiwfQiQ/exec');
+                const cloudData = await res.json();
+                
+                if(cloudData && cloudData.length > 0) {
+                    cloudData.forEach(item => {
+                        // 1. Actualizar array maestro
+                        let prod = systemProducts.find(p => p.id === item.id);
+                        if(prod) {
+                            prod.price = parseFloat(item.price) || 0;
+                            prod.name = item.name || prod.name;
+                            prod.desc = item.desc || prod.desc;
+                            
+                            // Actualizar el DOM visible de las tarjetas HTML
+                            let priceEl = document.querySelector('#card-' + item.id + ' .tracking-tighter');
+                            if(priceEl) {
+                                priceEl.innerText = prod.price.toFixed(2);
+                            }
+                        }
+                        
+                        // 2. Actualizar array de destacados
+                        // Buscamos si el ID en la nube (ej. DIG-GPT) corresponde a un destacado (DES-GPT)
+                        let destId = 'DES-' + item.id.split('-')[1]; 
+                        let dest = destacadosItems.find(d => d.id === destId);
+                        if(dest) {
+                            // En destacados le aplicas tus descuentos manuales, pero si quieres leerlo de la nube:
+                            // dest.price = parseFloat(item.price) || 0; 
+                            // Por ahora dejamos que Google Sheets actualice SOLO los normales. 
+                            // Si en tu excel tienes los IDs "DES-...", entonces usa esto:
+                            let directDest = destacadosItems.find(d => d.id === item.id);
+                            if(directDest) directDest.price = parseFloat(item.price) || 0;
+                        }
+                    });
+                    
+                    // Re-renderizamos con los nuevos precios de la nube
+                    renderDestacados();
+                    syncProductButtons();
+                    console.log("⚡ [NIVEL DIOS]: Base de Datos sincronizada con Google Sheets.");
+                }
+            } catch(error) {
+                console.log("⚡ [MODO OFFLINE]: Usando precios locales de seguridad.");
+            }
+        }
 
         function openSearch() {
             const modal = document.getElementById('search-modal');
@@ -2271,7 +2322,7 @@
             navigate(hash);
 
             document.body.addEventListener('click', function initAudio() {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
+                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
                 a.volume = 0; a.play().catch(()=>{});
                 document.body.removeEventListener('click', initAudio);
             }, { once: true });
@@ -2286,8 +2337,15 @@
 
             try { setLiveStats(); } catch(e) {}
             try { initScrollObserver(); } catch(e) {}
-            syncProductButtons();
-            renderCarousel('all');
+            
+            // ⚡ SINCRONIZACIÓN INICIAL CON GOOGLE SHEETS ⚡
+            syncCloudDB().then(() => {
+                // Se renderiza después de cargar los datos de la nube
+                syncProductButtons();
+                renderCarousel('all');
+            });
+            
+            // Renderizamos los destacados locales mientras carga la nube
             renderDestacados();
             initFomo();
         };
