@@ -175,7 +175,7 @@
             color: white;
             font-family: 'Fira Code', monospace;
             font-size: 11px;
-            padding: 8px 30px 8px 12px; 
+            padding: 8px 30px 8px 12px;
             width: 100%;
             outline: none;
             transition: all 0.3s ease;
@@ -215,22 +215,9 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
-        /* ⚡ VELOCIDAD DEL CARRUSEL DE REFERENCIAS MÁS LENTA (40s) ⚡ */
         .carousel-track { display: flex; width: max-content; animation: scroll-left 40s linear infinite; }
         .carousel-track:hover { animation-play-state: paused; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        .destacado-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            padding: 5px 0 20px 0;
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        .destacado-track { display: flex; width: max-content; animation: scroll-left-destacado 30s linear infinite; }
-        .destacado-track:hover { animation-play-state: paused; }
-        @keyframes scroll-left-destacado { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         #toast-container {
             max-width: 90vw;
@@ -261,9 +248,9 @@
         </button>
         <img id="lightbox-img" src="" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
         
-        <!-- Contenedor dinámico para el botón de Añadir al carrito desde Destacados -->
+        <!-- ⚡ BOTON DORADO VIP PARA AÑADIR DESTACADOS ⚡ -->
         <div id="lightbox-action-container" class="mt-6 w-full max-w-sm hidden transform scale-95 transition-transform duration-300 opacity-0">
-            <button id="lightbox-add-btn" onclick="" class="w-full py-4 bg-[#25D366] hover:bg-emerald-500 text-black rounded-xl font-bold text-[13px] tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all">
+            <button id="lightbox-add-btn" onclick="" class="w-full py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 text-black rounded-xl font-bold text-[13px] tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all transform hover:scale-105">
                 <i class="fa-solid fa-cart-plus text-lg"></i> <span id="lightbox-btn-text">AÑADIR A LA ORDEN - S/ 0.00</span>
             </button>
         </div>
@@ -281,7 +268,6 @@
 
     <!-- NOTIFICACIONES TOAST Y FOMO -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
-    <!-- ⚡ FOMO REUBICADO ARRIBA A LA DERECHA ⚡ -->
     <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
     <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
@@ -463,14 +449,15 @@
 
         <!-- ============================== VISTA HUB ============================== -->
         <div id="view-hub" class="hidden-view w-full animate-fade-in">
-            <div class="mb-10 flex flex-col items-center text-center">
+            <!-- ⚡ ESPACIO SUPERIOR REDUCIDO ⚡ -->
+            <div class="mb-4 flex flex-col items-center text-center">
                 <div class="font-mono text-[10px] text-emerald-400 border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 rounded-full tracking-widest mb-6 uppercase flex items-center gap-2">
                     <i class="fa-solid fa-shield-check"></i> Acceso Autorizado
                 </div>
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white">Paneles de Gestión</h1>
-                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light mb-8">Seleccione el portal de servicio para gestionar su solicitud de forma segura.</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-2 tracking-tight text-white">Paneles de Gestión</h1>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl font-light mb-6">Seleccione el portal de servicio para gestionar su solicitud de forma segura.</p>
                 
-                <div class="flex justify-center gap-4 md:gap-8 flex-wrap mb-10">
+                <div class="flex justify-center gap-4 md:gap-8 flex-wrap mb-4">
                     <div class="bg-[#0A0F16]/50 border border-blue-500/20 rounded-xl px-5 py-3 flex flex-col items-center min-w-[140px] shadow-inner">
                         <span id="stat-global" class="font-bold text-2xl text-white font-mono">0</span>
                         <span class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Consultas Globales</span>
@@ -485,7 +472,6 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <!-- ⚡ ÍCONO MÁS GRANDE ⚡ -->
                     <i class="fa-solid fa-wallet absolute top-4 right-4 text-8xl text-blue-500/10 group-hover:text-blue-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
@@ -718,22 +704,20 @@
                 <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
             </div>
 
-            <!-- ⚡ SECCIÓN DESTACADOS VIP ⚡ -->
-            <div class="mb-8 mt-2">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                        <i class="fa-solid fa-fire text-yellow-500 animate-pulse text-sm"></i>
+            <!-- ⚡ SECCIÓN DESTACADOS VIP (SWIPEABLE) ⚡ -->
+            <div class="mb-10 mt-4">
+                <div class="flex items-center gap-3 mb-5 px-2">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                        <i class="fa-solid fa-crown text-black text-lg"></i>
                     </div>
                     <div>
-                        <h3 class="text-white text-xl font-bold leading-tight">Destacados</h3>
-                        <p class="text-gray-500 font-mono text-[9px] uppercase tracking-widest">Lo más top del momento</p>
+                        <h3 class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 text-2xl font-black leading-tight uppercase tracking-wide">Destacados VIP</h3>
+                        <p class="text-yellow-500/70 font-mono text-[10px] uppercase tracking-widest">Las mejores promociones</p>
                     </div>
                 </div>
                 
-                <div class="destacado-container">
-                    <div id="destacado-track" class="destacado-track gap-4">
-                        <!-- Se inyecta via JS para mantener el HTML limpio -->
-                    </div>
+                <div class="w-full overflow-x-auto no-scrollbar snap-x snap-mandatory flex gap-4 pb-6 pt-2 px-2" style="-webkit-overflow-scrolling: touch;" id="destacado-track">
+                    <!-- Se inyecta via JS para mantener el HTML limpio -->
                 </div>
             </div>
 
@@ -1237,7 +1221,7 @@
             }
         });
 
-        // ⚡ FUNCIÓN DE LIGHTBOX MODIFICADA PARA ACEPTAR BOTÓN DE AÑADIR ⚡
+        // ⚡ MODIFICADO: AÑADIR AL CARRITO SIN ABRIRLO ⚡
         function openLightbox(src, isDestacado = false, id = '', name = '', price = 0) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
@@ -1252,11 +1236,11 @@
             if(isDestacado) {
                 btnContainer.classList.remove('hidden');
                 btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
-                // Configurar el click del botón flotante para que llame a addToCart
+                // Solo añadir y notificar, no abrir el carrito
                 addBtn.onclick = () => {
                     addToCart(id, name, price, 'DESTACADO', null);
                     closeLightbox();
-                    openCart(); // Abrir carrito para que vea que se añadió
+                    showNotification(`✅ ¡${name} agregado a la orden!`);
                 };
                 setTimeout(() => {
                     btnContainer.classList.remove('opacity-0', 'scale-95');
@@ -1326,7 +1310,6 @@
             track.innerHTML = html;
         }
 
-        // ⚡ NUEVOS DATOS PARA LOS DESTACADOS ⚡
         const destacadosItems = [
             { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
             { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
@@ -1341,20 +1324,19 @@
             if(!track) return;
             let html = '';
             
-            // ⚡ EL ONCLICK AHORA PASA LOS DATOS PARA EL CARRITO ⚡
             const buildCard = (item) => `
-                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-40 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-gray-800 hover:border-[#58a6ff]/50 transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
+                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
                     <img src="${item.src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
-                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                        <span class="text-[#58a6ff] font-mono text-[10px] tracking-widest uppercase font-bold bg-[#1f6feb]/20 border border-[#1f6feb]/30 px-2 py-1 rounded backdrop-blur-sm"><i class="fa-solid fa-star"></i> Promo VIP</span>
-                        <span class="text-white font-bold bg-black/60 px-2 py-1 rounded text-xs"><i class="fa-solid fa-magnifying-glass-plus"></i> Abrir</span>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                    <div class="absolute top-3 left-3 bg-red-600 text-white font-bold font-mono text-[8px] px-2 py-1 rounded uppercase tracking-widest shadow-[0_0_10px_rgba(220,38,38,0.8)] animate-pulse">Limitado</div>
+                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-1 group-hover:translate-y-0 transition-transform">
+                        <span class="text-yellow-400 font-mono text-[10px] tracking-widest uppercase font-bold bg-yellow-500/10 border border-yellow-500/30 px-2 py-1 rounded backdrop-blur-sm"><i class="fa-solid fa-star"></i> Promo VIP</span>
+                        <span class="text-black font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1.5 rounded-lg text-xs shadow-[0_0_15px_rgba(234,179,8,0.5)] uppercase tracking-wide"><i class="fa-solid fa-cart-plus"></i> Ver</span>
                     </div>
                 </div>
             `;
 
             destacadosItems.forEach(item => html += buildCard(item));
-            destacadosItems.forEach(item => html += buildCard(item)); // Duplicado para infinito
             
             track.innerHTML = html;
         }
@@ -2268,7 +2250,6 @@
             }
             navigate(hash);
 
-            // Activar sonidos al primer clic en la página (Políticas de Autoplay de navegadores)
             document.body.addEventListener('click', function initAudio() {
                 const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
                 a.volume = 0; a.play().catch(()=>{});
