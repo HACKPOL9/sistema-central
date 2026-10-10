@@ -28,17 +28,12 @@
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
                         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
-                        'fade-in': 'fadeIn 0.3s ease-out forwards',
-                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards'
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-15px)' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(100%)', opacity: 0 },
-                            '100%': { transform: 'translateY(0)', opacity: 1 }
                         }
                     }
                 }
@@ -215,21 +210,10 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
+        /* ⚡ Velocidad reducida a 40s ⚡ */
         .carousel-track { display: flex; width: max-content; animation: scroll-left 40s linear infinite; }
         .carousel-track:hover { animation-play-state: paused; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        .destacado-container {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            padding: 5px 0 20px 0;
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        .destacado-track { display: flex; width: max-content; animation: scroll-left-destacado 30s linear infinite; }
-        .destacado-track:hover { animation-play-state: paused; }
-        @keyframes scroll-left-destacado { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         #toast-container {
             max-width: 90vw;
@@ -239,11 +223,7 @@
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
 
-    <!-- ⚡ AUDIOS REALES CONECTADOS ⚡ -->
-    <audio id="audio-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
-    <audio id="audio-scan" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-    <audio id="audio-success" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
-
+    <!-- SPLASH SCREEN LENTO CON EFECTO FLOAT PRO -->
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex flex-col items-center">
             <img src="logo.png" alt="Logo" class="w-24 h-24 object-contain animate-float mb-6 drop-shadow-[0_0_15px_rgba(88,166,255,0.5)]" onerror="this.src='https://placehold.co/100x100/111/fff?text=LOGO'">
@@ -252,12 +232,14 @@
         </div>
     </div>
 
+    <!-- ⚡ VISOR DE EVIDENCIAS Y DESTACADOS (LIGHTBOX) ⚡ -->
     <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-6 right-6 z-[10000] text-white bg-gray-800/80 hover:bg-red-500/80 rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer border border-gray-600">
             <i class="fa-solid fa-xmark text-2xl"></i>
         </button>
         <img id="lightbox-img" src="" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
         
+        <!-- ⚡ BOTON DORADO VIP PARA AÑADIR DESTACADOS ⚡ -->
         <div id="lightbox-action-container" class="mt-6 w-full max-w-sm hidden transform scale-95 transition-transform duration-300 opacity-0">
             <button id="lightbox-add-btn" onclick="" class="w-full py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 text-black rounded-xl font-bold text-[13px] tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all transform hover:scale-105">
                 <i class="fa-solid fa-cart-plus text-lg"></i> <span id="lightbox-btn-text">AÑADIR A LA ORDEN - S/ 0.00</span>
@@ -265,6 +247,7 @@
         </div>
     </div>
 
+    <!-- FONDOS -->
     <div class="fixed inset-0 z-0 bg-[#02050A]"></div>
     <div class="bg-noise"></div>
     <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-60"></div>
@@ -274,9 +257,11 @@
         <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
     </div>
 
+    <!-- NOTIFICACIONES TOAST Y FOMO -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
     <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
+    <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
     <div id="search-modal" class="fixed inset-0 z-[1000] bg-[#02050A]/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center p-4 pt-16">
         <div class="w-full max-w-2xl relative transform transition-transform duration-300 scale-95" id="search-modal-content">
             <button onclick="closeSearch()" class="absolute -top-10 right-0 text-gray-500 hover:text-white transition-colors flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
@@ -455,6 +440,7 @@
 
         <!-- ============================== VISTA HUB ============================== -->
         <div id="view-hub" class="hidden-view w-full animate-fade-in">
+            <!-- ⚡ ESPACIO SUPERIOR REDUCIDO MANTENIDO ⚡ -->
             <div class="mb-4 flex flex-col items-center text-center">
                 <div class="font-mono text-[10px] text-emerald-400 border border-emerald-500/40 bg-emerald-500/10 px-5 py-2 rounded-full tracking-widest mb-6 uppercase flex items-center gap-2">
                     <i class="fa-solid fa-shield-check"></i> Acceso Autorizado
@@ -717,6 +703,7 @@
                 </button>
             </div>
 
+            <!-- ⚡ SECCIÓN DESTACADOS VIP ⚡ -->
             <div class="mb-10 mt-4">
                 <div class="flex items-center gap-3 mb-5 px-2">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-[0_0_20px_rgba(234,179,8,0.4)]">
@@ -1054,12 +1041,12 @@
         <!-- ================ PORTAL DE INVESTIGACIÓN ================= -->
         <!-- ========================================================= -->
         <div id="view-investigacion" class="hidden-view w-full animate-fade-in">
+            <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO CYAN ⚡ -->
             <div class="mb-10 border-b border-gray-800 pb-4 flex justify-between items-center">
                 <div>
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-radar text-cyan-500 mr-2"></i>Investigación</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Inteligencia de Datos</p>
                 </div>
-                <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO CYAN ⚡ -->
                 <button onclick="navigate('hub', true)" class="group relative inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-cyan-500/10 border border-cyan-500 text-cyan-400 hover:text-white hover:bg-cyan-600 font-mono text-[10px] md:text-xs uppercase tracking-widest rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:shadow-[0_0_25px_rgba(6,182,212,0.8)]">
                     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300 relative z-10"></i>
                     <span class="relative z-10 font-bold">Regresar</span>
@@ -1206,19 +1193,17 @@
     </main>
 
     <script>
-        let systemProducts = []; // Se inicializa vacío para llenarse con Google Sheets
-
         const sfx = {
             click: () => {
-                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'); 
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
                 a.volume = 0.2; a.play().catch(()=>{});
             },
             scan: () => {
-                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); 
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
                 a.volume = 0.15; a.play().catch(()=>{});
             },
             cash: () => {
-                const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
                 a.volume = 0.3; a.play().catch(()=>{});
             }
         };
@@ -1237,6 +1222,7 @@
             }
         });
 
+        // ⚡ MODIFICADO: AÑADIR AL CARRITO SIN ABRIRLO Y NOTIFICACIÓN DORADA ⚡
         function openLightbox(src, isDestacado = false, id = '', name = '', price = 0) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
@@ -1251,6 +1237,7 @@
             if(isDestacado) {
                 btnContainer.classList.remove('hidden');
                 btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
+                // Solo añadir y notificar, no abrir el carrito
                 addBtn.onclick = () => {
                     addToCart(id, name, price, 'DESTACADO', null);
                     closeLightbox();
@@ -1324,16 +1311,23 @@
             track.innerHTML = html;
         }
 
-        let destacadosItems = []; // Se llena desde Google Sheets
+        const destacadosItems = [
+            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
+            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
+            { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
+            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
+            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
+            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
+        ];
 
         function renderDestacados() {
             const track = document.getElementById('destacado-track');
-            if(!track || destacadosItems.length === 0) return;
+            if(!track) return;
             let html = '';
             
             const buildCard = (item) => `
-                <div onclick="openLightbox('${item.src || 'destacado/destacado1.png'}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
-                    <img src="${item.src || 'destacado/destacado1.png'}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
+                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
+                    <img src="${item.src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
                     <div class="absolute top-3 left-3 bg-red-600 text-white font-bold font-mono text-[8px] px-2 py-1 rounded uppercase tracking-widest shadow-[0_0_10px_rgba(220,38,38,0.8)] animate-pulse">Limitado</div>
                     <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-1 group-hover:translate-y-0 transition-transform">
@@ -1390,9 +1384,8 @@
             addToCart(id, name, price, category, btn);
         }
 
-        // --- CONEXIÓN GOOGLE SHEETS (OPCIÓN 2) ---
-        // Fallback local en caso de que tarde en cargar la API
-        const localFallbackProducts = [
+        // ⚡ ARREGLADO: LISTA NATIVA DE PRODUCTOS COMPLETA ⚡
+        const systemProducts = [
             {id: 'FIN-CMB', name: 'Combo Total Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'yellow'},
             {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
             {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue'},
@@ -1443,61 +1436,6 @@
             {id: 'INV-FIS', name: 'FISCALÍA/MPFN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
             {id: 'INV-FAC', name: 'RECONOCIMIENTO FACIAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'}
         ];
-        
-        const localDestacados = [
-            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
-            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
-            { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
-            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
-            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
-            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
-        ];
-
-        async function syncCloudDB() {
-            try {
-                // Tu URL real de Google Apps Script
-                const res = await fetch('https://script.google.com/macros/s/AKfycbx6fz4eYDSUCJOS1mCiSNZF1K945HqJyW0lkec8CsmMPRasZDqFNYbe-3wFqCKpiwfQiQ/exec');
-                const cloudData = await res.json();
-                
-                if(cloudData && cloudData.length > 0) {
-                    cloudData.forEach(item => {
-                        // 1. Actualizar array maestro
-                        let prod = systemProducts.find(p => p.id === item.id);
-                        if(prod) {
-                            prod.price = parseFloat(item.price) || 0;
-                            prod.name = item.name || prod.name;
-                            prod.desc = item.desc || prod.desc;
-                            
-                            // Actualizar el DOM visible de las tarjetas HTML
-                            let priceEl = document.querySelector('#card-' + item.id + ' .tracking-tighter');
-                            if(priceEl) {
-                                priceEl.innerText = prod.price.toFixed(2);
-                            }
-                        }
-                        
-                        // 2. Actualizar array de destacados
-                        // Buscamos si el ID en la nube (ej. DIG-GPT) corresponde a un destacado (DES-GPT)
-                        let destId = 'DES-' + item.id.split('-')[1]; 
-                        let dest = destacadosItems.find(d => d.id === destId);
-                        if(dest) {
-                            // En destacados le aplicas tus descuentos manuales, pero si quieres leerlo de la nube:
-                            // dest.price = parseFloat(item.price) || 0; 
-                            // Por ahora dejamos que Google Sheets actualice SOLO los normales. 
-                            // Si en tu excel tienes los IDs "DES-...", entonces usa esto:
-                            let directDest = destacadosItems.find(d => d.id === item.id);
-                            if(directDest) directDest.price = parseFloat(item.price) || 0;
-                        }
-                    });
-                    
-                    // Re-renderizamos con los nuevos precios de la nube
-                    renderDestacados();
-                    syncProductButtons();
-                    console.log("⚡ [NIVEL DIOS]: Base de Datos sincronizada con Google Sheets.");
-                }
-            } catch(error) {
-                console.log("⚡ [MODO OFFLINE]: Usando precios locales de seguridad.");
-            }
-        }
 
         function openSearch() {
             const modal = document.getElementById('search-modal');
@@ -1588,7 +1526,6 @@
             }, 400);
         }
 
-        // ⚡ NOTIFICACIÓN MEJORADA (ACEPTA TIPO VIP O ERROR) ⚡
         function showNotification(message, type = 'error') {
             try { if(navigator.vibrate) navigator.vibrate([50, 100, 50]); } catch(e){}
             const container = document.getElementById('toast-container');
@@ -2338,14 +2275,8 @@
             try { setLiveStats(); } catch(e) {}
             try { initScrollObserver(); } catch(e) {}
             
-            // ⚡ SINCRONIZACIÓN INICIAL CON GOOGLE SHEETS ⚡
-            syncCloudDB().then(() => {
-                // Se renderiza después de cargar los datos de la nube
-                syncProductButtons();
-                renderCarousel('all');
-            });
-            
-            // Renderizamos los destacados locales mientras carga la nube
+            syncProductButtons();
+            renderCarousel('all');
             renderDestacados();
             initFomo();
         };
