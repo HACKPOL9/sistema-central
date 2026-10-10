@@ -44,12 +44,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+
         body { 
             background-color: #02050A; 
             color: #c9d1d9; 
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .bg-noise {
@@ -2280,6 +2286,52 @@
             renderDestacados();
             initFomo();
         };
+
+        // =========================================================
+        // 🛡️ BLINDAJE DE SEGURIDAD NIVEL DIOS (ANTI-COPIA) 🛡️
+        // =========================================================
+        
+        // 1. Bloquear Clic Derecho
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Bloquear atajos de teclado de desarrollador
+        document.addEventListener('keydown', function(e) {
+            // Bloquear F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+Shift+I / Cmd+Opt+I (Inspeccionar)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+Shift+J / Cmd+Opt+J (Consola)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+Shift+C / Cmd+Opt+C (Inspector de elementos)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+U / Cmd+U (Ver código fuente)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+S / Cmd+S (Guardar página)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
+                e.preventDefault();
+            }
+            // Bloquear Ctrl+P / Cmd+P (Imprimir página)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'P' || e.key === 'p')) {
+                e.preventDefault();
+            }
+        });
+        
+        // 3. Bloquear arrastre de imágenes (Drag & Drop)
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
     </script>
 </body>
 </html>
