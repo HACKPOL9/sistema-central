@@ -175,7 +175,7 @@
             color: white;
             font-family: 'Fira Code', monospace;
             font-size: 11px;
-            padding: 8px 30px 8px 12px;
+            padding: 8px 30px 8px 12px; 
             width: 100%;
             outline: none;
             transition: all 0.3s ease;
@@ -215,11 +215,11 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
-        .carousel-track { display: flex; width: max-content; animation: scroll-left 25s linear infinite; }
+        /* ⚡ VELOCIDAD DEL CARRUSEL DE REFERENCIAS MÁS LENTA (40s) ⚡ */
+        .carousel-track { display: flex; width: max-content; animation: scroll-left 40s linear infinite; }
         .carousel-track:hover { animation-play-state: paused; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* ⚡ ANIMACIÓN CSS PARA EL CARRUSEL DE DESTACADOS ⚡ */
         .destacado-container {
             width: 100%;
             overflow: hidden;
@@ -254,12 +254,19 @@
         </div>
     </div>
 
-    <!-- ⚡ VISOR DE EVIDENCIAS (LIGHTBOX) ⚡ -->
-    <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <!-- ⚡ VISOR DE EVIDENCIAS Y DESTACADOS (LIGHTBOX) ⚡ -->
+    <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center p-4">
         <button onclick="closeLightbox()" class="absolute top-6 right-6 z-[10000] text-white bg-gray-800/80 hover:bg-red-500/80 rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer border border-gray-600">
             <i class="fa-solid fa-xmark text-2xl"></i>
         </button>
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
+        
+        <!-- Contenedor dinámico para el botón de Añadir al carrito desde Destacados -->
+        <div id="lightbox-action-container" class="mt-6 w-full max-w-sm hidden transform scale-95 transition-transform duration-300 opacity-0">
+            <button id="lightbox-add-btn" onclick="" class="w-full py-4 bg-[#25D366] hover:bg-emerald-500 text-black rounded-xl font-bold text-[13px] tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,211,102,0.4)] transition-all">
+                <i class="fa-solid fa-cart-plus text-lg"></i> <span id="lightbox-btn-text">AÑADIR A LA ORDEN - S/ 0.00</span>
+            </button>
+        </div>
     </div>
 
     <!-- FONDOS -->
@@ -274,6 +281,7 @@
 
     <!-- NOTIFICACIONES TOAST Y FOMO -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+    <!-- ⚡ FOMO REUBICADO ARRIBA A LA DERECHA ⚡ -->
     <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
     <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
@@ -343,10 +351,6 @@
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">👤</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Identidad:</strong> Fichas RENIEC, Árbol Genealógico.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚔</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Antecedentes:</strong> Policiales, Penales, Judiciales.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚗</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Vehicular:</strong> SUNARP, SOAT, Boletas Informativas.</p></div>
-                </div>
-                <div class="mb-6 flex items-start gap-2 text-center justify-center">
-                    <i class="fa-solid fa-triangle-exclamation text-red-500/70 mt-0.5 text-[10px]"></i>
-                    <p class="text-gray-500 text-[9px] font-mono uppercase tracking-widest leading-tight">Uso confidencial. Extracción bajo responsabilidad del usuario.</p>
                 </div>
                 <button onclick="proceedToInvestigacion()" class="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
             </div>
@@ -481,7 +485,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <i class="fa-solid fa-wallet absolute top-4 right-4 text-7xl text-blue-500/10 group-hover:text-blue-500/20 transition-colors"></i>
+                    <!-- ⚡ ÍCONO MÁS GRANDE ⚡ -->
+                    <i class="fa-solid fa-wallet absolute top-4 right-4 text-8xl text-blue-500/10 group-hover:text-blue-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -510,7 +515,7 @@
 
                 <!-- DIGITAL -->
                 <div onclick="initDigitalPortal()" class="portfolio-card card-dig group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-emerald-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <i class="fa-solid fa-server absolute top-4 right-4 text-7xl text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors"></i>
+                    <i class="fa-solid fa-server absolute top-4 right-4 text-8xl text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -548,7 +553,7 @@
 
                 <!-- INVESTIGACION -->
                 <div onclick="initInvestigacionPortal()" class="portfolio-card card-inv group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-cyan-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <i class="fa-solid fa-user-secret absolute top-4 right-4 text-7xl text-cyan-500/10 group-hover:text-cyan-500/20 transition-colors"></i>
+                    <i class="fa-solid fa-user-secret absolute top-4 right-4 text-8xl text-cyan-500/10 group-hover:text-cyan-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -1054,11 +1059,11 @@
         <!-- ================ PORTAL DE INVESTIGACIÓN ================= -->
         <!-- ========================================================= -->
         <div id="view-investigacion" class="hidden-view w-full animate-fade-in">
-            <!-- ⚡ ENCABEZADO CORREGIDO: BOTÓN REGRESAR A LA DERECHA ⚡ -->
+            <!-- ⚡ BOTON REGRESAR A LA DERECHA CORREGIDO ⚡ -->
             <div class="mb-10 border-b border-gray-800 pb-4 flex justify-between items-center">
                 <div>
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-radar text-cyan-500 mr-2"></i>Investigación</h2>
-                    <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Inteligencia de Datos y Antecedentes</p>
+                    <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Inteligencia de Datos</p>
                 </div>
                 <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
             </div>
@@ -1232,22 +1237,48 @@
             }
         });
 
-        function openLightbox(src) {
+        // ⚡ FUNCIÓN DE LIGHTBOX MODIFICADA PARA ACEPTAR BOTÓN DE AÑADIR ⚡
+        function openLightbox(src, isDestacado = false, id = '', name = '', price = 0) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
+            const btnContainer = document.getElementById('lightbox-action-container');
+            const addBtn = document.getElementById('lightbox-add-btn');
+            const btnText = document.getElementById('lightbox-btn-text');
+
             img.src = src;
             modal.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => img.classList.remove('scale-95'), 10);
             
+            if(isDestacado) {
+                btnContainer.classList.remove('hidden');
+                btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
+                // Configurar el click del botón flotante para que llame a addToCart
+                addBtn.onclick = () => {
+                    addToCart(id, name, price, 'DESTACADO', null);
+                    closeLightbox();
+                    openCart(); // Abrir carrito para que vea que se añadió
+                };
+                setTimeout(() => {
+                    btnContainer.classList.remove('opacity-0', 'scale-95');
+                }, 150);
+            } else {
+                btnContainer.classList.add('hidden', 'opacity-0', 'scale-95');
+            }
+
             history.pushState({ lightbox: true }, '');
         }
 
         function closeLightbox(fromPopState = false) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
+            const btnContainer = document.getElementById('lightbox-action-container');
+
             img.classList.add('scale-95');
+            btnContainer.classList.add('opacity-0', 'scale-95');
             modal.classList.add('opacity-0', 'pointer-events-none');
             
+            setTimeout(() => { btnContainer.classList.add('hidden'); }, 300);
+
             if(!fromPopState) {
                 history.back(); 
             }
@@ -1295,27 +1326,35 @@
             track.innerHTML = html;
         }
 
-        // ⚡ RENDERIZADO DINÁMICO DE DESTACADOS ⚡
+        // ⚡ NUEVOS DATOS PARA LOS DESTACADOS ⚡
+        const destacadosItems = [
+            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
+            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
+            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 },
+            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
+            { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
+            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 }
+        ];
+
         function renderDestacados() {
             const track = document.getElementById('destacado-track');
             if(!track) return;
             let html = '';
-            // Leyendo exactamente destacado1.png hasta destacado6.png
-            const images = [1,2,3,4,5,6].map(i => `destacado/destacado${i}.png`);
             
-            const buildCard = (src) => `
-                <div onclick="openLightbox('${src}')" class="w-[280px] md:w-[340px] h-40 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-gray-800 hover:border-[#58a6ff]/50 transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
-                    <img src="${src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
+            // ⚡ EL ONCLICK AHORA PASA LOS DATOS PARA EL CARRITO ⚡
+            const buildCard = (item) => `
+                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-40 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-gray-800 hover:border-[#58a6ff]/50 transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
+                    <img src="${item.src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
                     <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-2 group-hover:translate-y-0 transition-transform">
                         <span class="text-[#58a6ff] font-mono text-[10px] tracking-widest uppercase font-bold bg-[#1f6feb]/20 border border-[#1f6feb]/30 px-2 py-1 rounded backdrop-blur-sm"><i class="fa-solid fa-star"></i> Promo VIP</span>
+                        <span class="text-white font-bold bg-black/60 px-2 py-1 rounded text-xs"><i class="fa-solid fa-magnifying-glass-plus"></i> Abrir</span>
                     </div>
                 </div>
             `;
 
-            // Duplicar para efecto scroll infinito sin saltos
-            images.forEach(src => html += buildCard(src));
-            images.forEach(src => html += buildCard(src));
+            destacadosItems.forEach(item => html += buildCard(item));
+            destacadosItems.forEach(item => html += buildCard(item)); // Duplicado para infinito
             
             track.innerHTML = html;
         }
@@ -2073,7 +2112,7 @@
             let hasZeroPrice = false;
             let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL\n🔒ID: ${orderId}\n\n`;
             
-            const grouped = { 'DIGITAL': [], 'FINANCIERO': [], 'INVESTIGACIÓN': [] };
+            const grouped = { 'DIGITAL': [], 'FINANCIERO': [], 'INVESTIGACIÓN': [], 'DESTACADO': [] };
             
             cart.forEach(item => {
                 let cat = item.category.toUpperCase();
@@ -2185,7 +2224,9 @@
             { text: "🎵 Un cliente activó Spotify Premium", icon: "fa-music text-emerald-400", border: "border-emerald-500/30" },
             { text: "🚗 Alguien acaba de solicitar una Boleta Informativa", icon: "fa-car text-cyan-400", border: "border-cyan-500/30" },
             { text: "💻 Un cliente adquirió Microsoft 365", icon: "fa-compact-disc text-blue-400", border: "border-blue-500/30" },
-            { text: "🚔 Alguien solicitó Antecedentes Policiales", icon: "fa-handcuffs text-cyan-400", border: "border-cyan-500/30" }
+            { text: "🚔 Alguien solicitó Antecedentes Policiales", icon: "fa-handcuffs text-cyan-400", border: "border-cyan-500/30" },
+            { text: "🎨 Un usuario ha comprado Canva Pro VIP", icon: "fa-pen-nib text-purple-400", border: "border-purple-500/30" },
+            { text: "📊 Se ha validado un Reporte Equifax Oficial", icon: "fa-file-invoice text-blue-400", border: "border-blue-500/30" }
         ];
 
         function showFomoNotification() {
@@ -2215,7 +2256,7 @@
         function initFomo() {
             setTimeout(() => {
                 showFomoNotification();
-                setInterval(showFomoNotification, 45000); 
+                setInterval(showFomoNotification, 35000); 
             }, 15000); 
         }
 
@@ -2226,6 +2267,13 @@
                 history.replaceState(null, '', window.location.pathname + '#hub');
             }
             navigate(hash);
+
+            // Activar sonidos al primer clic en la página (Políticas de Autoplay de navegadores)
+            document.body.addEventListener('click', function initAudio() {
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
+                a.volume = 0; a.play().catch(()=>{});
+                document.body.removeEventListener('click', initAudio);
+            }, { once: true });
 
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
