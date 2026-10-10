@@ -28,12 +28,17 @@
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
                         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
-                        'fade-in': 'fadeIn 0.3s ease-out forwards'
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-15px)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: 0 },
+                            '100%': { transform: 'translateY(0)', opacity: 1 }
                         }
                     }
                 }
@@ -162,7 +167,6 @@
         .card-selected-red { border-color: #ef4444 !important; box-shadow: 0 0 20px rgba(239,68,68,0.3) !important; background-color: rgba(239,68,68,0.05) !important; }
         .card-selected-cyan { border-color: #06b6d4 !important; box-shadow: 0 0 20px rgba(6,182,212,0.3) !important; background-color: rgba(6,182,212,0.05) !important; }
         .card-selected-purple { border-color: #a855f7 !important; box-shadow: 0 0 20px rgba(168,85,247,0.3) !important; background-color: rgba(168,85,247,0.05) !important; }
-        
         .card-selected-yellow { border-color: #eab308 !important; box-shadow: 0 0 20px rgba(234,179,8,0.3) !important; background-color: rgba(234,179,8,0.05) !important; }
 
         .dni-input {
@@ -171,13 +175,26 @@
             color: white;
             font-family: 'Fira Code', monospace;
             font-size: 11px;
-            padding: 8px 12px;
+            padding: 8px 30px 8px 12px;
             width: 100%;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
-        .dni-input:focus { border-color: #58a6ff; }
         
+        .dni-input.invalid { border-color: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
+        .dni-input.valid { border-color: #10b981; box-shadow: 0 0 12px rgba(16, 185, 129, 0.3); }
+        .dni-input:focus:not(.invalid):not(.valid) { border-color: #58a6ff; }
+        
+        .validation-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .dni-input.valid + .validation-icon { opacity: 1; color: #10b981; }
+
         .type-selector {
             background-color: rgba(30,58,138,0.2);
             border: 1px solid rgba(59,130,246,0.3);
@@ -198,12 +215,35 @@
             mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
-        .carousel-track { display: flex; width: max-content; animation: scroll-left 12s linear infinite; }
+        .carousel-track { display: flex; width: max-content; animation: scroll-left 25s linear infinite; }
         .carousel-track:hover { animation-play-state: paused; }
         @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ⚡ ANIMACIÓN CSS PARA EL CARRUSEL DE DESTACADOS ⚡ */
+        .destacado-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 5px 0 20px 0;
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+        .destacado-track { display: flex; width: max-content; animation: scroll-left-destacado 30s linear infinite; }
+        .destacado-track:hover { animation-play-state: paused; }
+        @keyframes scroll-left-destacado { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        #toast-container {
+            max-width: 90vw;
+            width: max-content;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative font-sans">
+
+    <!-- AUDIOS SISTEMA CYBER-UI -->
+    <audio id="audio-click" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
+    <audio id="audio-scan" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
+    <audio id="audio-success" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
 
     <!-- SPLASH SCREEN LENTO CON EFECTO FLOAT PRO -->
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-500">
@@ -215,11 +255,11 @@
     </div>
 
     <!-- ⚡ VISOR DE EVIDENCIAS (LIGHTBOX) ⚡ -->
-    <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4" onclick="closeLightbox()">
-        <button class="absolute top-6 right-6 text-white bg-gray-800/50 hover:bg-red-500/50 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
-            <i class="fa-solid fa-xmark text-xl"></i>
+    <div id="lightbox-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 z-[10000] text-white bg-gray-800/80 hover:bg-red-500/80 rounded-full w-12 h-12 flex items-center justify-center transition-colors cursor-pointer border border-gray-600">
+            <i class="fa-solid fa-xmark text-2xl"></i>
         </button>
-        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl border border-gray-700 shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
     </div>
 
     <!-- FONDOS -->
@@ -232,8 +272,9 @@
         <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
     </div>
 
-    <!-- NOTIFICACIONES TOAST -->
-    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none w-full max-w-md px-4"></div>
+    <!-- NOTIFICACIONES TOAST Y FOMO -->
+    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+    <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
     <!-- ⚡ MODAL BÚSQUEDA GLOBAL (LUPA) ⚡ -->
     <div id="search-modal" class="fixed inset-0 z-[1000] bg-[#02050A]/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center p-4 pt-16">
@@ -302,6 +343,10 @@
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">👤</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Identidad:</strong> Fichas RENIEC, Árbol Genealógico.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚔</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Antecedentes:</strong> Policiales, Penales, Judiciales.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚗</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Vehicular:</strong> SUNARP, SOAT, Boletas Informativas.</p></div>
+                </div>
+                <div class="mb-6 flex items-start gap-2 text-center justify-center">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500/70 mt-0.5 text-[10px]"></i>
+                    <p class="text-gray-500 text-[9px] font-mono uppercase tracking-widest leading-tight">Uso confidencial. Extracción bajo responsabilidad del usuario.</p>
                 </div>
                 <button onclick="proceedToInvestigacion()" class="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
             </div>
@@ -436,6 +481,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
+                    <i class="fa-solid fa-wallet absolute top-4 right-4 text-7xl text-blue-500/10 group-hover:text-blue-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -464,6 +510,7 @@
 
                 <!-- DIGITAL -->
                 <div onclick="initDigitalPortal()" class="portfolio-card card-dig group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-emerald-500/50 cursor-pointer overflow-hidden flex flex-col">
+                    <i class="fa-solid fa-server absolute top-4 right-4 text-7xl text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -501,6 +548,7 @@
 
                 <!-- INVESTIGACION -->
                 <div onclick="initInvestigacionPortal()" class="portfolio-card card-inv group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-cyan-500/50 cursor-pointer overflow-hidden flex flex-col">
+                    <i class="fa-solid fa-user-secret absolute top-4 right-4 text-7xl text-cyan-500/10 group-hover:text-cyan-500/20 transition-colors"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
                             <div class="top-carousel-wrapper text-gray-500">
@@ -599,7 +647,6 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <div id="card-FIN-CMB" class="card-digital-item flex flex-col group rounded-2xl border border-yellow-500/50 bg-gradient-to-br from-[#0A0F16] to-[#1a1500] p-6 transition-all shadow-[0_0_20px_rgba(234,179,8,0.15)] relative mt-4 overflow-visible">
-                        <!-- ⚡ ETIQUETA FUEGO 🔥 ⚡ -->
                         <div class="absolute -top-3 right-6 z-20 bg-yellow-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse">🔥 Opción Recomendada</div>
                         <div class="flex justify-between items-start mb-4 mt-2">
                             <div>
@@ -664,6 +711,25 @@
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Streaming & Tech</p>
                 </div>
                 <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
+            </div>
+
+            <!-- ⚡ SECCIÓN DESTACADOS VIP ⚡ -->
+            <div class="mb-8 mt-2">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                        <i class="fa-solid fa-fire text-yellow-500 animate-pulse text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-white text-xl font-bold leading-tight">Destacados</h3>
+                        <p class="text-gray-500 font-mono text-[9px] uppercase tracking-widest">Lo más top del momento</p>
+                    </div>
+                </div>
+                
+                <div class="destacado-container">
+                    <div id="destacado-track" class="destacado-track gap-4">
+                        <!-- Se inyecta via JS para mantener el HTML limpio -->
+                    </div>
+                </div>
             </div>
 
             <div id="digital-filters" class="flex overflow-x-auto gap-2 mb-6 pb-2 no-scrollbar">
@@ -988,19 +1054,15 @@
         <!-- ================ PORTAL DE INVESTIGACIÓN ================= -->
         <!-- ========================================================= -->
         <div id="view-investigacion" class="hidden-view w-full animate-fade-in">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6 border-b border-gray-800 pb-6 relative">
+            <!-- ⚡ ENCABEZADO CORREGIDO: BOTÓN REGRESAR A LA DERECHA ⚡ -->
+            <div class="mb-10 border-b border-gray-800 pb-4 flex justify-between items-center">
                 <div>
-                    <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 flex items-center gap-2 hover:text-white py-2 px-3 bg-gray-900/50 rounded border border-gray-800 transition-all mb-6 uppercase tracking-widest w-fit">
-                        <i class="fa-solid fa-arrow-left"></i> Regresar
-                    </button>
-                    <h2 class="text-3xl md:text-4xl font-bold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-radar text-cyan-500"></i> Investigación
-                    </h2>
-                    <p class="text-gray-500 text-xs mt-2 font-mono tracking-widest uppercase">/// Inteligencia de Datos y Antecedentes</p>
+                    <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-radar text-cyan-500 mr-2"></i>Investigación</h2>
+                    <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Inteligencia de Datos y Antecedentes</p>
                 </div>
+                <button onclick="navigate('hub', true)" class="font-mono text-[10px] text-gray-400 px-3 py-2 bg-gray-900/50 rounded border border-gray-800 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left"></i> Regresar</button>
             </div>
 
-            <!-- ⚡ INFO GENERAL DORADO CON OVERFLOW-VISIBLE ⚡ -->
             <div id="card-INV-GEN" class="mb-8 card-digital-item relative bg-gradient-to-br from-[#0A0F16] to-[#1a1500] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between group shadow-[0_0_30px_rgba(234,179,8,0.15)] border border-yellow-500/30 overflow-visible mt-4">
                 <div class="absolute -top-3 right-6 z-20 bg-yellow-500 text-black font-bold font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.6)] animate-pulse">
                     🔥 Paquete Completo
@@ -1025,7 +1087,7 @@
                 <h3 class="text-white font-mono text-sm uppercase tracking-widest">Módulos de Extracción Individual</h3>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mb-10">
                 
                 <div id="card-INV-C4" class="card-digital-item bg-[#0A0F16] rounded-xl p-4 flex flex-col justify-between group">
                     <div class="flex items-start gap-3 mb-4"><i class="fa-solid fa-address-card text-cyan-500 text-lg mt-0.5 group-hover:animate-pulse"></i><h4 class="text-white font-bold text-xs leading-tight">FICHA RENIEC (C4)</h4></div>
@@ -1129,12 +1191,33 @@
                     <div id="action-INV-FAC"></div>
                 </div>
             </div>
+            
+            <div class="w-full mb-8 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3 shadow-inner mt-4">
+                <i class="fa-solid fa-user-secret text-red-500 mt-0.5 text-lg animate-pulse"></i>
+                <p class="text-gray-300 text-xs font-mono tracking-wide leading-relaxed">
+                    <strong class="text-red-400 uppercase">Aviso de Confidencialidad:</strong> El uso de esta información es estrictamente confidencial. La extracción, tratamiento y destino final de los datos es responsabilidad única del usuario.
+                </p>
+            </div>
         </div>
 
     </main>
 
     <script>
-        // LÓGICA DE TECLADO (NUEVO)
+        const sfx = {
+            click: () => {
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                a.volume = 0.2; a.play().catch(()=>{});
+            },
+            scan: () => {
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                a.volume = 0.15; a.play().catch(()=>{});
+            },
+            cash: () => {
+                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
+                a.volume = 0.3; a.play().catch(()=>{});
+            }
+        };
+
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                 e.preventDefault();
@@ -1142,26 +1225,38 @@
             }
         });
 
-        // LÓGICA DEL LIGHTBOX (NUEVO)
+        window.addEventListener('popstate', (event) => {
+            const modal = document.getElementById('lightbox-modal');
+            if(!modal.classList.contains('opacity-0')) {
+                closeLightbox(true);
+            }
+        });
+
         function openLightbox(src) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
             img.src = src;
             modal.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => img.classList.remove('scale-95'), 10);
+            
+            history.pushState({ lightbox: true }, '');
         }
 
-        function closeLightbox() {
+        function closeLightbox(fromPopState = false) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
             img.classList.add('scale-95');
             modal.classList.add('opacity-0', 'pointer-events-none');
+            
+            if(!fromPopState) {
+                history.back(); 
+            }
         }
 
         const referencesData = {
-            finanzas: [1, 2, 3, 4, 5].map(i => `referencias/finanzas${i}.png`),
-            streaming: [1, 2, 3, 4, 5].map(i => `referencias/streaming${i}.png`),
-            investigacion: [1, 2, 3, 4, 5].map(i => `referencias/doxeo${i}.png`)
+            finanzas: [1, 2, 3, 4, 5, 6, 7, 8].map(i => `referencias/finanzas${i}.png`),
+            streaming: [1, 2, 3, 4, 5, 6, 7, 8].map(i => `referencias/streaming${i}.png`),
+            investigacion: [1, 2, 3, 4, 5, 6, 7, 8].map(i => `referencias/doxeo${i}.png`)
         };
 
         function renderCarousel(filter) {
@@ -1185,12 +1280,11 @@
             const track = document.getElementById('carousel-track');
             let html = '';
             
-            // SE AÑADIÓ ONCLICK PARA ABRIR LIGHTBOX
             const buildImageCard = (src) => `
-                <div onclick="openLightbox('${src}')" class="w-40 md:w-48 h-auto aspect-[9/16] rounded-xl overflow-hidden border border-gray-800 shrink-0 bg-[#0A0F16] relative group cursor-pointer">
+                <div onclick="openLightbox('${src}')" class="w-40 md:w-48 h-auto aspect-[9/18] rounded-xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.8)]">
                     <img src="${src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                        <span class="text-emerald-400 font-mono text-[9px] tracking-widest uppercase font-bold"><i class="fa-solid fa-magnifying-glass-plus"></i> Ver Detalle</span>
+                        <span class="text-emerald-400 font-mono text-[9px] tracking-widest uppercase font-bold bg-black/50 px-2 py-1 rounded"><i class="fa-solid fa-magnifying-glass-plus"></i> Ver Detalle</span>
                     </div>
                 </div>
             `;
@@ -1198,6 +1292,31 @@
             imagesToRender.forEach(src => html += buildImageCard(src));
             imagesToRender.forEach(src => html += buildImageCard(src));
 
+            track.innerHTML = html;
+        }
+
+        // ⚡ RENDERIZADO DINÁMICO DE DESTACADOS ⚡
+        function renderDestacados() {
+            const track = document.getElementById('destacado-track');
+            if(!track) return;
+            let html = '';
+            // Leyendo exactamente destacado1.png hasta destacado6.png
+            const images = [1,2,3,4,5,6].map(i => `destacado/destacado${i}.png`);
+            
+            const buildCard = (src) => `
+                <div onclick="openLightbox('${src}')" class="w-[280px] md:w-[340px] h-40 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-gray-800 hover:border-[#58a6ff]/50 transition-all shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]">
+                    <img src="${src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                        <span class="text-[#58a6ff] font-mono text-[10px] tracking-widest uppercase font-bold bg-[#1f6feb]/20 border border-[#1f6feb]/30 px-2 py-1 rounded backdrop-blur-sm"><i class="fa-solid fa-star"></i> Promo VIP</span>
+                    </div>
+                </div>
+            `;
+
+            // Duplicar para efecto scroll infinito sin saltos
+            images.forEach(src => html += buildCard(src));
+            images.forEach(src => html += buildCard(src));
+            
             track.innerHTML = html;
         }
 
@@ -1390,8 +1509,8 @@
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(220,38,38,0.4)] border border-red-500/50 bg-red-950/90 backdrop-blur-md w-max mx-auto pointer-events-auto cursor-pointer`;
-            toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-lg"></i><p class="text-white text-[11px] font-mono tracking-wide leading-tight">${message}</p>`;
+            toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(220,38,38,0.4)] border border-red-500/50 bg-red-950/90 backdrop-blur-md w-full max-w-sm mx-auto pointer-events-auto cursor-pointer`;
+            toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-lg flex-shrink-0"></i><p class="text-white text-[11px] font-mono tracking-wide leading-tight break-words pr-2">${message}</p>`;
 
             toast.onclick = () => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
@@ -1479,6 +1598,7 @@
         }
 
         function initInvestigacionPortal() {
+            sfx.scan();
             const modal = document.getElementById('investigacion-intro-modal');
             const card = document.getElementById('investigacion-intro-card');
             if(modal && card) {
@@ -1542,6 +1662,7 @@
         });
 
         function addToCart(id, name, price, category, btnElement) {
+            sfx.click();
             try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             let item = cart.find(i => i.id === id);
             
@@ -1549,16 +1670,16 @@
             if (category === 'FINANCIERO') {
                 if (item) {
                     if (id === 'FIN-CMB') {
-                        item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''});
+                        item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false});
                     } else {
-                        item.dnis.push({type: 'DNI', num: ''});
+                        item.dnis.push({type: 'DNI', num: '', valid: false});
                     }
                     dnisArray = item.dnis;
                 } else {
                     if (id === 'FIN-CMB') {
-                        dnisArray = [{type: 'DNI', num: '', type2: 'DNI', num2: ''}];
+                        dnisArray = [{type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}];
                     } else {
-                        dnisArray = [{type: 'DNI', num: ''}];
+                        dnisArray = [{type: 'DNI', num: '', valid: false}];
                     }
                 }
             }
@@ -1574,6 +1695,7 @@
         }
 
         function updateQty(id, change) {
+            sfx.click();
             try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
             let item = cart.find(i => i.id === id);
             if(item) {
@@ -1584,9 +1706,9 @@
                     if(item.category === 'FINANCIERO') {
                         if(change > 0) {
                             if(id === 'FIN-CMB') {
-                                item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: ''}); 
+                                item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}); 
                             } else {
-                                item.dnis.push({type: 'DNI', num: ''}); 
+                                item.dnis.push({type: 'DNI', num: '', valid: false}); 
                             }
                         }
                         if(change < 0) item.dnis.pop();
@@ -1610,21 +1732,39 @@
                 if(targetNum === 1) {
                     item.dnis[index].type = type;
                     item.dnis[index].num = ''; 
+                    item.dnis[index].valid1 = false;
                 } else {
                     item.dnis[index].type2 = type;
                     item.dnis[index].num2 = '';
+                    item.dnis[index].valid2 = false;
                 }
                 renderCart();
             }
         }
 
-        function updateDni(id, index, value, targetNum = 1) {
+        function updateDni(id, index, value, inputElement, targetNum = 1) {
             let item = cart.find(i => i.id === id);
             if(item && item.category === 'FINANCIERO') { 
+                let type = targetNum === 1 ? item.dnis[index].type : item.dnis[index].type2;
+                let reqLength = type === 'RUC' ? 11 : (type === 'CE' ? 9 : 8);
+                let isValid = value.length === reqLength;
+
                 if(targetNum === 1) {
                     item.dnis[index].num = value; 
+                    item.dnis[index].valid1 = isValid;
                 } else {
                     item.dnis[index].num2 = value; 
+                    item.dnis[index].valid2 = isValid;
+                }
+
+                if(value.length === 0) {
+                    inputElement.classList.remove('valid', 'invalid');
+                } else if(isValid) {
+                    inputElement.classList.add('valid');
+                    inputElement.classList.remove('invalid');
+                } else {
+                    inputElement.classList.add('invalid');
+                    inputElement.classList.remove('valid');
                 }
             }
         }
@@ -1748,6 +1888,10 @@
                             if(!doc) continue;
                             
                             if (isCombo) {
+                                let v1Class = doc.valid1 ? 'valid' : (doc.num.length > 0 ? 'invalid' : '');
+                                let v2Class = doc.valid2 ? 'valid' : (doc.num2.length > 0 ? 'invalid' : '');
+                                let max1 = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
+
                                 html += `<div class="flex flex-col gap-2 mt-2">
                                     <div class="text-[9px] text-gray-500 uppercase tracking-widest">>> Reporte Sentinel:</div>
                                     <div class="flex relative">
@@ -1756,20 +1900,23 @@
                                             <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
                                             <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
                                         </select>
-                                        <input type="tel" inputmode="numeric" maxlength="11" placeholder="Ingrese ${doc.type}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, 1)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
+                                        <input type="tel" inputmode="numeric" maxlength="${max1}" placeholder="Ingrese ${doc.type}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this, 1)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${v1Class}">
+                                        <i class="fa-solid fa-circle-check validation-icon"></i>
                                     </div>
                                     <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">>> Reporte SBS (Solo DNI):</div>
                                     <div class="flex relative">
                                         <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed">
                                             <option value="DNI" selected>DNI</option>
                                         </select>
-                                        <input type="tel" inputmode="numeric" maxlength="8" placeholder="Ingrese DNI" value="${doc.num2}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, 2)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1">
+                                        <input type="tel" inputmode="numeric" maxlength="8" placeholder="Ingrese DNI" value="${doc.num2}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this, 2)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${v2Class}">
+                                        <i class="fa-solid fa-circle-check validation-icon"></i>
                                     </div>
                                 </div>`;
                             } else {
                                 if(isSBS) doc.type = 'DNI';
                                 let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
                                 let ph = doc.type === 'RUC' ? "Ingrese RUC del Reporte" : `Ingrese ${doc.type} del Reporte`;
+                                let vClass = doc.valid1 ? 'valid' : (doc.num && doc.num.length > 0 ? 'invalid' : '');
                                 
                                 html += `<div class="flex relative">`;
                                 if(isSBS) {
@@ -1781,7 +1928,9 @@
                                         <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
                                     </select>`;
                                 }
-                                html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1"></div>`;
+                                html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${vClass}">
+                                    <i class="fa-solid fa-circle-check validation-icon"></i>
+                                </div>`;
                             }
                         }
                         html += `</div>`;
@@ -1863,9 +2012,12 @@
             cart.forEach(item => {
                 if(item.category === 'FINANCIERO') {
                     item.dnis.forEach((doc, idx) => {
-                        let len = doc.num.length;
-                        if(doc.type === 'DNI' && len !== 8) errorMsg = `El DNI para ${item.name} debe tener 8 números exactos.`;
-                        if(item.id === 'FIN-CMB' && doc.num2.length !== 8) errorMsg = `El DNI de SBS en Combo Total debe tener 8 números exactos.`;
+                        if (item.id === 'FIN-CMB') {
+                            if (!doc.valid1) errorMsg = `El documento para Sentinel en ${item.name} es inválido.`;
+                            if (!doc.valid2) errorMsg = `El DNI para SBS en ${item.name} debe tener 8 dígitos.`;
+                        } else {
+                            if (!doc.valid1) errorMsg = `El ${doc.type} para ${item.name} es incompleto o inválido.`;
+                        }
                     });
                 }
             });
@@ -1889,6 +2041,7 @@
         }
 
         function copyNumber() {
+            sfx.cash();
             const num = "938748277";
             navigator.clipboard.writeText(num).then(() => {
                 const btnCopy = document.getElementById('btn-copy');
@@ -1897,6 +2050,8 @@
                 setTimeout(() => {
                     closePaymentModal();
                     openFinalModal();
+                    btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> COPIAR NÚMERO';
+                    btnCopy.classList.remove('bg-emerald-500', 'text-black');
                 }, 1000);
             });
         }
@@ -2022,6 +2177,48 @@
             } catch(e) {}
         }
 
+        const fomoMessages = [
+            { text: "⚡ Un cliente acaba de adquirir el Combo Sentinel + SBS", icon: "fa-wallet text-blue-400", border: "border-blue-500/30" },
+            { text: "🎬 Alguien acaba de renovar Netflix 4K", icon: "fa-play text-red-400", border: "border-red-500/30" },
+            { text: "👤 Un cliente solicitó el paquete de Información General", icon: "fa-fingerprint text-yellow-400", border: "border-yellow-500/30" },
+            { text: "🧠 Alguien acaba de adquirir ChatGPT Plus", icon: "fa-brain text-cyan-400", border: "border-cyan-500/30" },
+            { text: "🎵 Un cliente activó Spotify Premium", icon: "fa-music text-emerald-400", border: "border-emerald-500/30" },
+            { text: "🚗 Alguien acaba de solicitar una Boleta Informativa", icon: "fa-car text-cyan-400", border: "border-cyan-500/30" },
+            { text: "💻 Un cliente adquirió Microsoft 365", icon: "fa-compact-disc text-blue-400", border: "border-blue-500/30" },
+            { text: "🚔 Alguien solicitó Antecedentes Policiales", icon: "fa-handcuffs text-cyan-400", border: "border-cyan-500/30" }
+        ];
+
+        function showFomoNotification() {
+            const container = document.getElementById('fomo-container');
+            if(!container) return;
+
+            const randomMsg = fomoMessages[Math.floor(Math.random() * fomoMessages.length)];
+            const toast = document.createElement('div');
+            
+            toast.className = `bg-[#0A0F16]/95 backdrop-blur-md border ${randomMsg.border} rounded-lg p-3 flex items-center gap-3 shadow-[0_5px_15px_rgba(0,0,0,0.5)] transform transition-all duration-500 translate-y-10 opacity-0 max-w-[250px]`;
+            toast.innerHTML = `<i class="fa-solid ${randomMsg.icon} text-lg flex-shrink-0"></i><p class="text-gray-300 text-[10px] font-mono leading-tight">${randomMsg.text}</p>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 500);
+            }, 5000);
+        }
+
+        function initFomo() {
+            setTimeout(() => {
+                showFomoNotification();
+                setInterval(showFomoNotification, 45000); 
+            }, 15000); 
+        }
+
         window.onload = () => {
             let hash = window.location.hash.replace('#', '');
             if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) {
@@ -2042,6 +2239,8 @@
             try { initScrollObserver(); } catch(e) {}
             syncProductButtons();
             renderCarousel('all');
+            renderDestacados();
+            initFomo();
         };
     </script>
 </body>
