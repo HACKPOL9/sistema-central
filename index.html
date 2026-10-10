@@ -243,7 +243,6 @@
     <audio id="audio-scan" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
     <audio id="audio-success" src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" preload="auto"></audio>
 
-    <!-- SPLASH SCREEN LENTO CON EFECTO FLOAT PRO -->
     <div id="splash-screen" class="fixed inset-0 z-[9999] bg-[#02050A] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex flex-col items-center">
             <img src="logo.png" alt="Logo" class="w-24 h-24 object-contain animate-float mb-6 drop-shadow-[0_0_15px_rgba(88,166,255,0.5)]" onerror="this.src='https://placehold.co/100x100/111/fff?text=LOGO'">
@@ -259,7 +258,6 @@
         </button>
         <img id="lightbox-img" src="" class="max-w-full max-h-[75vh] object-contain rounded-xl shadow-[0_0_40px_rgba(88,166,255,0.2)] transform scale-95 transition-transform duration-300">
         
-        <!-- ⚡ BOTON DORADO VIP PARA AÑADIR DESTACADOS ⚡ -->
         <div id="lightbox-action-container" class="mt-6 w-full max-w-sm hidden transform scale-95 transition-transform duration-300 opacity-0">
             <button id="lightbox-add-btn" onclick="" class="w-full py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 text-black rounded-xl font-bold text-[13px] tracking-widest uppercase flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all transform hover:scale-105">
                 <i class="fa-solid fa-cart-plus text-lg"></i> <span id="lightbox-btn-text">AÑADIR A LA ORDEN - S/ 0.00</span>
@@ -267,7 +265,6 @@
         </div>
     </div>
 
-    <!-- FONDOS -->
     <div class="fixed inset-0 z-0 bg-[#02050A]"></div>
     <div class="bg-noise"></div>
     <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-60"></div>
@@ -277,7 +274,6 @@
         <div class="orb-3 absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] max-w-[900px] max-h-[900px] bg-cyan-600/10 rounded-full blur-[140px] mix-blend-screen"></div>
     </div>
 
-    <!-- NOTIFICACIONES TOAST Y FOMO -->
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
     <div id="fomo-container" class="fixed top-20 right-4 md:top-24 md:right-8 z-[90] pointer-events-none flex flex-col gap-2"></div>
 
@@ -328,7 +324,7 @@
                 <p class="text-gray-400 text-[13px] leading-relaxed mb-6">Disfruta de tus series favoritas, música y herramientas de trabajo al instante. Cuentas 100% seguras y con garantía total.</p>
                 <div class="space-y-4 mb-8 bg-[#02050A]/50 border border-gray-800/80 p-5 rounded-xl shadow-inner">
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🎬</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Entretenimiento:</strong> Netflix, Prime, Disney+, YouTube.</p></div>
-                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">I.A y Herramientas:</strong> ChatGPT Plus, Gemini, Canva Pro.</p></div>
+                    <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🧠</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">I.A y Herramientas:</strong> ChatGPT Plus, Gemini Pro, Canva Pro.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">💻</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Software y Extras:</strong> Windows, Office.</p></div>
                 </div>
                 <button onclick="proceedToDigital()" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
@@ -348,11 +344,6 @@
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">👤</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Identidad:</strong> Fichas RENIEC, Árbol Genealógico.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚔</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Antecedentes:</strong> Policiales, Penales, Judiciales.</p></div>
                     <div class="flex items-start gap-3"><span class="text-lg leading-none mt-0.5">🚗</span><p class="text-gray-300 text-[13px] leading-tight"><strong class="text-white">Vehicular:</strong> SUNARP, SOAT, Boletas Informativas.</p></div>
-                </div>
-                <!-- AVISO MODIFICADO EN MODAL -->
-                <div class="mb-6 flex items-start gap-2 text-center justify-center">
-                    <i class="fa-solid fa-triangle-exclamation text-red-500/70 mt-0.5 text-[10px]"></i>
-                    <p class="text-gray-500 text-[9px] font-mono uppercase tracking-widest leading-tight">Uso confidencial. Extracción bajo responsabilidad del usuario.</p>
                 </div>
                 <button onclick="proceedToInvestigacion()" class="w-full py-4 bg-cyan-600 hover:bg-cyan-500 text-black rounded-xl font-bold text-[11px] tracking-widest uppercase flex justify-center gap-2">ACCEDER <i class="fa-solid fa-arrow-right"></i></button>
             </div>
@@ -399,7 +390,6 @@
                 <div class="bg-[#02050A]/50 border border-[#58a6ff]/20 rounded-lg p-3 mb-5 w-full text-center shadow-inner">
                     <p class="text-gray-400 text-[10px] uppercase font-mono tracking-widest leading-relaxed">
                         <span class="text-[#58a6ff] font-bold">1.</span> Seleccione "Copiar Número"<br>
-                        <!-- ⚡ WPP A WHATSAPP ⚡ -->
                         <span class="text-[#58a6ff] font-bold">2.</span> Envíe la orden por WhatsApp<br>
                         <span class="text-[#58a6ff] font-bold">3.</span> Ingrese a su billetera favorita y realice el pago
                     </p>
@@ -488,7 +478,6 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <!-- FINANCIERO -->
                 <div onclick="initFinancieroPortal()" class="portfolio-card card-fin group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-blue-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <!-- ⚡ ÍCONO NEÓN PRO CENTRADO Y MÁS GRANDE ⚡ -->
                     <i class="fa-solid fa-building-columns absolute top-8 right-8 md:top-10 md:right-12 text-[70px] md:text-[90px] text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
@@ -518,7 +507,6 @@
 
                 <!-- DIGITAL -->
                 <div onclick="initDigitalPortal()" class="portfolio-card card-dig group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-emerald-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <!-- ⚡ ÍCONO NEÓN PRO CENTRADO Y MÁS GRANDE ⚡ -->
                     <i class="fa-solid fa-desktop absolute top-8 right-8 md:top-10 md:right-12 text-[70px] md:text-[90px] text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.8)] opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
@@ -557,7 +545,6 @@
 
                 <!-- INVESTIGACION -->
                 <div onclick="initInvestigacionPortal()" class="portfolio-card card-inv group relative bg-[#0A0F16] rounded-2xl p-6 md:p-8 border border-gray-800 hover:border-cyan-500/50 cursor-pointer overflow-hidden flex flex-col">
-                    <!-- ⚡ ÍCONO NEÓN PRO CENTRADO Y MÁS GRANDE ⚡ -->
                     <i class="fa-solid fa-fingerprint absolute top-8 right-8 md:top-10 md:right-12 text-[70px] md:text-[90px] text-cyan-500 drop-shadow-[0_0_15px_rgba(6,182,212,0.8)] opacity-40 group-hover:opacity-80 group-hover:scale-110 transition-all duration-500"></i>
                     <div class="relative z-10 flex flex-col h-full mt-1">
                         <div class="flex items-start mb-6">
@@ -650,7 +637,6 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-wallet text-blue-500 mr-2"></i>Financiero</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Catálogo de Riesgo</p>
                 </div>
-                <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO AZUL ⚡ -->
                 <button onclick="navigate('hub', true)" class="group relative inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-blue-500/10 border border-blue-500 text-blue-400 hover:text-white hover:bg-blue-600 font-mono text-[10px] md:text-xs uppercase tracking-widest rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:shadow-[0_0_25px_rgba(59,130,246,0.8)]">
                     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300 relative z-10"></i>
                     <span class="relative z-10 font-bold">Regresar</span>
@@ -724,7 +710,6 @@
                     <h2 class="text-3xl font-bold text-white"><i class="fa-solid fa-terminal text-emerald-500 mr-2"></i>Digital</h2>
                     <p class="text-gray-500 text-[10px] font-mono tracking-widest uppercase mt-1">/// Streaming & Tech</p>
                 </div>
-                <!-- ⚡ BOTÓN REGRESAR ALUMBRANDO ESMERALDA ⚡ -->
                 <button onclick="navigate('hub', true)" class="group relative inline-flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-emerald-500/10 border border-emerald-500 text-emerald-400 hover:text-white hover:bg-emerald-600 font-mono text-[10px] md:text-xs uppercase tracking-widest rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.5)] hover:shadow-[0_0_25px_rgba(16,185,129,0.8)]">
                     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300 relative z-10"></i>
                     <span class="relative z-10 font-bold">Regresar</span>
@@ -931,7 +916,7 @@
                             <img src="publi/Gemini.png" class="w-full h-full object-cover p-0 group-hover:scale-105 transition-transform duration-300" alt="Gemini" onerror="this.src='https://placehold.co/400x400/111/fff?text=GEMINI'">
                         </div>
                         <div class="p-3 md:p-5 flex flex-col flex-grow">
-                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini</h3>
+                            <h3 class="text-sm md:text-lg font-bold text-white mb-1 leading-tight">Gemini Pro</h3>
                             <span class="text-gray-400 font-mono text-[10px] mb-2 uppercase">18 Meses</span>
                             <div class="flex items-baseline gap-1 mb-3 mt-auto">
                                 <span class="text-gray-500 font-mono text-xs">S/</span><span class="text-xl md:text-3xl font-black text-white tracking-tighter">18.00</span>
@@ -1263,10 +1248,11 @@
             if(isDestacado) {
                 btnContainer.classList.remove('hidden');
                 btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
+                // ⚡ NOTIFICACIÓN VIP DORADA ⚡
                 addBtn.onclick = () => {
                     addToCart(id, name, price, 'DESTACADO', null);
                     closeLightbox();
-                    showNotification(`✅ ¡${name} agregado a la orden!`);
+                    showNotification(`¡Excelente! ${name} se ha agregado a tu orden.`, 'vip');
                 };
                 setTimeout(() => {
                     btnContainer.classList.remove('opacity-0', 'scale-95');
@@ -1336,13 +1322,14 @@
             track.innerHTML = html;
         }
 
+        // ⚡ NUEVO ORDEN DE DESTACADOS SOLICITADO ⚡
         const destacadosItems = [
             { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
             { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
-            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 },
-            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
             { id: 'DES-GEM', src: 'destacado/destacado5.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
-            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 }
+            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
+            { id: 'DES-PRM', src: 'destacado/destacado6.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
+            { id: 'DES-PAR', src: 'destacado/destacado3.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
         ];
 
         function renderDestacados() {
@@ -1429,7 +1416,7 @@
             {id: 'DIG-CRN', name: 'Crunchyroll', desc: 'Mega Fan', price: 8.00, portal: 'digital', color: 'red'},
             {id: 'DIG-APL', name: 'Apple TV', desc: 'Originals 4K', price: 10.00, portal: 'digital', color: 'red'},
             {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 15.00, portal: 'digital', color: 'cyan'},
-            {id: 'DIG-GEM', name: 'Gemini Advanced 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
+            {id: 'DIG-GEM', name: 'Gemini Pro 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
             {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Diseño Pro', price: 2.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple'},
             {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue'},
@@ -1550,14 +1537,21 @@
             }, 400);
         }
 
-        function showNotification(message) {
+        // ⚡ NOTIFICACIÓN MEJORADA (ACEPTA TIPO VIP O ERROR) ⚡
+        function showNotification(message, type = 'error') {
             try { if(navigator.vibrate) navigator.vibrate([50, 100, 50]); } catch(e){}
             const container = document.getElementById('toast-container');
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(220,38,38,0.4)] border border-red-500/50 bg-red-950/90 backdrop-blur-md w-full max-w-sm mx-auto pointer-events-auto cursor-pointer`;
-            toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-lg flex-shrink-0"></i><p class="text-white text-[11px] font-mono tracking-wide leading-tight break-words pr-2">${message}</p>`;
+            
+            if (type === 'vip') {
+                toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(234,179,8,0.4)] border border-yellow-500/50 bg-[#1a1500]/95 backdrop-blur-md w-full max-w-sm mx-auto pointer-events-auto cursor-pointer`;
+                toast.innerHTML = `<i class="fa-solid fa-crown text-yellow-500 text-lg flex-shrink-0 animate-pulse"></i><p class="text-yellow-400 text-[11px] font-mono tracking-wide leading-tight break-words pr-2">${message}</p>`;
+            } else {
+                toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(220,38,38,0.4)] border border-red-500/50 bg-red-950/90 backdrop-blur-md w-full max-w-sm mx-auto pointer-events-auto cursor-pointer`;
+                toast.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-lg flex-shrink-0"></i><p class="text-white text-[11px] font-mono tracking-wide leading-tight break-words pr-2">${message}</p>`;
+            }
 
             toast.onclick = () => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
