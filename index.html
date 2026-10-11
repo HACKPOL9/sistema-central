@@ -1307,7 +1307,7 @@
             } else if (s >= 4 && s <= 8) {
                 return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest uppercase shadow-[0_0_8px_rgba(234,179,8,0.2)]"><i class="fa-solid fa-triangle-exclamation"></i> Últimos ${s}</div></div>`;
             } else {
-                return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-red-500/10 text-red-500 border border-red-500/50 px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"><i class="fa-solid fa-fire text-orange-400"></i> ¡Solo quedan ${s}!</div></div>`;
+                return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-red-500/10 text-red-500 border border-red-500/50 px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"><i class="fa-solid fa-fire text-orange-400"></i> ¡STOCK: ${s}!</div></div>`;
             }
         }
 
@@ -1366,7 +1366,7 @@
                     } else {
                         badgeClasses = 'bg-red-950 border-red-500/50 text-red-400 animate-pulse shadow-[0_0_25px_rgba(239,68,68,0.25)]';
                         badgeIcon = '<i class="fa-solid fa-fire-flame-curved text-lg"></i>';
-                        badgeText = `¡AGOTÁNDOSE! SOLO QUEDAN ${s}`;
+                        badgeText = `¡AGOTÁNDOSE! STOCK: ${s}`;
                     }
 
                     stockHtml = `<div id="vip-stock-badge" class="mb-4 w-full">
@@ -1462,7 +1462,7 @@
                     } else if (s >= 4 && s <= 8) {
                         stockBadge = `<div class="absolute top-3 left-3 bg-yellow-900/80 backdrop-blur-md border border-yellow-500/50 text-yellow-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.4)] flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></div> Últimos ${s}</div>`;
                     } else {
-                        stockBadge = `<div class="absolute top-3 left-3 bg-red-900/80 backdrop-blur-md border border-red-500/50 text-red-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-red-400"></div> ¡Solo quedan ${s}!</div>`;
+                        stockBadge = `<div class="absolute top-3 left-3 bg-red-900/80 backdrop-blur-md border border-red-500/50 text-red-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-red-400"></div> ¡STOCK: ${s}!</div>`;
                     }
                 }
 
