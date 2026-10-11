@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA CENTRAL | Panel Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #02050A; color: #c9d1d9; font-family: 'Space Grotesk', sans-serif; }
+        input { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 4px; background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1f6feb; border-radius: 4px; }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-gray-800 pb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-2"><i class="fa-solid fa-user-shield text-emerald-500 mr-2"></i>Panel de Control</h1>
+                <p class="text-gray-500 font-mono text-xs uppercase tracking-widest">Modifica precios y stock en tiempo real</p>
+            </div>
+            <button onclick="loadAdminData()" class="mt-4 md:mt-0 px-4 py-2 bg-blue-600/20 text-blue-400 border border-blue-600/30 rounded-lg text-xs font-mono uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Recargar Datos
+            </button>
+        </div>
+
+        <!-- ⚡ PEGA TU NUEVA URL AQUÍ ⚡ -->
+        <script>const API_URL = "https://script.google.com/macros/s/AKfycbwsmuDJVR7I7PYfxdiuPo4ejmXZ8Ci_vy-YZyTti9USmINNvlVifXoyo3rDH_x-C3JlIw/exec";</script>
+
+        <div id="loading" class="flex flex-col items-center justify-center py-20 text-emerald-400 font-mono animate-pulse">
+            <i class="fa-solid fa-server text-4xl mb-4"></i>
+            <span>Conectando a la base de datos segura...</span>
+        </div>
+
+        <div id="admin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden"></div>
+    </div>
+
+    <script>
+        async function loadAdminData() {
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('admin-grid').classList.add('hidden');
+            try {
+                // Fetch simplificado sin forzar redirects estrictos
+                const res = await fetch(API_URL);
+                
+                if (!res.ok) throw new Error("Error en la respuesta de la red");
+                
+                const result = await res.json();
+                
+                if(result.status === 'success') {
+                    renderAdmin(result.data);
+                } else {
+                    showError("Error en la respuesta del servidor: " + (result.message || "Desconocido"));
+                }
+            } catch(e) {
+                console.error("Detalle del error:", e);
+                showError("Error de conexión. Revisa la consola (F12) o verifica la URL.");
+            }
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').innerHTML = `<i class='fa-solid fa-triangle-exclamation text-red-500 text-4xl mb-4'></i><span class='text-red-400 font-mono text-sm'>${msg}</span>`;
+        }
+
+        function renderAdmin(data) {
+            document.getElementById('loading').classList.add('hidden');
+            const grid = document.getElementById('admin-grid');
+            grid.classList.remove('hidden');
+            
+            let html = '';
+            data.forEach(p => {
+                if(parseFloat(p.price) >= 0 && p.id !== 'INV-GEN' && !p.id.includes('INV-') || p.id === 'INV-GEN') {
+                    
+                    let isVip = p.destacado === 'SI' ? '<i class="fa-solid fa-star text-yellow-500 text-xs"></i> VIP' : '';
+                    let colorStock = p.stock > 8 ? 'text-emerald-400' : (p.stock >= 4 ? 'text-yellow-400' : 'text-red-500 animate-pulse');
+                    
+                    html += `
+                    <div class="bg-[#0A0F16] border border-gray-800 rounded-xl p-5 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:border-gray-600 transition-colors relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="pr-2">
+                                <h3 class="text-white font-bold text-sm leading-tight">${p.name}</h3>
+                                <span class="text-[9px] font-mono text-gray-500 uppercase tracking-widest">${p.id}</span>
+                            </div>
+                            <span class="text-[9px] font-mono font-bold bg-gray-800 px-2 py-1 rounded whitespace-nowrap">${isVip}</span>
+                        </div>
+                        
+                        <div class="flex gap-3 mb-4">
+                            <div class="flex-1">
+                                <label class="block text-[9px] text-gray-500 uppercase tracking-widest mb-1">Precio (S/)</label>
+                                <input type="number" id="price-${p.id}" value="${p.price}" step="0.50" class="w-full bg-[#02050A] border border-gray-700 text-[#58a6ff] rounded-lg px-3 py-2 text-sm font-bold outline-none focus:border-blue-500 transition-colors">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-[9px] text-gray-500 uppercase tracking-widest mb-1">Stock</label>
+                                <input type="number" id="stock-${p.id}" value="${p.stock}" class="w-full bg-[#02050A] border border-gray-700 ${colorStock} rounded-lg px-3 py-2 text-sm font-black outline-none focus:border-emerald-500 transition-colors">
+                            </div>
+                        </div>
+                        
+                        <button onclick="saveChanges('${p.id}')" class="w-full py-2.5 bg-blue-600/10 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-600/30 rounded-lg text-[10px] font-mono uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Guardar Cambios
+                        </button>
+                        <div id="msg-${p.id}" class="text-[9px] text-center font-mono mt-3 hidden h-3 uppercase tracking-widest"></div>
+                    </div>`;
+                }
+            });
+            grid.innerHTML = html;
+        }
+
+        async function saveChanges(id) {
+            const btnMsg = document.getElementById(`msg-${id}`);
+            const newPrice = document.getElementById(`price-${id}`).value;
+            const newStock = document.getElementById(`stock-${id}`).value;
+
+            // Mostramos el mensaje de "Guardando..."
+            btnMsg.classList.remove('hidden');
+            btnMsg.className = "text-[9px] text-yellow-400 text-center font-mono mt-3 animate-pulse uppercase tracking-widest";
+            btnMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Guardando...';
+
+            try {
+                // ⚡ EL SECRETO: Enviamos como text/plain para evitar el bloqueo CORS
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({ id: id, price: newPrice, stock: newStock })
+                });
+                
+                const result = await response.json();
+                
+                if(result.status === 'success') {
+                    // Si Google confirma, mostramos "Actualizado" en Verde
+                    btnMsg.className = "text-[9px] text-emerald-400 text-center font-bold font-mono mt-3 uppercase tracking-widest";
+                    btnMsg.innerHTML = '<i class="fa-solid fa-check mr-1"></i> Actualizado';
+                    setTimeout(() => btnMsg.classList.add('hidden'), 3000);
+                } else {
+                    throw new Error("Error en el servidor");
+                }
+            } catch(error) {
+                console.error("Detalle del error al guardar:", error);
+                // Si falla, mostramos Error en Rojo
+                btnMsg.className = "text-[9px] text-red-500 text-center font-bold font-mono mt-3 uppercase tracking-widest";
+                btnMsg.innerHTML = '<i class="fa-solid fa-xmark mr-1"></i> Error';
+            }
+        }
+
+        window.onload = loadAdminData;
+    </script>
+</body>
+</html>

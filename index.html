@@ -1199,37 +1199,140 @@
     </main>
 
     <script>
-        const sfx = {
-            click: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
-                a.volume = 0.2; a.play().catch(()=>{});
-            },
-            scan: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
-                a.volume = 0.15; a.play().catch(()=>{});
-            },
-            cash: () => {
-                const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); 
-                a.volume = 0.3; a.play().catch(()=>{});
+        // =========================================================
+        // ⚡ LA CONEXIÓN MAESTRA A LA NUBE (API GOOGLE SHEETS) ⚡
+        // =========================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbwsmuDJVR7I7PYfxdiuPo4ejmXZ8Ci_vy-YZyTti9USmINNvlVifXoyo3rDH_x-C3JlIw/exec";
+        
+        // 🛡️ CATÁLOGO DE EMERGENCIA (Offline)
+        let systemProducts = [
+            {id: 'FIN-CMB', name: 'Combo Total Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'yellow', stock: 99},
+            {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue', stock: 99},
+            {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue', stock: 99},
+            {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', desc: 'Historial bancario', price: 8.00, portal: 'financiero', color: 'blue', stock: 99},
+            {id: 'DIG-YTB', name: 'YouTube Premium', desc: 'Sin Anuncios', price: 9.00, portal: 'digital', color: 'red', stock: 15},
+            {id: 'DIG-SPT', name: 'Spotify Premium', desc: 'Música Ilimitada', price: 10.00, portal: 'digital', color: 'emerald', stock: 10},
+            {id: 'DIG-DUO', name: 'Duolingo Super 12 Meses', desc: 'Vidas Ilimitadas', price: 20.00, portal: 'digital', color: 'emerald', stock: 5},
+            {id: 'DIG-NTF', name: 'Netflix', desc: '4K Ultra HD', price: 14.00, portal: 'digital', color: 'red', stock: 2},
+            {id: 'DIG-DSN', name: 'Disney Premium', desc: 'Estrenos y Star', price: 10.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-PRM', name: 'Prime Video', desc: 'Ultra HD', price: 7.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-MAX', name: 'HBO Max', desc: 'Platino / 4K', price: 7.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-DTV', name: 'DirecTV GO', desc: 'TV en Vivo', price: 15.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-MOV', name: 'Movistar Play', desc: 'App Móvil', price: 15.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-IPTV', name: 'IPTV Smarters', desc: 'Señal VIP', price: 10.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-PAR', name: 'Paramount', desc: 'Estrenos', price: 8.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-VIX', name: 'VIX', desc: 'Liga 1 Max', price: 8.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-CRN', name: 'Crunchyroll', desc: 'Mega Fan', price: 8.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-APL', name: 'Apple TV', desc: 'Originals 4K', price: 10.00, portal: 'digital', color: 'red', stock: 10},
+            {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 15.00, portal: 'digital', color: 'cyan', stock: 10},
+            {id: 'DIG-GEM', name: 'Gemini Pro 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan', stock: 10},
+            {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Diseño Pro', price: 2.00, portal: 'digital', color: 'purple', stock: 10},
+            {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple', stock: 10},
+            {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue', stock: 10},
+            {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Office Completo', price: 20.00, portal: 'digital', color: 'blue', stock: 10},
+            {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'yellow', stock: 99},
+            {id: 'INV-C4', name: 'FICHA RENIEC (C4)', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Validación de Identidad', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-DIR', name: 'DIRECCIONES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-ARB', name: 'ÁRBOL GENEALÓGICO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-TEL', name: 'TITULARIDAD LÍNEA TELEFÓNICA', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-MIG', name: 'REGISTRO MIGRATORIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-SNP', name: 'SUNARP PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-LIT', name: 'COPIA LITERAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-TIV', name: 'TIVE PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-BOL', name: 'BOLETA INFORMATIVA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-REV', name: 'REVISIÓN TÉCNICA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-SOA', name: 'SOAT PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-NAC', name: 'ACTA DE NACIMIENTO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-DEF', name: 'ACTA DE DEFUNCIÓN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-MAT', name: 'ACTA DE MATRIMONIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-EST', name: 'LUGARES DE ESTUDIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-CER', name: 'CERTIFICADO DE ESTUDIOS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-POL', name: 'ANTECEDENTES POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-PEN', name: 'ANTECEDENTES PENALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-JUD', name: 'ANTECEDENTES JUDICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-DEN', name: 'DENUNCIAS POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-REQ', name: 'REQUISITORIAS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-FIS', name: 'FISCALÍA/MPFN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99},
+            {id: 'INV-FAC', name: 'RECONOCIMIENTO FACIAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan', stock: 99}
+        ];
+
+        let destacadosItems = [
+            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00, stock: 15 },
+            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00, stock: 5 },
+            { id: 'DES-GEM', src: 'destacado/destacado3.png', name: 'Gemini Pro (Promo VIP)', price: 18.00, stock: 2 },
+            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00, stock: 10 },
+            { id: 'DES-PRM', src: 'destacado/destacado5.png', name: 'Amazon Prime (Promo VIP)', price: 7.00, stock: 8 },
+            { id: 'DES-PAR', src: 'destacado/destacado6.png', name: 'Paramount+ (Promo VIP)', price: 8.00, stock: 3 }  
+        ];
+
+        async function initCloudConnection() {
+            try {
+                const res = await fetch(API_URL);
+                const text = await res.text(); 
+                
+                try {
+                    const result = JSON.parse(text); 
+                    if(result.status === 'success' && result.data && result.data.length > 0) {
+                        systemProducts = result.data.filter(p => p.destacado !== 'SI');
+                        destacadosItems = result.data
+                            .filter(p => p.destacado === 'SI')
+                            .map(p => ({
+                                id: p.id,
+                                src: p.imagen_vip,
+                                name: p.name,
+                                price: parseFloat(p.price),
+                                stock: p.stock
+                            }));
+                        console.log("Conectado a la Nube Exitosamente.");
+                    }
+                } catch(jsonError) {
+                    console.log("Cargando versión de emergencia silenciosamente.");
+                }
+            } catch(e) {
+                console.log("Cargando versión de emergencia silenciosamente.");
+            } finally {
+                renderDestacados();
+                syncProductButtons();
             }
+        }
+
+        // ⚡ ETIQUETAS DINÁMICAS DE STOCK POR COLORES ⚡
+        function getStockBadge(stockStr) {
+            let s = parseInt(stockStr);
+            if (isNaN(s)) return '';
+            
+            if (s > 8) {
+                return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest uppercase shadow-[0_0_8px_rgba(16,185,129,0.2)]"><i class="fa-solid fa-circle-check"></i> Stock: ${s} Disp.</div></div>`;
+            } else if (s >= 4 && s <= 8) {
+                return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest uppercase shadow-[0_0_8px_rgba(234,179,8,0.2)]"><i class="fa-solid fa-triangle-exclamation"></i> Últimos ${s}</div></div>`;
+            } else {
+                return `<div class="mb-3 w-full flex justify-center"><div class="inline-flex items-center gap-1.5 bg-red-500/10 text-red-500 border border-red-500/50 px-2 py-0.5 rounded text-[10px] font-mono font-bold tracking-widest uppercase animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]"><i class="fa-solid fa-fire text-orange-400"></i> ¡Solo quedan ${s}!</div></div>`;
+            }
+        }
+
+        // =========================================================
+        // SONIDOS Y EVENTOS BÁSICOS
+        // =========================================================
+        const sfx = {
+            click: () => { const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); a.volume = 0.2; a.play().catch(()=>{}); },
+            scan: () => { const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); a.volume = 0.15; a.play().catch(()=>{}); },
+            cash: () => { const a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='); a.volume = 0.3; a.play().catch(()=>{}); }
         };
 
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                openSearch();
-            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
         });
 
         window.addEventListener('popstate', (event) => {
             const modal = document.getElementById('lightbox-modal');
-            if(!modal.classList.contains('opacity-0')) {
-                closeLightbox(true);
-            }
+            if(!modal.classList.contains('opacity-0')) closeLightbox(true);
         });
 
-        // ⚡ MODIFICADO: AÑADIR AL CARRITO SIN ABRIRLO Y NOTIFICACIÓN DORADA ⚡
-        function openLightbox(src, isDestacado = false, id = '', name = '', price = 0) {
+        // =========================================================
+        // LIGHTBOX & VIP CARRUSEL
+        // =========================================================
+        function openLightbox(src, isDestacado = false, id = '', name = '', price = 0, stockStr = '') {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
             const btnContainer = document.getElementById('lightbox-action-container');
@@ -1241,21 +1344,55 @@
             setTimeout(() => img.classList.remove('scale-95'), 10);
             
             if(isDestacado) {
+                // ⚡ DISEÑO PRO PARA EL STOCK EN EL LIGHTBOX VIP ⚡
+                let stockHtml = '';
+                let s = parseInt(stockStr);
+                if (!isNaN(s)) {
+                    const oldBadge = document.getElementById('vip-stock-badge');
+                    if (oldBadge) oldBadge.remove();
+
+                    let badgeClasses = '';
+                    let badgeIcon = '';
+                    let badgeText = '';
+
+                    if (s > 8) {
+                        badgeClasses = 'bg-emerald-950 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.15)]';
+                        badgeIcon = '<i class="fa-solid fa-shield-check text-lg"></i>';
+                        badgeText = `STOCK CONFIRMADO: ${s} DISPONIBLES`;
+                    } else if (s >= 4 && s <= 8) {
+                        badgeClasses = 'bg-yellow-950 border-yellow-500/50 text-yellow-400 shadow-[0_0_20px_rgba(234,179,8,0.15)]';
+                        badgeIcon = '<i class="fa-solid fa-bolt text-lg"></i>';
+                        badgeText = `ALTA DEMANDA: ÚLTIMAS ${s} CUENTAS`;
+                    } else {
+                        badgeClasses = 'bg-red-950 border-red-500/50 text-red-400 animate-pulse shadow-[0_0_25px_rgba(239,68,68,0.25)]';
+                        badgeIcon = '<i class="fa-solid fa-fire-flame-curved text-lg"></i>';
+                        badgeText = `¡AGOTÁNDOSE! SOLO QUEDAN ${s}`;
+                    }
+
+                    stockHtml = `<div id="vip-stock-badge" class="mb-4 w-full">
+                                    <div class="flex items-center justify-center gap-3 border px-4 py-2.5 rounded-xl text-[11px] font-mono font-bold tracking-widest uppercase ${badgeClasses}">
+                                        ${badgeIcon} 
+                                        <span>${badgeText}</span>
+                                    </div>
+                                 </div>`;
+                    
+                    btnContainer.insertAdjacentHTML('afterbegin', stockHtml);
+                }
+
                 btnContainer.classList.remove('hidden');
-                btnText.innerText = `AÑADIR - S/ ${price.toFixed(2)}`;
-                // Solo añadir y notificar, no abrir el carrito
+                btnText.innerText = `AÑADIR A LA ORDEN - S/ ${price.toFixed(2)}`;
+                
                 addBtn.onclick = () => {
                     addToCart(id, name, price, 'DESTACADO', null);
                     closeLightbox();
                     showNotification(`¡Excelente! ${name} se ha agregado a tu orden.`, 'vip');
                 };
-                setTimeout(() => {
-                    btnContainer.classList.remove('opacity-0', 'scale-95');
-                }, 150);
+                setTimeout(() => btnContainer.classList.remove('opacity-0', 'scale-95'), 150);
             } else {
                 btnContainer.classList.add('hidden', 'opacity-0', 'scale-95');
+                const oldBadge = document.getElementById('vip-stock-badge');
+                if (oldBadge) oldBadge.remove();
             }
-
             history.pushState({ lightbox: true }, '');
         }
 
@@ -1267,14 +1404,13 @@
             img.classList.add('scale-95');
             btnContainer.classList.add('opacity-0', 'scale-95');
             modal.classList.add('opacity-0', 'pointer-events-none');
-            
-            setTimeout(() => { btnContainer.classList.add('hidden'); }, 300);
-
-            if(!fromPopState) {
-                history.back(); 
-            }
+            setTimeout(() => btnContainer.classList.add('hidden'), 300);
+            if(!fromPopState) history.back(); 
         }
 
+        // =========================================================
+        // EVIDENCIAS CARRUSEL
+        // =========================================================
         const referencesData = {
             finanzas: [1, 2, 3, 4, 5, 6, 7, 8].map(i => `referencias/finanzas${i}.png`),
             streaming: [1, 2, 3, 4, 5, 6, 7, 8].map(i => `referencias/streaming${i}.png`),
@@ -1292,69 +1428,62 @@
                 activeBtn.classList.add('active', 'border-[#58a6ff]', 'bg-[#1f6feb]/20', 'text-white');
             }
 
-            let imagesToRender = [];
-            if(filter === 'all') {
-                imagesToRender = [...referencesData.finanzas, ...referencesData.streaming, ...referencesData.investigacion];
-            } else {
-                imagesToRender = referencesData[filter];
-            }
+            let imagesToRender = filter === 'all' 
+                ? [...referencesData.finanzas, ...referencesData.streaming, ...referencesData.investigacion]
+                : referencesData[filter];
 
             const track = document.getElementById('carousel-track');
             let html = '';
-            
             const buildImageCard = (src) => `
                 <div onclick="openLightbox('${src}')" class="w-40 md:w-48 h-auto aspect-[9/18] rounded-xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.8)]">
                     <img src="${src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
                         <span class="text-emerald-400 font-mono text-[9px] tracking-widest uppercase font-bold bg-black/50 px-2 py-1 rounded"><i class="fa-solid fa-magnifying-glass-plus"></i> Ver Detalle</span>
                     </div>
-                </div>
-            `;
+                </div>`;
             
             imagesToRender.forEach(src => html += buildImageCard(src));
             imagesToRender.forEach(src => html += buildImageCard(src));
-
             track.innerHTML = html;
         }
-
-        const destacadosItems = [
-            { id: 'DES-GPT', src: 'destacado/destacado1.png', name: 'ChatGPT Plus (Promo VIP)', price: 10.00 },
-            { id: 'DES-DSN', src: 'destacado/destacado2.png', name: 'Disney Premium (Promo VIP)', price: 10.00 },
-            { id: 'DES-GEM', src: 'destacado/destacado3.png', name: 'Gemini Pro (Promo VIP)', price: 18.00 },
-            { id: 'DES-MAX', src: 'destacado/destacado4.png', name: 'HBO Max (Promo VIP)', price: 7.00 },
-            { id: 'DES-PRM', src: 'destacado/destacado5.png', name: 'Amazon Prime (Promo VIP)', price: 7.00 },
-            { id: 'DES-PAR', src: 'destacado/destacado6.png', name: 'Paramount+ (Promo VIP)', price: 8.00 }            
-        ];
 
         function renderDestacados() {
             const track = document.getElementById('destacado-track');
             if(!track) return;
             let html = '';
             
-            const buildCard = (item) => `
-                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price})" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
+            destacadosItems.forEach(item => {
+                // ⚡ LÓGICA DE COLOR PARA STOCK VIP EN TARJETA (ESTILO PRO) ⚡
+                let s = parseInt(item.stock);
+                let stockBadge = '';
+                if (!isNaN(s)) {
+                    if (s > 8) {
+                        stockBadge = `<div class="absolute top-3 left-3 bg-emerald-900/80 backdrop-blur-md border border-emerald-500/50 text-emerald-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.4)] flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div> Stock: ${s}</div>`;
+                    } else if (s >= 4 && s <= 8) {
+                        stockBadge = `<div class="absolute top-3 left-3 bg-yellow-900/80 backdrop-blur-md border border-yellow-500/50 text-yellow-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_15px_rgba(234,179,8,0.4)] flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></div> Últimos ${s}</div>`;
+                    } else {
+                        stockBadge = `<div class="absolute top-3 left-3 bg-red-900/80 backdrop-blur-md border border-red-500/50 text-red-100 font-bold font-mono text-[9px] px-2.5 py-1 rounded-md uppercase tracking-widest shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-red-400"></div> ¡Solo quedan ${s}!</div>`;
+                    }
+                }
+
+                html += `
+                <div onclick="openLightbox('${item.src}', true, '${item.id}', '${item.name}', ${item.price}, '${item.stock}')" class="w-[280px] md:w-[340px] h-44 md:h-48 rounded-2xl overflow-hidden shrink-0 bg-[#0A0F16] relative group cursor-pointer border border-yellow-500/50 hover:border-yellow-400 transition-all shadow-[0_10px_30px_-10px_rgba(234,179,8,0.2)] snap-center">
                     <img src="${item.src}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" onerror="this.parentElement.style.display='none'">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#02050A] via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
-                    <div class="absolute top-3 left-3 bg-red-600 text-white font-bold font-mono text-[8px] px-2 py-1 rounded uppercase tracking-widest shadow-[0_0_10px_rgba(220,38,38,0.8)] animate-pulse">Limitado</div>
+                    ${stockBadge}
                     <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end transform translate-y-1 group-hover:translate-y-0 transition-transform">
-                        <span class="text-yellow-400 font-mono text-[10px] tracking-widest uppercase font-bold bg-yellow-500/10 border border-yellow-500/30 px-2 py-1 rounded backdrop-blur-sm"><i class="fa-solid fa-star"></i> Promo VIP</span>
-                        <span class="text-black font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 px-3 py-1.5 rounded-lg text-xs shadow-[0_0_15px_rgba(234,179,8,0.5)] uppercase tracking-wide"><i class="fa-solid fa-cart-plus"></i> Ver</span>
+                        <span class="text-yellow-400 font-mono text-[10px] tracking-widest uppercase font-bold bg-yellow-500/10 border border-yellow-500/30 px-2.5 py-1 rounded-md backdrop-blur-md"><i class="fa-solid fa-star"></i> S/ ${item.price.toFixed(2)}</span>
+                        <span class="text-black font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-300 hover:to-yellow-500 px-4 py-1.5 rounded-lg text-xs shadow-[0_0_15px_rgba(234,179,8,0.5)] uppercase tracking-wide transition-colors"><i class="fa-solid fa-cart-plus"></i> Ver</span>
                     </div>
-                </div>
-            `;
-
-            destacadosItems.forEach(item => html += buildCard(item));
-            
+                </div>`;
+            });
             track.innerHTML = html;
         }
 
-        const configuredPlans = {
-            'DIG-YTB': { name: 'YouTube Premium (1 Mes)', price: 9.00 },
-            'DIG-SPT': { name: 'Spotify Premium (1 Mes)', price: 10.00 },
-            'DIG-GPT': { name: 'ChatGPT Plus (1 Disp.)', price: 15.00 },
-            'DIG-CNV': { name: 'Canva Pro (1 Mes)', price: 2.00 }
-        };
-
+        // =========================================================
+        // PLANES CON CONFIGURACIÓN VISUAL
+        // =========================================================
+        const configuredPlans = {};
         function selectPlan(id, planLabel, price, btn) {
             let baseName = '';
             if(id === 'DIG-YTB') baseName = 'YouTube Premium';
@@ -1364,16 +1493,12 @@
 
             configuredPlans[id] = { name: baseName + ` (${planLabel})`, price: price };
             
-            let color = 'cyan';
-            if(id === 'DIG-YTB') color = 'red';
-            if(id === 'DIG-SPT') color = 'emerald';
-            if(id === 'DIG-CNV') color = 'purple';
+            let color = id === 'DIG-YTB' ? 'red' : (id === 'DIG-SPT' ? 'emerald' : (id === 'DIG-CNV' ? 'purple' : 'cyan'));
             
             const container = btn.parentElement;
             container.querySelectorAll('button').forEach(b => {
                 b.className = `px-1.5 py-1 rounded bg-gray-800 border border-gray-700 text-gray-400 text-[9px] font-mono hover:text-white transition-colors`;
             });
-            
             btn.className = `px-1.5 py-1 rounded bg-${color}-500/20 border border-${color}-500 text-${color}-400 text-[9px] font-mono font-bold transition-colors`;
             
             const priceDisplay = document.getElementById('price-display-' + id);
@@ -1390,90 +1515,28 @@
             addToCart(id, name, price, category, btn);
         }
 
-        // ⚡ ARREGLADO: LISTA NATIVA DE PRODUCTOS COMPLETA ⚡
-        const systemProducts = [
-            {id: 'FIN-CMB', name: 'Combo Total Sentinel + SBS', desc: 'Reporte dual completo', price: 10.00, portal: 'financiero', color: 'yellow'},
-            {id: 'FIN-SNT', name: 'Reporte Sentinel', desc: 'Score y alertas', price: 4.00, portal: 'financiero', color: 'blue'},
-            {id: 'FIN-EQF', name: 'Reporte Equifax', desc: 'Score y riesgo', price: 7.00, portal: 'financiero', color: 'blue'},
-            {id: 'FIN-SBS', name: 'SBS Deudas Antiguas', desc: 'Historial bancario', price: 8.00, portal: 'financiero', color: 'blue'},
-            {id: 'DIG-YTB', name: 'YouTube Premium', desc: 'Sin Anuncios', price: 9.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-SPT', name: 'Spotify Premium', desc: 'Música Ilimitada', price: 10.00, portal: 'digital', color: 'emerald'},
-            {id: 'DIG-DUO', name: 'Duolingo Super 12 Meses', desc: 'Vidas Ilimitadas', price: 20.00, portal: 'digital', color: 'emerald'},
-            {id: 'DIG-NTF', name: 'Netflix', desc: '4K Ultra HD', price: 14.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-DSN', name: 'Disney Premium', desc: 'Estrenos y Star', price: 10.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-PRM', name: 'Prime Video', desc: 'Ultra HD', price: 7.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-MAX', name: 'HBO Max', desc: 'Platino / 4K', price: 7.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-DTV', name: 'DirecTV GO', desc: 'TV en Vivo', price: 15.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-MOV', name: 'Movistar Play', desc: 'App Móvil', price: 15.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-IPTV', name: 'IPTV Smarters', desc: 'Señal VIP', price: 10.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-PAR', name: 'Paramount', desc: 'Estrenos', price: 8.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-VIX', name: 'VIX', desc: 'Liga 1 Max', price: 8.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-CRN', name: 'Crunchyroll', desc: 'Mega Fan', price: 8.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-APL', name: 'Apple TV', desc: 'Originals 4K', price: 10.00, portal: 'digital', color: 'red'},
-            {id: 'DIG-GPT', name: 'ChatGPT Plus', desc: 'GPT-4o', price: 15.00, portal: 'digital', color: 'cyan'},
-            {id: 'DIG-GEM', name: 'Gemini Pro 18 Meses', desc: 'Google 1.5 Pro', price: 18.00, portal: 'digital', color: 'cyan'},
-            {id: 'DIG-CNV', name: 'Canva Pro', desc: 'Diseño Pro', price: 2.00, portal: 'digital', color: 'purple'},
-            {id: 'DIG-CPT', name: 'CapCut Pro', desc: 'Efectos VIP', price: 15.00, portal: 'digital', color: 'purple'},
-            {id: 'DIG-WIN', name: 'Windows 10/11 Pro', desc: 'Licencia OEM', price: 15.00, portal: 'digital', color: 'blue'},
-            {id: 'DIG-OFF', name: 'Microsoft 365', desc: 'Office Completo', price: 20.00, portal: 'digital', color: 'blue'},
-            {id: 'INV-GEN', name: 'INFORMACIÓN GENERAL', desc: 'Reporte Completo', price: 15.00, portal: 'investigacion', color: 'yellow'},
-            {id: 'INV-C4', name: 'FICHA RENIEC (C4)', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-DNI', name: 'DNI VIRTUAL', desc: 'Validación de Identidad', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-DIR', name: 'DIRECCIONES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-ARB', name: 'ÁRBOL GENEALÓGICO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-TEL', name: 'TITULARIDAD LÍNEA TELEFÓNICA', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-MIG', name: 'REGISTRO MIGRATORIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-SNP', name: 'SUNARP PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-LIT', name: 'COPIA LITERAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-TIV', name: 'TIVE PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-BOL', name: 'BOLETA INFORMATIVA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-REV', name: 'REVISIÓN TÉCNICA PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-SOA', name: 'SOAT PDF', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-NAC', name: 'ACTA DE NACIMIENTO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-DEF', name: 'ACTA DE DEFUNCIÓN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-MAT', name: 'ACTA DE MATRIMONIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-EST', name: 'LUGARES DE ESTUDIO', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-CER', name: 'CERTIFICADO DE ESTUDIOS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-POL', name: 'ANTECEDENTES POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-PEN', name: 'ANTECEDENTES PENALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-JUD', name: 'ANTECEDENTES JUDICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-DEN', name: 'DENUNCIAS POLICIALES', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-REQ', name: 'REQUISITORIAS', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-FIS', name: 'FISCALÍA/MPFN', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'},
-            {id: 'INV-FAC', name: 'RECONOCIMIENTO FACIAL', desc: 'Extracción de Datos', price: 0.00, portal: 'investigacion', color: 'cyan'}
-        ];
-
+        // =========================================================
+        // BUSCADOR GLOBAL
+        // =========================================================
         function openSearch() {
-            const modal = document.getElementById('search-modal');
-            const content = document.getElementById('search-modal-content');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.remove('scale-95');
+            document.getElementById('search-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('search-modal-content').classList.remove('scale-95');
             document.getElementById('modal-search-input').focus();
             document.body.style.overflow = 'hidden';
         }
 
         function closeSearch() {
-            const modal = document.getElementById('search-modal');
-            const content = document.getElementById('search-modal-content');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            content.classList.add('scale-95');
+            document.getElementById('search-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('search-modal-content').classList.add('scale-95');
             document.getElementById('modal-search-input').value = '';
-            document.getElementById('search-results-container').innerHTML = `
-                <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
-                    <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el catálogo
-                </div>
-            `;
+            document.getElementById('search-results-container').innerHTML = `<div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest"><i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el catálogo</div>`;
             document.body.style.overflow = 'auto';
         }
 
         function executeSearch(query) {
             const container = document.getElementById('search-results-container');
             if(!query || query.length < 2) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest">
-                        <i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el catálogo
-                    </div>
-                `;
+                container.innerHTML = `<div class="text-center text-gray-600 mt-10 font-mono text-xs uppercase tracking-widest"><i class="fa-solid fa-keyboard text-3xl mb-3 opacity-50"></i><br>Escribe para buscar en el catálogo</div>`;
                 return;
             }
             
@@ -1494,13 +1557,9 @@
                 let portalName = portal === 'investigacion' ? 'Portal de Investigación' : `Portal ${portal.charAt(0).toUpperCase() + portal.slice(1)}`;
                 let icon = portal === 'financiero' ? 'fa-wallet text-blue-500' : (portal === 'digital' ? 'fa-terminal text-emerald-500' : 'fa-radar text-cyan-500');
                 
-                html += `
-                    <div class="mb-4">
-                        <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><i class="fa-solid ${icon}"></i> ${portalName}</h4>
-                        <div class="space-y-2">
-                `;
+                html += `<div class="mb-4"><h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-500 mb-2 flex items-center gap-2"><i class="fa-solid ${icon}"></i> ${portalName}</h4><div class="space-y-2">`;
                 items.forEach(item => {
-                    let priceStr = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : 'Consultar';
+                    let priceStr = item.price > 0 ? `S/ ${parseFloat(item.price).toFixed(2)}` : 'Consultar';
                     html += `
                         <div onclick="goToProduct('${item.portal}', '${item.id}')" class="bg-[#0A0F16] border border-gray-800 hover:border-${item.color}-500/50 p-3 rounded-xl cursor-pointer transition-colors flex items-center justify-between group">
                             <div>
@@ -1511,8 +1570,7 @@
                                 <span class="text-white font-mono font-bold">${priceStr}</span>
                                 <i class="fa-solid fa-chevron-right text-gray-600 text-xs ml-2 group-hover:text-${item.color}-400"></i>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
                 html += `</div></div>`;
             }
@@ -1520,8 +1578,7 @@
         }
 
         function goToProduct(portal, id) {
-            closeSearch();
-            navigate(portal, false);
+            closeSearch(); navigate(portal, false);
             setTimeout(() => {
                 const card = document.getElementById('card-' + id);
                 if(card) {
@@ -1532,13 +1589,15 @@
             }, 400);
         }
 
+        // =========================================================
+        // NAVEGACIÓN Y NOTIFICACIONES
+        // =========================================================
         function showNotification(message, type = 'error') {
             try { if(navigator.vibrate) navigator.vibrate([50, 100, 50]); } catch(e){}
             const container = document.getElementById('toast-container');
             if (!container) return;
 
             const toast = document.createElement('div');
-            
             if (type === 'vip') {
                 toast.className = `transform transition-all duration-500 opacity-0 -translate-y-5 flex items-center gap-3 px-4 py-3 rounded-xl shadow-[0_10px_40px_rgba(234,179,8,0.4)] border border-yellow-500/50 bg-[#1a1500]/95 backdrop-blur-md w-full max-w-sm mx-auto pointer-events-auto cursor-pointer`;
                 toast.innerHTML = `<i class="fa-solid fa-crown text-yellow-500 text-lg flex-shrink-0 animate-pulse"></i><p class="text-yellow-400 text-[11px] font-mono tracking-wide leading-tight break-words pr-2">${message}</p>`;
@@ -1553,104 +1612,37 @@
                 setTimeout(() => toast.remove(), 500);
             };
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-0', '-translate-y-5');
-                toast.classList.add('opacity-100', 'translate-y-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', '-translate-y-5');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
+            setTimeout(() => { toast.classList.remove('opacity-0', '-translate-y-5'); toast.classList.add('opacity-100', 'translate-y-0'); }, 10);
+            setTimeout(() => { toast.classList.remove('opacity-100', 'translate-y-0'); toast.classList.add('opacity-0', '-translate-y-5'); setTimeout(() => toast.remove(), 500); }, 4000);
         }
 
         function navigate(viewId, isBack = false) {
             const views = ['hub', 'financiero', 'digital', 'investigacion'];
-            
             views.forEach(v => {
                 const el = document.getElementById('view-' + v);
                 if(el) {
-                    if (v === viewId) {
-                        el.classList.remove('hidden-view');
-                        el.classList.add('animate-fade-in');
-                    } else {
-                        el.classList.add('hidden-view');
-                        el.classList.remove('animate-fade-in');
-                    }
+                    if (v === viewId) { el.classList.remove('hidden-view'); el.classList.add('animate-fade-in'); } 
+                    else { el.classList.add('hidden-view'); el.classList.remove('animate-fade-in'); }
                 }
             });
-
-            window.scrollTo(0, 0);
-            window.location.hash = viewId;
+            window.scrollTo(0, 0); window.location.hash = viewId;
         }
 
         window.addEventListener('hashchange', () => {
             let hash = window.location.hash.replace('#', '');
-            if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) {
-                hash = 'hub';
-            }
+            if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) hash = 'hub';
             navigate(hash, true);
         });
 
-        function initFinancieroPortal() {
-            const modal = document.getElementById('financiero-intro-modal');
-            const card = document.getElementById('financiero-intro-card');
-            if(modal && card) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                card.classList.remove('scale-95');
-            }
-        }
-
-        function proceedToFinanciero() {
-            const modal = document.getElementById('financiero-intro-modal');
-            const card = document.getElementById('financiero-intro-card');
-            if(modal && card) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                card.classList.add('scale-95');
-            }
-            navigate('financiero');
-        }
-
-        function initDigitalPortal() {
-            const modal = document.getElementById('digital-intro-modal');
-            const card = document.getElementById('digital-intro-card');
-            if(modal && card) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                card.classList.remove('scale-95');
-            }
-        }
-
-        function proceedToDigital() {
-            const modal = document.getElementById('digital-intro-modal');
-            const card = document.getElementById('digital-intro-card');
-            if(modal && card) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                card.classList.add('scale-95');
-            }
-            navigate('digital');
-        }
-
-        function initInvestigacionPortal() {
-            sfx.scan();
-            const modal = document.getElementById('investigacion-intro-modal');
-            const card = document.getElementById('investigacion-intro-card');
-            if(modal && card) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                card.classList.remove('scale-95');
-            }
-        }
-
-        function proceedToInvestigacion() {
-            const modal = document.getElementById('investigacion-intro-modal');
-            const card = document.getElementById('investigacion-intro-card');
-            if(modal && card) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                card.classList.add('scale-95');
-            }
-            navigate('investigacion');
-        }
+        // =========================================================
+        // APERTURA DE PORTALES Y FILTROS
+        // =========================================================
+        function initFinancieroPortal() { const m = document.getElementById('financiero-intro-modal'); const c = document.getElementById('financiero-intro-card'); if(m&&c){m.classList.remove('opacity-0', 'pointer-events-none');c.classList.remove('scale-95');} }
+        function proceedToFinanciero() { const m = document.getElementById('financiero-intro-modal'); const c = document.getElementById('financiero-intro-card'); if(m&&c){m.classList.add('opacity-0', 'pointer-events-none');c.classList.add('scale-95');} navigate('financiero'); }
+        function initDigitalPortal() { const m = document.getElementById('digital-intro-modal'); const c = document.getElementById('digital-intro-card'); if(m&&c){m.classList.remove('opacity-0', 'pointer-events-none');c.classList.remove('scale-95');} }
+        function proceedToDigital() { const m = document.getElementById('digital-intro-modal'); const c = document.getElementById('digital-intro-card'); if(m&&c){m.classList.add('opacity-0', 'pointer-events-none');c.classList.add('scale-95');} navigate('digital'); }
+        function initInvestigacionPortal() { sfx.scan(); const m = document.getElementById('investigacion-intro-modal'); const c = document.getElementById('investigacion-intro-card'); if(m&&c){m.classList.remove('opacity-0', 'pointer-events-none');c.classList.remove('scale-95');} }
+        function proceedToInvestigacion() { const m = document.getElementById('investigacion-intro-modal'); const c = document.getElementById('investigacion-intro-card'); if(m&&c){m.classList.add('opacity-0', 'pointer-events-none');c.classList.add('scale-95');} navigate('investigacion'); }
 
         function filterDigital(category) {
             document.querySelectorAll('.dig-filter-btn').forEach(btn => {
@@ -1658,151 +1650,19 @@
                 btn.classList.add('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
             });
             const activeBtn = document.getElementById('btn-dig-' + category);
-            if(activeBtn) {
-                activeBtn.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold');
-                activeBtn.classList.remove('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400');
-            }
-
-            const sections = document.querySelectorAll('.category-section');
-            const cards = document.querySelectorAll('.card-digital-item');
-            
-            sections.forEach(sec => {
-                if(category === 'all' || sec.classList.contains('cat-' + category)) {
-                    sec.style.display = 'block';
-                } else {
-                    sec.style.display = 'none';
-                }
-            });
-
-            cards.forEach(card => {
-                if (category === 'all' || card.classList.contains('cat-' + category)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            if(activeBtn) { activeBtn.classList.add('border-emerald-500', 'bg-emerald-500/20', 'text-white', 'font-bold'); activeBtn.classList.remove('border-gray-800', 'bg-[#0A0F16]', 'text-gray-400'); }
+            document.querySelectorAll('.category-section').forEach(sec => sec.style.display = (category === 'all' || sec.classList.contains('cat-' + category)) ? 'block' : 'none');
+            document.querySelectorAll('.card-digital-item').forEach(card => card.style.display = (category === 'all' || card.classList.contains('cat-' + category)) ? 'flex' : 'none');
         }
 
+        // =========================================================
+        // CARRITO DE COMPRAS Y LÓGICA DE CÓDIGOS
+        // =========================================================
         let cart = [];
         const WA_NUMBER = "51937751224";
         let orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-        
-        try {
-            const elOrderId = document.getElementById('order-id-display');
-            if(elOrderId) elOrderId.innerText = "ID: " + orderId;
-        } catch(e) {}
-
-        window.addEventListener('beforeunload', function (e) {
-            if (cart.length > 0) { e.preventDefault(); e.returnValue = ''; }
-        });
-
-        function addToCart(id, name, price, category, btnElement) {
-            sfx.click();
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            let item = cart.find(i => i.id === id);
-            
-            let dnisArray = [];
-            if (category === 'FINANCIERO') {
-                if (item) {
-                    if (id === 'FIN-CMB') {
-                        item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false});
-                    } else {
-                        item.dnis.push({type: 'DNI', num: '', valid: false});
-                    }
-                    dnisArray = item.dnis;
-                } else {
-                    if (id === 'FIN-CMB') {
-                        dnisArray = [{type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}];
-                    } else {
-                        dnisArray = [{type: 'DNI', num: '', valid: false}];
-                    }
-                }
-            }
-
-            if(item) {
-                item.qty++;
-                if(category === 'FINANCIERO') item.dnis = dnisArray;
-            } else {
-                cart.push({ id, name, price, category, qty: 1, dnis: dnisArray }); 
-            }
-            
-            syncProductButtons(); updateFloatingAction(); renderCart();
-        }
-
-        function updateQty(id, change) {
-            sfx.click();
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            let item = cart.find(i => i.id === id);
-            if(item) {
-                item.qty += change;
-                if(item.qty <= 0) {
-                    cart = cart.filter(i => i.id !== id);
-                } else {
-                    if(item.category === 'FINANCIERO') {
-                        if(change > 0) {
-                            if(id === 'FIN-CMB') {
-                                item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}); 
-                            } else {
-                                item.dnis.push({type: 'DNI', num: '', valid: false}); 
-                            }
-                        }
-                        if(change < 0) item.dnis.pop();
-                    }
-                }
-            }
-            syncProductButtons(); updateFloatingAction(); renderCart();
-            if(cart.length === 0) closeCart();
-        }
-
-        function removeItem(id) {
-            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
-            cart = cart.filter(i => i.id !== id);
-            syncProductButtons(); updateFloatingAction(); renderCart();
-            if(cart.length === 0) closeCart();
-        }
-
-        function updateDocType(id, index, type, targetNum = 1) {
-            let item = cart.find(i => i.id === id);
-            if(item && item.category === 'FINANCIERO') {
-                if(targetNum === 1) {
-                    item.dnis[index].type = type;
-                    item.dnis[index].num = ''; 
-                    item.dnis[index].valid1 = false;
-                } else {
-                    item.dnis[index].type2 = type;
-                    item.dnis[index].num2 = '';
-                    item.dnis[index].valid2 = false;
-                }
-                renderCart();
-            }
-        }
-
-        function updateDni(id, index, value, inputElement, targetNum = 1) {
-            let item = cart.find(i => i.id === id);
-            if(item && item.category === 'FINANCIERO') { 
-                let type = targetNum === 1 ? item.dnis[index].type : item.dnis[index].type2;
-                let reqLength = type === 'RUC' ? 11 : (type === 'CE' ? 9 : 8);
-                let isValid = value.length === reqLength;
-
-                if(targetNum === 1) {
-                    item.dnis[index].num = value; 
-                    item.dnis[index].valid1 = isValid;
-                } else {
-                    item.dnis[index].num2 = value; 
-                    item.dnis[index].valid2 = isValid;
-                }
-
-                if(value.length === 0) {
-                    inputElement.classList.remove('valid', 'invalid');
-                } else if(isValid) {
-                    inputElement.classList.add('valid');
-                    inputElement.classList.remove('invalid');
-                } else {
-                    inputElement.classList.add('invalid');
-                    inputElement.classList.remove('valid');
-                }
-            }
-        }
+        try { const elOrderId = document.getElementById('order-id-display'); if(elOrderId) elOrderId.innerText = "ID: " + orderId; } catch(e) {}
+        window.addEventListener('beforeunload', function (e) { if (cart.length > 0) { e.preventDefault(); e.returnValue = ''; } });
 
         const colorMap = {
             'blue': { bg: 'bg-blue-600', text: 'text-blue-400', border: 'border-blue-600', lightBg: 'bg-blue-500/10', lightBorder: 'border-blue-500/30' },
@@ -1813,28 +1673,33 @@
             'yellow': { bg: 'bg-yellow-600', text: 'text-yellow-400', border: 'border-yellow-600', lightBg: 'bg-yellow-500/10', lightBorder: 'border-yellow-500/30' }
         };
 
+        // ⚡ SINCRONIZADOR MAESTRO (STOCK Y PRECIO DESDE NUBE) ⚡
         function syncProductButtons() {
             systemProducts.forEach(prod => {
                 let container = document.getElementById('action-' + prod.id);
                 let card = document.getElementById('card-' + prod.id);
+                let priceDisplay = document.querySelector(`#card-${prod.id} .tracking-tighter`); 
                 
                 if(!container) return;
-                
                 let inCartItem = cart.find(i => i.id === prod.id);
                 let c = colorMap[prod.color];
                 
-                if (card) {
-                    if (inCartItem) {
-                        card.classList.add('card-selected-' + prod.color);
-                    } else {
-                        card.classList.remove('card-selected-' + prod.color);
-                    }
+                if(priceDisplay && prod.price > 0 && prod.id !== 'DIG-YTB' && prod.id !== 'DIG-SPT' && prod.id !== 'DIG-CNV' && prod.id !== 'DIG-GPT') {
+                    priceDisplay.innerText = parseFloat(prod.price).toFixed(2);
                 }
+                
+                if (card) {
+                    if (inCartItem) card.classList.add('card-selected-' + prod.color);
+                    else card.classList.remove('card-selected-' + prod.color);
+                }
+
+                let stockHtml = (prod.portal === 'digital' || prod.portal === 'financiero') ? getStockBadge(prod.stock) : '';
 
                 if(inCartItem) {
                     if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
                         container.innerHTML = `
-                            <div class="flex justify-between items-center w-full bg-cyan-600 rounded p-1 shadow-[0_0_10px_rgba(6,182,212,0.4)] border border-cyan-500 transition-all">
+                            ${stockHtml}
+                            <div class="flex justify-between items-center w-full bg-cyan-600 rounded p-1 shadow-[0_0_10px_rgba(6,182,212,0.4)] border border-cyan-500 transition-all mt-2">
                                 <button onclick="updateQty('${prod.id}', -1)" class="w-6 h-6 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded transition-colors"><i class="fa-solid fa-minus text-[8px]"></i></button>
                                 <span class="font-mono text-[9px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN ORDEN</span>
                                 <button onclick="updateQty('${prod.id}', 1)" class="w-6 h-6 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded transition-colors"><i class="fa-solid fa-plus text-[8px]"></i></button>
@@ -1842,7 +1707,8 @@
                         `;
                     } else {
                         container.innerHTML = `
-                            <div class="flex justify-between items-center w-full ${c.bg} rounded-xl p-1.5 border ${c.border} transition-all">
+                            ${stockHtml}
+                            <div class="flex justify-between items-center w-full ${c.bg} rounded-xl p-1.5 border ${c.border} transition-all mt-2 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                                 <button onclick="updateQty('${prod.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
                                 <span class="font-mono text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase">${inCartItem.qty} EN CARRITO</span>
                                 <button onclick="updateQty('${prod.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white bg-black/20 hover:bg-black/40 rounded-lg transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
@@ -1862,13 +1728,15 @@
 
                     if(prod.portal === 'investigacion' && prod.id !== 'INV-GEN') {
                         container.innerHTML = `
-                            <button onclick="${clickFn}" class="btn-product w-full py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors">
+                            ${stockHtml}
+                            <button onclick="${clickFn}" class="btn-product w-full mt-2 py-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded text-[9px] font-mono uppercase tracking-widest hover:bg-cyan-500 hover:text-white transition-colors">
                                 <i class="fa-solid fa-cart-plus"></i> ${btnText}
                             </button>
                         `;
                     } else {
                         container.innerHTML = `
-                            <button onclick="${clickFn}" class="w-full py-2.5 md:py-3 ${c.lightBg} border ${c.lightBorder} ${c.text} hover:${c.bg} hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
+                            ${stockHtml}
+                            <button onclick="${clickFn}" class="w-full mt-2 py-2.5 md:py-3 ${c.lightBg} border ${c.lightBorder} ${c.text} hover:${c.bg} hover:text-white rounded-xl text-center font-mono text-[9px] md:text-[11px] tracking-widest transition-all uppercase font-bold flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-cart-plus"></i> ${btnText}
                             </button>
                         `;
@@ -1877,24 +1745,87 @@
             });
         }
 
+        function addToCart(id, name, price, category, btnElement) {
+            sfx.click(); try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            let item = cart.find(i => i.id === id);
+            let dnisArray = [];
+            if (category === 'FINANCIERO') {
+                if (item) {
+                    if (id === 'FIN-CMB') item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false});
+                    else item.dnis.push({type: 'DNI', num: '', valid: false});
+                    dnisArray = item.dnis;
+                } else {
+                    if (id === 'FIN-CMB') dnisArray = [{type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}];
+                    else dnisArray = [{type: 'DNI', num: '', valid: false}];
+                }
+            }
+            if(item) { item.qty++; if(category === 'FINANCIERO') item.dnis = dnisArray; } 
+            else { cart.push({ id, name, price, category, qty: 1, dnis: dnisArray }); }
+            syncProductButtons(); updateFloatingAction(); renderCart();
+        }
+
+        function updateQty(id, change) {
+            sfx.click(); try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            let item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) { cart = cart.filter(i => i.id !== id); } 
+                else {
+                    if(item.category === 'FINANCIERO') {
+                        if(change > 0) {
+                            if(id === 'FIN-CMB') item.dnis.push({type: 'DNI', num: '', type2: 'DNI', num2: '', valid1: false, valid2: false}); 
+                            else item.dnis.push({type: 'DNI', num: '', valid: false}); 
+                        }
+                        if(change < 0) item.dnis.pop();
+                    }
+                }
+            }
+            syncProductButtons(); updateFloatingAction(); renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        function removeItem(id) {
+            try { if(navigator.vibrate) navigator.vibrate(30); } catch(e){}
+            cart = cart.filter(i => i.id !== id);
+            syncProductButtons(); updateFloatingAction(); renderCart();
+            if(cart.length === 0) closeCart();
+        }
+
+        function updateDocType(id, index, type, targetNum = 1) {
+            let item = cart.find(i => i.id === id);
+            if(item && item.category === 'FINANCIERO') {
+                if(targetNum === 1) { item.dnis[index].type = type; item.dnis[index].num = ''; item.dnis[index].valid1 = false; } 
+                else { item.dnis[index].type2 = type; item.dnis[index].num2 = ''; item.dnis[index].valid2 = false; }
+                renderCart();
+            }
+        }
+
+        function updateDni(id, index, value, inputElement, targetNum = 1) {
+            let item = cart.find(i => i.id === id);
+            if(item && item.category === 'FINANCIERO') { 
+                let type = targetNum === 1 ? item.dnis[index].type : item.dnis[index].type2;
+                let reqLength = type === 'RUC' ? 11 : (type === 'CE' ? 9 : 8);
+                let isValid = value.length === reqLength;
+
+                if(targetNum === 1) { item.dnis[index].num = value; item.dnis[index].valid1 = isValid; } 
+                else { item.dnis[index].num2 = value; item.dnis[index].valid2 = isValid; }
+
+                if(value.length === 0) { inputElement.classList.remove('valid', 'invalid'); } 
+                else if(isValid) { inputElement.classList.add('valid'); inputElement.classList.remove('invalid'); } 
+                else { inputElement.classList.add('invalid'); inputElement.classList.remove('valid'); }
+            }
+        }
+
         function renderCart() {
             const container = document.getElementById('cart-items');
             if(!container) return;
-            
-            let html = '';
-            let total = 0;
+            let html = ''; let total = 0;
             
             if(cart.length === 0) {
-                html = `
-                <div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10">
-                    <i class="fa-solid fa-cart-shopping text-6xl mb-4"></i>
-                    <p class="font-mono text-xs uppercase tracking-widest mt-4">Terminal vacía</p>
-                </div>`;
+                html = `<div class="h-full flex flex-col items-center justify-center text-gray-600 opacity-50 mt-10"><i class="fa-solid fa-cart-shopping text-6xl mb-4"></i><p class="font-mono text-xs uppercase tracking-widest mt-4">Terminal vacía</p></div>`;
             } else {
                 cart.forEach(item => {
-                    let itemTotal = item.price * item.qty;
-                    total += itemTotal;
-                    
+                    let itemTotal = item.price * item.qty; total += itemTotal;
                     let priceDisplay = item.price > 0 ? `S/ ${item.price.toFixed(2)}` : '<span class="text-orange-400 font-bold">⚠️ Por Cotizar</span>';
                     
                     html += `
@@ -1915,34 +1846,24 @@
 
                     if(item.category === 'FINANCIERO' && item.dnis) {
                         html += `<div class="mt-2 space-y-2 border-t border-gray-800/50 pt-3">`;
-                        let isSBS = item.id === 'FIN-SBS';
-                        let isCombo = item.id === 'FIN-CMB';
+                        let isSBS = item.id === 'FIN-SBS'; let isCombo = item.id === 'FIN-CMB';
                         
                         for(let i=0; i<item.qty; i++) {
-                            let doc = item.dnis[i];
-                            if(!doc) continue;
-                            
+                            let doc = item.dnis[i]; if(!doc) continue;
                             if (isCombo) {
                                 let v1Class = doc.valid1 ? 'valid' : (doc.num.length > 0 ? 'invalid' : '');
                                 let v2Class = doc.valid2 ? 'valid' : (doc.num2.length > 0 ? 'invalid' : '');
                                 let max1 = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
-
                                 html += `<div class="flex flex-col gap-2 mt-2">
                                     <div class="text-[9px] text-gray-500 uppercase tracking-widest">>> Reporte Sentinel:</div>
                                     <div class="flex relative">
-                                        <select onchange="updateDocType('${item.id}', ${i}, this.value, 1)" class="type-selector rounded-l-md border-r-0">
-                                            <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
-                                            <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
-                                            <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
-                                        </select>
+                                        <select onchange="updateDocType('${item.id}', ${i}, this.value, 1)" class="type-selector rounded-l-md border-r-0"><option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option><option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option><option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option></select>
                                         <input type="tel" inputmode="numeric" maxlength="${max1}" placeholder="Ingrese ${doc.type}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this, 1)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${v1Class}">
                                         <i class="fa-solid fa-circle-check validation-icon"></i>
                                     </div>
                                     <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">>> Reporte SBS (Solo DNI):</div>
                                     <div class="flex relative">
-                                        <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed">
-                                            <option value="DNI" selected>DNI</option>
-                                        </select>
+                                        <select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>
                                         <input type="tel" inputmode="numeric" maxlength="8" placeholder="Ingrese DNI" value="${doc.num2}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this, 2)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${v2Class}">
                                         <i class="fa-solid fa-circle-check validation-icon"></i>
                                     </div>
@@ -1950,22 +1871,12 @@
                             } else {
                                 if(isSBS) doc.type = 'DNI';
                                 let maxL = doc.type === 'RUC' ? 11 : (doc.type === 'CE' ? 9 : 8);
-                                let ph = doc.type === 'RUC' ? "Ingrese RUC del Reporte" : `Ingrese ${doc.type} del Reporte`;
+                                let ph = doc.type === 'RUC' ? "Ingrese RUC" : `Ingrese ${doc.type}`;
                                 let vClass = doc.valid1 ? 'valid' : (doc.num && doc.num.length > 0 ? 'invalid' : '');
-                                
                                 html += `<div class="flex relative">`;
-                                if(isSBS) {
-                                    html += `<select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>`;
-                                } else {
-                                    html += `<select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0">
-                                        <option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option>
-                                        <option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option>
-                                        <option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option>
-                                    </select>`;
-                                }
-                                html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${vClass}">
-                                    <i class="fa-solid fa-circle-check validation-icon"></i>
-                                </div>`;
+                                if(isSBS) { html += `<select disabled class="type-selector rounded-l-md border-r-0 opacity-60 cursor-not-allowed"><option value="DNI" selected>DNI</option></select>`; } 
+                                else { html += `<select onchange="updateDocType('${item.id}', ${i}, this.value)" class="type-selector rounded-l-md border-r-0"><option value="DNI" ${doc.type==='DNI'?'selected':''}>DNI</option><option value="CE" ${doc.type==='CE'?'selected':''}>C.E</option><option value="RUC" ${doc.type==='RUC'?'selected':''}>RUC</option></select>`; }
+                                html += `<input type="tel" inputmode="numeric" maxlength="${maxL}" placeholder="${ph}" value="${doc.num}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateDni('${item.id}', ${i}, this.value, this)" class="dni-input rounded-r-md rounded-l-none pl-3 border-l-0 flex-1 ${vClass}"><i class="fa-solid fa-circle-check validation-icon"></i></div>`;
                             }
                         }
                         html += `</div>`;
@@ -1973,74 +1884,41 @@
                     html += `</div>`;
                 });
             }
-            
             container.innerHTML = html;
-            const elSub = document.getElementById('cart-subtotal');
-            const elTotal = document.getElementById('cart-total');
-            if(elSub) elSub.innerText = 'S/ ' + total.toFixed(2);
-            if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
+            const elSub = document.getElementById('cart-subtotal'); const elTotal = document.getElementById('cart-total');
+            if(elSub) elSub.innerText = 'S/ ' + total.toFixed(2); if(elTotal) elTotal.innerText = 'S/ ' + total.toFixed(2);
         }
 
+        // =========================================================
+        // PAGOS Y WHATSAPP
+        // =========================================================
         function updateFloatingAction() {
-            const btn = document.getElementById('floating-btn');
-            const icon = document.getElementById('floating-icon');
-            const badge = document.getElementById('cart-badge');
+            const btn = document.getElementById('floating-btn'); const icon = document.getElementById('floating-icon'); const badge = document.getElementById('cart-badge');
             if(!btn || !icon || !badge) return;
-
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-
             if (totalItems > 0) {
-                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]');
-                btn.classList.remove('bg-[#25D366]');
-                icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all text-xl"; 
-                badge.innerText = totalItems;
-                badge.classList.remove('opacity-0', 'scale-0');
+                btn.classList.add('bg-[#1f6feb]', 'shadow-[0_0_20px_rgba(31,111,235,0.4)]'); btn.classList.remove('bg-[#25D366]');
+                icon.className = "fa-solid fa-cart-shopping relative z-10 transition-all text-xl"; badge.innerText = totalItems; badge.classList.remove('opacity-0', 'scale-0');
             } else {
-                btn.classList.add('bg-[#25D366]');
-                btn.classList.remove('bg-[#1f6feb]');
-                icon.className = "fa-brands fa-whatsapp relative z-10 transition-all text-2xl";
-                badge.classList.add('opacity-0', 'scale-0');
+                btn.classList.add('bg-[#25D366]'); btn.classList.remove('bg-[#1f6feb]');
+                icon.className = "fa-brands fa-whatsapp relative z-10 transition-all text-2xl"; badge.classList.add('opacity-0', 'scale-0');
             }
         }
 
         function handleFloatingAction() {
-            if (cart.length > 0) { 
-                openCart(); 
-            } else { 
+            if (cart.length > 0) { openCart(); } 
+            else { 
                 let hash = window.location.hash.replace('#', '');
                 let msg = "Hola 👋, vengo del *Sistema Central* y necesito hacer una consulta rápida. 🚀";
-                
-                if (hash === 'financiero') {
-                    msg = "Hola 👋, estoy en el *Portal Financiero* y deseo consultar sobre los reportes de riesgo y deudas.";
-                } else if (hash === 'digital') {
-                    msg = "Hola 👋, estoy en el *Portal Digital* y deseo realizar una consulta sobre las cuentas premium de Streaming/Software.";
-                } else if (hash === 'investigacion') {
-                    msg = "Hola 👋, estoy en el *Portal de Investigación* y requiero información sobre una auditoría o extracción de datos.";
-                }
-                
+                if (hash === 'financiero') msg = "Hola 👋, estoy en el *Portal Financiero* y deseo consultar sobre los reportes de riesgo y deudas.";
+                else if (hash === 'digital') msg = "Hola 👋, estoy en el *Portal Digital* y deseo realizar una consulta sobre las cuentas premium de Streaming/Software.";
+                else if (hash === 'investigacion') msg = "Hola 👋, estoy en el *Portal de Investigación* y requiero información sobre una auditoría o extracción de datos.";
                 window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank'); 
             }
         }
 
-        function openCart() {
-            const el1 = document.getElementById('cart-overlay');
-            const el2 = document.getElementById('cart-drawer');
-            if(el1 && el2) {
-                el1.classList.remove('opacity-0', 'pointer-events-none');
-                el2.classList.remove('translate-x-full');
-                document.body.style.overflow = 'hidden'; 
-            }
-        }
-
-        function closeCart() {
-            const el1 = document.getElementById('cart-overlay');
-            const el2 = document.getElementById('cart-drawer');
-            if(el1 && el2) {
-                el1.classList.add('opacity-0', 'pointer-events-none');
-                el2.classList.add('translate-x-full');
-                document.body.style.overflow = 'auto'; 
-            }
-        }
+        function openCart() { const el1 = document.getElementById('cart-overlay'); const el2 = document.getElementById('cart-drawer'); if(el1 && el2) { el1.classList.remove('opacity-0', 'pointer-events-none'); el2.classList.remove('translate-x-full'); document.body.style.overflow = 'hidden'; } }
+        function closeCart() { const el1 = document.getElementById('cart-overlay'); const el2 = document.getElementById('cart-drawer'); if(el1 && el2) { el1.classList.add('opacity-0', 'pointer-events-none'); el2.classList.add('translate-x-full'); document.body.style.overflow = 'auto'; } }
 
         function processToPaymentModal() {
             let errorMsg = "";
@@ -2058,89 +1936,33 @@
             });
             if(errorMsg !== "") { showNotification(errorMsg); return; }
             closeCart();
-            const modal = document.getElementById('payment-modal');
-            const card = document.getElementById('payment-card');
-            if(modal && card) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                card.classList.remove('scale-95');
-            }
-        }
-
-        function closePaymentModal() {
-            const modal = document.getElementById('payment-modal');
-            const card = document.getElementById('payment-card');
-            if(modal && card) {
-                modal.classList.add('opacity-0', 'pointer-events-none');
-                card.classList.add('scale-95');
-            }
-        }
-
-        function copyNumber() {
-            sfx.cash();
-            const num = "938748277";
-            navigator.clipboard.writeText(num).then(() => {
-                const btnCopy = document.getElementById('btn-copy');
-                btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> ¡COPIADO!';
-                btnCopy.classList.add('bg-emerald-500', 'text-black');
-                setTimeout(() => {
-                    closePaymentModal();
-                    openFinalModal();
-                    btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> COPIAR NÚMERO';
-                    btnCopy.classList.remove('bg-emerald-500', 'text-black');
-                }, 1000);
-            });
-        }
-
-        function openFinalModal() {
-            const modal = document.getElementById('final-modal');
-            const card = document.getElementById('final-card');
+            const modal = document.getElementById('payment-modal'); const card = document.getElementById('payment-card');
             if(modal && card) { modal.classList.remove('opacity-0', 'pointer-events-none'); card.classList.remove('scale-95'); }
         }
 
-        function closeFinalModal() {
-            const modal = document.getElementById('final-modal');
-            const card = document.getElementById('final-card');
-            if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); }
-        }
+        function closePaymentModal() { const modal = document.getElementById('payment-modal'); const card = document.getElementById('payment-card'); if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); } }
+        function copyNumber() { sfx.cash(); navigator.clipboard.writeText("938748277").then(() => { const btnCopy = document.getElementById('btn-copy'); btnCopy.innerHTML = '<i class="fa-solid fa-check"></i> ¡COPIADO!'; btnCopy.classList.add('bg-emerald-500', 'text-black'); setTimeout(() => { closePaymentModal(); openFinalModal(); btnCopy.innerHTML = '<i class="fa-regular fa-copy"></i> COPIAR NÚMERO'; btnCopy.classList.remove('bg-emerald-500', 'text-black'); }, 1000); }); }
+        function openFinalModal() { const modal = document.getElementById('final-modal'); const card = document.getElementById('final-card'); if(modal && card) { modal.classList.remove('opacity-0', 'pointer-events-none'); card.classList.remove('scale-95'); } }
+        function closeFinalModal() { const modal = document.getElementById('final-modal'); const card = document.getElementById('final-card'); if(modal && card) { modal.classList.add('opacity-0', 'pointer-events-none'); card.classList.add('scale-95'); } }
 
         function sendFinalWhatsApp() {
-            let total = 0;
-            let hasZeroPrice = false;
-            let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL\n🔒ID: ${orderId}\n\n`;
-            
+            let total = 0; let hasZeroPrice = false; let message = `SISTEMA CENTRAL - FINANCIERO Y DIGITAL\n🔒ID: ${orderId}\n\n`;
             const grouped = { 'DIGITAL': [], 'FINANCIERO': [], 'INVESTIGACIÓN': [], 'DESTACADO': [] };
-            
-            cart.forEach(item => {
-                let cat = item.category.toUpperCase();
-                if (cat === 'INVESTIGACION') cat = 'INVESTIGACIÓN'; 
-                if (!grouped[cat]) grouped[cat] = [];
-                grouped[cat].push(item);
-            });
+            cart.forEach(item => { let cat = item.category.toUpperCase(); if (cat === 'INVESTIGACION') cat = 'INVESTIGACIÓN'; if (!grouped[cat]) grouped[cat] = []; grouped[cat].push(item); });
 
             for (const [cat, items] of Object.entries(grouped)) {
                 if (items.length === 0) continue;
-                
                 message += `📍 CATEGORÍA ${cat}\n`;
-                
                 items.forEach(item => {
                     message += `✅ ${item.qty}x ${item.name}\n`;
-                    if (item.price > 0) {
-                        message += ` S/ ${(item.price * item.qty).toFixed(2)}\n`;
-                        total += (item.price * item.qty);
-                    } else {
-                        message += ` Requiere Cotización ⚠️\n`;
-                        hasZeroPrice = true;
-                    }
+                    if (item.price > 0) { message += ` S/ ${(item.price * item.qty).toFixed(2)}\n`; total += (item.price * item.qty); } 
+                    else { message += ` Requiere Cotización ⚠️\n`; hasZeroPrice = true; }
                     
                     if (item.category === 'FINANCIERO' && item.dnis && item.dnis.length > 0) {
                         message += `🔍Documentos a evaluar:\n`;
                         item.dnis.forEach(doc => {
-                            if (item.id === 'FIN-CMB') {
-                                message += `   Sentinel (${doc.type}): ${doc.num}\n`;
-                                message += `   SBS (DNI): ${doc.num2}\n`;
-                            } else {
-                                message += `   ${doc.type}: ${doc.num}\n`;
-                            }
+                            if (item.id === 'FIN-CMB') { message += `   Sentinel (${doc.type}): ${doc.num}\n   SBS (DNI): ${doc.num2}\n`; } 
+                            else { message += `   ${doc.type}: ${doc.num}\n`; }
                         });
                     }
                     message += `\n`;
@@ -2148,67 +1970,35 @@
             }
 
             message += `💰TOTAL ESTIMADO: S/ ${total.toFixed(2)}\n`;
-            
-            if (hasZeroPrice) {
-                message += `( POR COTIZAR UN SERVICIO )\n\n`;
-                message += `⚙️ Por favor, indícame cuánto sería el total por los servicios a cotizar para proceder a depositar.`;
-            } else {
-                message += `\n⚙️ Estoy realizando mi pago; le comparto el comprobante.`;
-            }
+            if (hasZeroPrice) { message += `( POR COTIZAR UN SERVICIO )\n\n⚙️ Por favor, indícame cuánto sería el total por los servicios a cotizar para proceder a depositar.`; } 
+            else { message += `\n⚙️ Estoy realizando mi pago; le comparto el comprobante.`; }
             
             closeFinalModal();
             window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-            cart = []; 
-            syncProductButtons();
-            updateFloatingAction();
+            cart = []; syncProductButtons(); updateFloatingAction();
         }
 
+        // =========================================================
+        // UI EXTRAS (OBSERVER, STATS, FOMO)
+        // =========================================================
         function initScrollObserver() {
             if (window.innerWidth >= 768) return;
-            const cards = document.querySelectorAll('.portfolio-card');
-            if(cards.length === 0) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('in-view', 'is-centered');
-                    } else {
-                        entry.target.classList.remove('in-view', 'is-centered');
-                    }
-                });
-            }, { threshold: 0.6 }); 
-
-            cards.forEach(card => observer.observe(card));
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('in-view', 'is-centered'); } else { entry.target.classList.remove('in-view', 'is-centered'); } }); }, { threshold: 0.6 }); 
+            document.querySelectorAll('.portfolio-card').forEach(card => observer.observe(card));
         }
 
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('scrollTopBtn');
-            if(btn) {
-                if (window.scrollY > 300) {
-                    btn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-                    btn.classList.add('opacity-100', 'translate-y-0');
-                } else {
-                    btn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-                    btn.classList.remove('opacity-100', 'translate-y-0');
-                }
-            }
+            if(btn) { if (window.scrollY > 300) { btn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none'); btn.classList.add('opacity-100', 'translate-y-0'); } else { btn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none'); btn.classList.remove('opacity-100', 'translate-y-0'); } }
         });
 
         function setLiveStats() {
             try {
-                const baseDate = new Date('2026-01-01').getTime();
-                const now = new Date();
+                const baseDate = new Date('2026-01-01').getTime(); const now = new Date();
                 const daysPassed = Math.floor((now.getTime() - baseDate) / (1000 * 60 * 60 * 24));
-                const baseGlobal = 8135;
-                const globalTotal = baseGlobal + (daysPassed * 12);
-                const hour = now.getHours();
-                const minutes = now.getMinutes();
-                const prospectosHoy = Math.floor(25 + (hour / 23) * 65 + (minutes / 59) * 10);
-                
-                const elGlobal = document.getElementById('stat-global');
-                const elHoy = document.getElementById('stat-hoy');
-                if(elGlobal) elGlobal.innerText = globalTotal.toLocaleString('en-US');
-                if(elHoy) elHoy.innerText = '+' + prospectosHoy;
+                const elGlobal = document.getElementById('stat-global'); const elHoy = document.getElementById('stat-hoy');
+                if(elGlobal) elGlobal.innerText = (8135 + (daysPassed * 12)).toLocaleString('en-US');
+                if(elHoy) elHoy.innerText = '+' + Math.floor(25 + (now.getHours() / 23) * 65 + (now.getMinutes() / 59) * 10);
             } catch(e) {}
         }
 
@@ -2221,46 +2011,29 @@
             { text: "🚗 Alguien acaba de solicitar una Boleta Informativa", icon: "fa-car text-cyan-400", border: "border-cyan-500/30" },
             { text: "💻 Un cliente adquirió Microsoft 365", icon: "fa-compact-disc text-blue-400", border: "border-blue-500/30" },
             { text: "🚔 Alguien solicitó Antecedentes Policiales", icon: "fa-handcuffs text-cyan-400", border: "border-cyan-500/30" },
-            { text: "🎨 Un usuario ha comprado Canva Pro VIP", icon: "fa-pen-nib text-purple-400", border: "border-purple-500/30" },
-            { text: "📊 Se ha validado un Reporte Equifax Oficial", icon: "fa-file-invoice text-blue-400", border: "border-blue-500/30" }
+            { text: "🎨 Un usuario ha comprado Canva Pro VIP", icon: "fa-pen-nib text-purple-400", border: "border-purple-500/30" }
         ];
 
         function showFomoNotification() {
-            const container = document.getElementById('fomo-container');
-            if(!container) return;
-
+            const container = document.getElementById('fomo-container'); if(!container) return;
             const randomMsg = fomoMessages[Math.floor(Math.random() * fomoMessages.length)];
             const toast = document.createElement('div');
-            
             toast.className = `bg-[#0A0F16]/95 backdrop-blur-md border ${randomMsg.border} rounded-lg p-3 flex items-center gap-3 shadow-[0_5px_15px_rgba(0,0,0,0.5)] transform transition-all duration-500 translate-y-10 opacity-0 max-w-[250px]`;
             toast.innerHTML = `<i class="fa-solid ${randomMsg.icon} text-lg flex-shrink-0"></i><p class="text-gray-300 text-[10px] font-mono leading-tight">${randomMsg.text}</p>`;
-            
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-                toast.classList.add('translate-y-0', 'opacity-100');
-            }, 100);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => toast.remove(), 500);
-            }, 5000);
+            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); toast.classList.add('translate-y-0', 'opacity-100'); }, 100);
+            setTimeout(() => { toast.classList.remove('translate-y-0', 'opacity-100'); toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 500); }, 5000);
         }
 
-        function initFomo() {
-            setTimeout(() => {
-                showFomoNotification();
-                setInterval(showFomoNotification, 35000); 
-            }, 15000); 
-        }
+        function initFomo() { setTimeout(() => { showFomoNotification(); setInterval(showFomoNotification, 35000); }, 15000); }
 
+        // =========================================================
+        // EJECUCIÓN INICIAL AL CARGAR LA PÁGINA
+        // =========================================================
         window.onload = () => {
             let hash = window.location.hash.replace('#', '');
             if(!['hub', 'financiero', 'digital', 'investigacion'].includes(hash)) {
-                hash = 'hub';
-                history.replaceState(null, '', window.location.pathname + '#hub');
+                hash = 'hub'; history.replaceState(null, '', window.location.pathname + '#hub');
             }
             navigate(hash);
 
@@ -2272,66 +2045,34 @@
 
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                if(splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => { splash.style.display = 'none'; }, 500);
-                }
+                if(splash) { splash.style.opacity = '0'; setTimeout(() => { splash.style.display = 'none'; }, 500); }
             }, 1000); 
 
             try { setLiveStats(); } catch(e) {}
             try { initScrollObserver(); } catch(e) {}
             
-            syncProductButtons();
             renderCarousel('all');
-            renderDestacados();
             initFomo();
+            
+            // 🔥 CONECTAMOS LA PÁGINA A TU GOOGLE SHEETS 🔥
+            initCloudConnection();
         };
 
         // =========================================================
         // 🛡️ BLINDAJE DE SEGURIDAD NIVEL DIOS (ANTI-COPIA) 🛡️
         // =========================================================
-        
-        // 1. Bloquear Clic Derecho
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || e.keyCode === 123) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) e.preventDefault();
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'P' || e.key === 'p')) e.preventDefault();
         });
-
-        // 2. Bloquear atajos de teclado de desarrollador
-        document.addEventListener('keydown', function(e) {
-            // Bloquear F12
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+Shift+I / Cmd+Opt+I (Inspeccionar)
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+Shift+J / Cmd+Opt+J (Consola)
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+Shift+C / Cmd+Opt+C (Inspector de elementos)
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+U / Cmd+U (Ver código fuente)
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+S / Cmd+S (Guardar página)
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
-                e.preventDefault();
-            }
-            // Bloquear Ctrl+P / Cmd+P (Imprimir página)
-            if ((e.ctrlKey || e.metaKey) && (e.key === 'P' || e.key === 'p')) {
-                e.preventDefault();
-            }
-        });
-        
-        // 3. Bloquear arrastre de imágenes (Drag & Drop)
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-        });
+        document.addEventListener('dragstart', e => e.preventDefault());
+    </script>
     </script>
 </body>
 </html>
